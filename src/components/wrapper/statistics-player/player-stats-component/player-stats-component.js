@@ -17,6 +17,9 @@ export default class PlayerStatsComponent extends Component {
         super(props);
         this.state = {
             currentTab: this.props.currentTab,
+            dataPlayer: this.props.dataPlayer,
+            statisticsDefinitions: this.props.statisticsDefinitions,
+
         };
 
     }
@@ -33,6 +36,8 @@ export default class PlayerStatsComponent extends Component {
 
         this.setState({
             currentTab:nextProps.currentTab,
+            dataPlayer:nextProps.dataPlayer,
+            statisticsDefinitions:nextProps.statisticsDefinitions,
         });
 
     }
@@ -159,6 +164,7 @@ PlayerStatsComponent.propTypes = {
     statisticsDefinitions: PropTypes.array,
     sportID: PropTypes.number,
     currentTab: PropTypes.number,
+    dataPlayer: PropTypes.object,
 };
 
 PlayerStatsComponent.defaultProps = {

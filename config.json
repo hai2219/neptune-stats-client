@@ -2,13 +2,13 @@
     "LOCAL_URL": "http://localhost",
     "LOCAL_PORT": "3003",
     "API_GET": "/api/get",
-    "SERVER_URL": "http://128.199.90.210:8081",
+    "SERVER_URL": "http://128.199.90.210:8082",
 
     "AUTHORIZATION": "Basic ZGV2OmRldjIwMTY=",
     "X_API_KEY": "XrVL2DyqsA3hIF3oIfbQU7bAF7EtfRSH1ln6RL22",
 
-    "PLAYER_STAT_GET_FORMAT_PATH": "/sport/Baseball/competition/{competitionId}/StatisticsDefinitions",
-    "PLAYER_STAT_GET_PLAYER_PATH": "/competition/{competitionId}/team/{teamId}/players"
+    "PLAYER_STAT_GET_FORMAT_PATH": "/sport/Baseball/season/{season}/competition/{competitionId}/StatisticsDefinitions",
+    "PLAYER_STAT_GET_PLAYER_PATH": "/sport/Baseball/season/{season}/competition/{competition}/division/{division}/round/{round}/fixture/{fixture}/Players"
 
 
 

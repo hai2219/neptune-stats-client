@@ -22,15 +22,20 @@ export default class PlayerStatsPageComponent extends Component {
             isShowModel:false,
             submitResult:true,
             statisticsDefinitions:[],
+            dataPlayer:null,
             currentTab:0,
         };
     }
 
     componentDidMount() {
 
-      let competitionId = "a0Ap0000004douyEAA";
-        Service.getFormat(competitionId).then(data => {
 
+        //get statistic definition
+        let competitionId = "a0Ap0000004douyEAA";
+        let season = "a2Cp0000000AdmdEAC";
+
+        Service.getFormat(season, competitionId).then(data => {
+            // console.log(data);
             if (data) {
                 if(data.Statisticsdefinition){
 
@@ -51,8 +56,37 @@ export default class PlayerStatsPageComponent extends Component {
 
 
         }).catch(error => {
-
+            this.setState({
+                statisticsDefinitions:[],
+            });
         });
+
+        //get player
+
+        let division = "a0Ap0000004g9eZEAQ";
+        let round = 9826;
+        let fixture = 54514;
+        Service.getPlayer(season,competitionId,division, round, fixture).then(data => {
+            // console.log(data);
+            if (data) {
+                this.setState({
+                    dataPlayer:data,
+                    });
+
+            }else{
+                this.setState({
+                    dataPlayer:null,
+                });
+            }
+
+
+        }).catch(error => {
+            this.setState({
+                dataPlayer:null,
+            });
+        });
+
+
     }
 
     componentWillUnmount(){
@@ -165,6 +199,7 @@ export default class PlayerStatsPageComponent extends Component {
                 <PlayerStatsComponent onChange={onChange}
                                       statisticsDefinitions={this.state.statisticsDefinitions}
                                       currentTab={this.state.currentTab}
+                                      dataPlayer={this.state.dataPlayer}
                 />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>

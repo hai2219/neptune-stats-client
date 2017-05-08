@@ -6,23 +6,26 @@ const Config = require('../../config');
 import * as CommonApi from "./common-api";
 import * as URLUtils from  '../utils/url-utils';
 
-export function getFormat(competitionId) {
+export function getFormat(season, competitionId) {
     let path = Config.PLAYER_STAT_GET_FORMAT_PATH;
 
     const param = {
         competitionId: competitionId,
-
+        season:season,
     };
 
     return CommonApi.httpGet(path, param);
 }
 
-export function getPlayer(competitionId,teamId) {
+export function getPlayer(season,competition,division, round, fixture) {
     let path = Config.PLAYER_STAT_GET_PLAYER_PATH;
 
     const param = {
-        competitionId: competitionId,
-        teamId: teamId,
+        season: season,
+        competition: competition,
+        division: division,
+        round: round,
+        fixture: fixture,
 
     };
 
