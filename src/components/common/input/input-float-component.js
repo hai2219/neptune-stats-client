@@ -158,12 +158,15 @@ export default class Float extends Component {
 
     render() {
         let {id} = this.props;
+        const inputProps = Object.assign({}, this.props);
+        delete inputProps.numOfDecimal;
+
         const onKeyDown = (event) => this.onKeyDown(event);
         const onKeyUp = (event) => this.onKeyUp(event);
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...this.props} type={"text"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
+            <input {...inputProps} type={"text"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
         );
     }
 }
