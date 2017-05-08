@@ -2,7 +2,7 @@
  * @copyright 2017 @ NEXLE
  * @author rocachien
  * @create 2017/05/08 10:03
- * @update 2017/05/08 10:03
+ * @update 2017/05/08 16:25
  * @file common/input/input-float-component.js
  */
 "use strict";
@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
  * @example
  *
  *
- * <Float className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} min={-999} max={999}/>
+ * <Float className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} numOfDecimal={2} min={-999} max={999}/>
  */
 
 const KeyCode = {
@@ -74,8 +74,18 @@ export default class Float extends Component {
         }
     }
 
+    _numOfDecimal(value) {
+        let decimal = (value + "").split(".")[1];
+
+        if(decimal && decimal.length > 0) {
+            return decimal.length;
+        } else {
+            return 0;
+        }
+    }
+
     onKeyUp(event) {
-        const {min, max, id} = this.props;
+        const {numOfDecimal, min, max, id} = this.props;
         let key = event.charCode || event.keyCode;
         let val = event.target.value;
         let value = parseFloat(val);
@@ -88,13 +98,18 @@ export default class Float extends Component {
             return true;
         }
 
+        if(this._numOfDecimal(val) > numOfDecimal) {
+            this.refs[id].value = this.value;
+            return false;
+        }
+
         if(value < min || value > max) {
             this.refs[id].value = this.value;
             return false;
         }
 
-        this.value = value;
-        if(val.length > 1 && !this._isMoveAndDelete(key)) this.refs[id].value = value;
+        this.value = val;
+        if(val.length > 1 && !this._isMoveAndDelete(key) && !this._isDecimal(key)) this.refs[id].value = value;
 
         if(key == KeyCode.enter) {
             if(this.props.onBlur) this.props.onBlur(value);
@@ -102,7 +117,7 @@ export default class Float extends Component {
     }
 
     onKeyDown(event) {
-        const {maxLength, min, id} = this.props;
+        const {min} = this.props;
         let key = event.charCode || event.keyCode;
         let value = event.target.value;
 
@@ -116,9 +131,13 @@ export default class Float extends Component {
             return true;
         }
 
-        if(value.length >= maxLength) {
-            event.stopPropagation();
-            event.preventDefault();
+        if(value.length > 0 && this._isDecimal(key)) {
+            if(value.indexOf(".") > 0) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+
+            return true;
         }
 
         if(this._isNumber(key)) {
@@ -144,7 +163,7 @@ export default class Float extends Component {
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...this.props} type={"number"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
+            <input {...this.props} type={"text"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
         );
     }
 }
@@ -153,7 +172,7 @@ Float.propTypes = {
     id: PropTypes.string,
     onBlur: PropTypes.func,
     onChange: PropTypes.func,
-    maxLength: PropTypes.number,
+    numOfDecimal: PropTypes.number,
     min: PropTypes.number,
     max: PropTypes.number,
 };
