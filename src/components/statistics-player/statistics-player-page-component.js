@@ -36,11 +36,11 @@ export default class PlayerStatsPageComponent extends Component {
 
         Service.getFormat(season, competitionId).then(data => {
             // console.log(data);
-            if (data) {
-                if(data.Statisticsdefinition){
+            if (data && data.data) {
+                if(data.data.Statisticsdefinition){
 
                     this.setState({
-                        statisticsDefinitions:data.Statisticsdefinition,
+                        statisticsDefinitions:data.data.Statisticsdefinition,
                     });
                 }else{
                     this.setState({
