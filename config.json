@@ -2,12 +2,12 @@
     "LOCAL_URL": "http://localhost",
     "LOCAL_PORT": "3003",
     "API_GET": "/api/get",
-    "SERVER_URL": "https://mapfinder-staging.herokuapp.com",
+    "SERVER_URL": "http://128.199.90.210:8081",
 
     "AUTHORIZATION": "Basic ZGV2OmRldjIwMTY=",
     "X_API_KEY": "XrVL2DyqsA3hIF3oIfbQU7bAF7EtfRSH1ln6RL22",
 
-    "PLAYER_STAT_GET_FORMAT_PATH": "/competition/{competitionId}/player-statistic-format",
+    "PLAYER_STAT_GET_FORMAT_PATH": "/sport/Baseball/competition/{competitionId}/StatisticsDefinitions",
     "PLAYER_STAT_GET_PLAYER_PATH": "/competition/{competitionId}/team/{teamId}/players"
 
 

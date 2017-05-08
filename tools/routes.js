@@ -11,7 +11,6 @@ const routes = () => {
     router.get('/api/get/*', function (req, res) {
         let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
         let url = appConfig.SERVER_URL + '/' + req.params[0] + search;
-
         const options = {
             url: url,
             headers: {
@@ -25,6 +24,8 @@ const routes = () => {
         };
 
         function callback(error, response, body) {
+
+            console.log(body);
             if (!error && (response.statusCode == 200 || response.statusCode == 404)) {
                 res.send(body);
             } else {
@@ -218,6 +219,7 @@ const routes = () => {
 
 
     });
+
 
 
     return router;

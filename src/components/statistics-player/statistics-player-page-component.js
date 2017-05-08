@@ -9,6 +9,7 @@ import  HeaderComponent from  "../wrapper/statistics-player/header-component/hea
 import  FooterComponent from  "../wrapper/statistics-player/footer-component/footer-wrapper-component";
 import ModalComponent from "../../components/common/modal/modal-component";
 import PopupComponent from "../../components/common/popup/popup-no-internet-component";
+import * as Service from  "../../api/statistics-player-api";
 
 export default class PlayerStatsPageComponent extends Component {
     constructor(props) {
@@ -20,11 +21,38 @@ export default class PlayerStatsPageComponent extends Component {
             isShowPopup:false,
             isShowModel:false,
             submitResult:true,
+            statisticsDefinitions:[],
+            currentTab:0,
         };
     }
 
     componentDidMount() {
 
+      let competitionId = "a0Ap0000004douyEAA";
+        Service.getFormat(competitionId).then(data => {
+
+            if (data) {
+                if(data.Statisticsdefinition){
+
+                    this.setState({
+                        statisticsDefinitions:data.Statisticsdefinition,
+                    });
+                }else{
+                    this.setState({
+                        statisticsDefinitions:[],
+                    });
+                }
+
+            }else{
+                this.setState({
+                    statisticsDefinitions:[],
+                });
+            }
+
+
+        }).catch(error => {
+
+        });
     }
 
     componentWillUnmount(){
@@ -32,14 +60,18 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     onSave() {
-        this.setState({
-            isShowPopup:true,
-        })
+        // this.setState({
+        //     isShowPopup:true,
+        // })
 
     }
 
     onChange(data) {
         this.setState({dataSource: data});
+    }
+
+    onChangeTab(index) {
+        this.setState({currentTab: index});
     }
 
     cancelConfirm() {
@@ -121,13 +153,19 @@ export default class PlayerStatsPageComponent extends Component {
 
         let onSave = ()=> this.onSave();
         let onChange = (data)=> this.onChange(data);
+        let onChangeTab = (index)=> this.onChangeTab(index);
 
         return (
             <div className="statistics-player-container">
                 {this.renderPopup()}
                 {this.renderModel()}
-                <HeaderComponent onSave={onSave} />
-                <PlayerStatsComponent onChange={onChange} />
+                <HeaderComponent onSave={onSave}
+                                 onChangeTab={onChangeTab}
+                />
+                <PlayerStatsComponent onChange={onChange}
+                                      statisticsDefinitions={this.state.statisticsDefinitions}
+                                      currentTab={this.state.currentTab}
+                />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>
             </div>

@@ -8,14 +8,14 @@ import TableComponent from  '../../../common/table/table-component';
 import SortIcon from '../../../common/icon/sort-icon-component';
 import IntegerNumber from '../../../common/input/integer-number-component';
 import ToggleComponent from '../../../common/toggle/toggle-button-component';
-
+import PropTypes from 'prop-types';
 
 export default class PlayerStatsComponent extends Component {
     constructor(props) {
 
         super(props);
         this.state = {
-
+            currentTab: this.props.currentTab,
         };
 
     }
@@ -28,10 +28,17 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
+    componentWillReceiveProps(nextProps){
+
+        this.setState({
+            currentTab:nextProps.currentTab,
+        });
+
+    }
 
     render() {
 
-        let headerData = [
+        let headerData1 = [
             <SortIcon text={"#"} key={16}/>,
             <SortIcon text={"NAME"} key={17}/>,
             <SortIcon text={"ORDER"} key={18}/>,
@@ -51,7 +58,7 @@ export default class PlayerStatsComponent extends Component {
             "SP",
             "AVG"
         ];
-        let bodyData = [
+        let bodyData1 = [
             ["01", "Sarah Love", <IntegerNumber key={1} className="order" min={1} max={999}/>, <ToggleComponent key={15}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />, <IntegerNumber min={0} max={999}  key={9} />, <IntegerNumber min={0} max={999}  key={10} />, <IntegerNumber min={0} max={999}  key={11} />, <IntegerNumber min={0} max={999}  key={12} />, <IntegerNumber min={0} max={999}  key={13} />, <IntegerNumber min={0} max={999}  key={14} />, "2.3"],
             ["02", "Issau Rave", <IntegerNumber key={1} className="order" min={1} max={999}/>, <ToggleComponent key={15}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />, <IntegerNumber min={0} max={999}  key={9} />, <IntegerNumber min={0} max={999}  key={10} />, <IntegerNumber min={0} max={999}  key={11} />, <IntegerNumber min={0} max={999}  key={12} />, <IntegerNumber min={0} max={999}  key={13} />, <IntegerNumber min={0} max={999}  key={14} />, "2.3"],
             ["03", "Sandran Muc", <IntegerNumber key={1} className="order" min={1} max={999}/>, <ToggleComponent key={15}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />, <IntegerNumber min={0} max={999}  key={9} />, <IntegerNumber min={0} max={999}  key={10} />, <IntegerNumber min={0} max={999}  key={11} />, <IntegerNumber min={0} max={999}  key={12} />, <IntegerNumber min={0} max={999}  key={13} />, <IntegerNumber min={0} max={999}  key={14} />, "2.3"],
@@ -69,6 +76,71 @@ export default class PlayerStatsComponent extends Component {
             ["54", "Sarah Love", <IntegerNumber key={1} className="order" min={1} max={999}/>, <ToggleComponent key={15}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />, <IntegerNumber min={0} max={999}  key={9} />, <IntegerNumber min={0} max={999}  key={10} />, <IntegerNumber min={0} max={999}  key={11} />, <IntegerNumber min={0} max={999}  key={12} />, <IntegerNumber min={0} max={999}  key={13} />, <IntegerNumber min={0} max={999}  key={14} />, "2.3"],
         ];
 
+        let headerData2 = [
+            <SortIcon text={"#"} key={16}/>,
+            <SortIcon text={"NAME"} key={17}/>,
+            <SortIcon text={"ORDER"} key={18}/>,
+            "IP",
+            "H",
+            "R",
+            "ER",
+            "BB",
+            "SO",
+            "HR",
+            "ERA"
+        ];
+        let bodyData2 = [
+            ["01", "Sarah Love", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["02", "Issau Rave", <IntegerNumber key={1} className="order" min={1} max={999}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["03", "Sandran Muc", <IntegerNumber key={1} className="order" min={1} max={999}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["04", "Bati Huci", <IntegerNumber key={1} className="order" min={1} max={999}/>, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["06", "Doti Hane", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["09", "Pharan Candia", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["19", "Not tival", <IntegerNumber key={1} className="order" defaultValue={3} min={1} max={999}/>, <IntegerNumber min={0} max={999}  key={2} />,<IntegerNumber min={0} max={999}  key={2} defaultValue={3} />, <IntegerNumber min={0} max={999}  key={3} defaultValue={3} />, <IntegerNumber min={0} max={999}  key={4}  defaultValue={3}/>, <IntegerNumber min={0} max={999}  key={5} defaultValue={3} />, <IntegerNumber min={0} max={999}  key={6} defaultValue={3} />],
+            ["11", "Sarah Love", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ["31", "Sarah Love", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />, <IntegerNumber min={0} max={999}  key={5} />, <IntegerNumber min={0} max={999}  key={6} />, <IntegerNumber min={0} max={999}  key={7} />, <IntegerNumber min={0} max={999}  key={8} />],
+            ];
+
+        let headerData3 = [
+            <SortIcon text={"#"} key={16}/>,
+            <SortIcon text={"NAME"} key={17}/>,
+            <SortIcon text={"ORDER"} key={18}/>,
+            "E",
+            "A",
+            "PO",
+            "FPCT"
+        ];
+        let bodyData3 = [
+            ["01", "Sarah Love", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />],
+            ["02", "Issau Rave", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />],
+            ["03", "Sandran Muc", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />],
+            ["04", "Bati Huci", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />],
+            ["06", "Doti Hane", <IntegerNumber key={1} className="order" min={1} max={999}/>, <IntegerNumber min={0} max={999}  key={2} />,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />],
+            ["09", "Pharan Candia", <IntegerNumber key={1} className="order" min={1} max={999}/>,<IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={2} />, <IntegerNumber min={0} max={999}  key={3} />, <IntegerNumber min={0} max={999}  key={4} />],
+            ];
+
+        let headerData = [];
+        let bodyData = [];
+        switch (this.state.currentTab){
+            case 1:
+                headerData = headerData1;
+                bodyData = bodyData1;
+                break;
+            case 2:
+                headerData = headerData2;
+                bodyData = bodyData2;
+                break;
+            case 3:
+                headerData = headerData3;
+                bodyData = bodyData3;
+                break;
+            default:
+                headerData = headerData1;
+                bodyData = bodyData1;
+                break;
+
+        }
+
         return (
 
             <div id="player-stats-wrapper-container">
@@ -81,6 +153,17 @@ export default class PlayerStatsComponent extends Component {
 
     }
 }
+
+PlayerStatsComponent.propTypes = {
+    statisticsDefinitions: PropTypes.array,
+    sportID: PropTypes.number,
+    currentTab: PropTypes.number,
+};
+
+PlayerStatsComponent.defaultProps = {
+    sportID: 7,
+    currentTab: 1,
+};
 
 const css = `
     #player-stats-wrapper-container { 
