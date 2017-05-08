@@ -9,7 +9,7 @@ import  HeaderComponent from  "../wrapper/statistics-player/header-component/hea
 import  FooterComponent from  "../wrapper/statistics-player/footer-component/footer-wrapper-component";
 import ModalComponent from "../../components/common/modal/modal-component";
 import PopupComponent from "../../components/common/popup/popup-no-internet-component";
-import * as Service from  "../../api/statistics-player-api";
+import * as Service from  "../../services/statistic-player-services";
 
 export default class PlayerStatsPageComponent extends Component {
     constructor(props) {

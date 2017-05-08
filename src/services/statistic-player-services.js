@@ -7,6 +7,6 @@ export function getFormat(season, competitionId){
     return StatisticsApi.getFormat(season, competitionId);
 }
 
-export function getPlayerr(season,competition,division, round, fixture){
-    return StatisticsApi.getPlayerr(season,competition,division, round, fixture);
+export function getPlayer(season,competition,division, round, fixture){
+    return StatisticsApi.getPlayer(season,competition,division, round, fixture);
 }
