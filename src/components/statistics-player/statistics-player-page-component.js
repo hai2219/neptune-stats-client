@@ -67,7 +67,7 @@ export default class PlayerStatsPageComponent extends Component {
         let round = 9826;
         let fixture = 54514;
         Service.getPlayer(season,competitionId,division, round, fixture).then(data => {
-            // console.log(data);
+            console.log(data);
             if (data) {
                 this.setState({
                     dataPlayer:data,
