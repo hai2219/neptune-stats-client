@@ -1,9 +1,9 @@
 /**
  * @copyright 2017 @ NEXLE
  * @author rocachien
- * @create 2017/04/28 14:41
- * @update 2017/05/03 12:03
- * @file common/input/integer-component.js
+ * @create 2017/05/08 10:03
+ * @update 2017/05/08 10:03
+ * @file common/input/input-float-component.js
  */
 "use strict";
 
@@ -11,11 +11,11 @@ import React, {Component} from "react";
 import PropTypes from 'prop-types';
 
 /**
- * @desc This is IntegerNumber component.
+ * @desc This is Input Float component.
  * @example
  *
  *
- * <IntegerNumber className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} min={-999} max={999}/>
+ * <Float className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} min={-999} max={999}/>
  */
 
 const KeyCode = {
@@ -26,10 +26,11 @@ const KeyCode = {
     e: 69,
     dash: 189,
     subtract: 109,
-    enter: 13
-
+    enter: 13,
+    period: 190,
+    decimal: 110
 };
-export default class IntegerNumber extends Component {
+export default class Float extends Component {
     /**
      * @param {object} props.
      */
@@ -65,11 +66,19 @@ export default class IntegerNumber extends Component {
         }
     }
 
+    _isDecimal(key) {
+        if(key == KeyCode.period || key == KeyCode.decimal) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     onKeyUp(event) {
         const {min, max, id} = this.props;
         let key = event.charCode || event.keyCode;
         let val = event.target.value;
-        let value = parseInt(val);
+        let value = parseFloat(val);
 
         if(this._isSubtract(key)) {
             if(this.value.length > 0 && isNaN(value)) {
@@ -140,7 +149,7 @@ export default class IntegerNumber extends Component {
     }
 }
 
-IntegerNumber.propTypes = {
+Float.propTypes = {
     id: PropTypes.string,
     onBlur: PropTypes.func,
     onChange: PropTypes.func,
@@ -149,6 +158,6 @@ IntegerNumber.propTypes = {
     max: PropTypes.number,
 };
 
-IntegerNumber.defaultProps = {
+Float.defaultProps = {
     id: 'id' + Math.floor((Math.random() * 1000000000) + 999999999)
 };
