@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset=utf-8" />
+    <meta name="description" content="Finding Sport">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <meta name="author" content="Roca Chien">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Sport</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        var sTop = false;
+        var baseURL= "https://apigateway.staging.foxsportspulse.com/v2/assocdata/associations/{assoc_id}/competitions";
+
+        function nextSport(next) {
+            if(sTop) return false;
+
+            var url = baseURL.replace("{assoc_id}", next);
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                headers: {
+                    "x-api-key": "XrVL2DyqsA3hIF3oIfbQU7bAF7EtfRSH1ln6RL22",
+                    "authorization": "Basic ZGV2OmRldjIwMTY="
+                }
+            }).done(function(rep)
+            {
+                if(rep.status != 200){
+                    return false;
+                }
+
+                if(rep && rep.resultList && rep.resultList[0] && rep.resultList[0].entity_obj && rep.resultList[0].entity_obj.sport_name){
+                    var comp = rep.resultList[0].entity_obj;
+
+                    var html = "";
+                    html += "<tr class='spt" + comp.sport_id + "'>";
+                    html += "<td>" + comp.sport_id + "</td>";
+                    html += "<td>" + comp.sport_name + "</td>";
+                    html += "<td>" + comp.entity_id + "</td>";
+                    html += "<td><a href='http://128.199.90.210:3000/match-centre?c=0-"+comp.entity_id+"-0-294949-0&round=5841749&pool=0&a=MATCH&webID=2307&fixture=24983722' target='_blank'>"+comp.name+"</a></td>";
+                    html += "</tr>";
+
+                    if($('#tbSport tr.spt'+ comp.sport_id).length > 0){
+                        $('#tbSport tr.spt'+ comp.sport_id +':last').after(html);
+                    }else {
+                        $('#tbSport tr:last').after(html);
+                    }
+                }
+
+            }).always(function() {
+                nextSport(next + 1);
+            });
+        }
+
+        $(document).ready(function(){
+            $("#btnSearch").click(function(){
+                $(this).attr('disabled','disabled');
+                $("#loading").show();
+                var assoc = $("#txtAssoc").val();
+                assoc = (!assoc || assoc.length < 1) ? 1 : parseInt(assoc);
+
+                sTop = false;
+                nextSport(assoc);
+            });
+
+            $("#btnStop").click(function () {
+                sTop = true;
+                $("#loading").hide();
+                $("#btnSearch").removeAttr('disabled');
+            });
+        });
+    </script>
+    <style type="text/css">
+        input {
+            margin-top: 3px;
+            border: 1px solid #4d4d4c;
+        }
+        td {
+            border: 1px solid #4d4d4c;
+        }
+    </style>
+</head>
+<body>
+<div style="float: left; width: 600px">
+    <fieldset>
+        <legend>Tìm sport theo soccid</legend>
+        <span id="vError" style="color: red"></span>
+
+        <input id="txtAssoc" type="text" placeholder="Nhập assoc bắt đầu" value="">
+        <hr>
+        <input id="btnSearch" type="button" value="TÌM SPORT" >
+        <input id="btnStop" type="button" value="DỪNG TÌM" >
+    </fieldset>
+
+    <br>
+    <fieldset id="vResult" style="display: block; position: relative;">
+        <legend>Kết quả</legend>
+        <div id="loading" style="position: absolute; top: 10px; right: 10px; display: none;">
+            <img src="http://www.lacartes.com/images/ajax-loader.gif">
+        </div>
+
+        <br><br>
+        <table id="tbSport" width="100%" cellpadding="5px">
+            <tr style="background: blue; color: white; text-align: center">
+                <td>sport_id</td>
+                <td>sport_name</td>
+                <td>entity_id</td>
+                <td>Link</td>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+<div style="float: left; width: 600px; height: 500px; overflow-y: scroll;" id="vLog"></div>
+</body>
+</html>
