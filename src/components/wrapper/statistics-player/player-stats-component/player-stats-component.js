@@ -53,13 +53,44 @@ export default class PlayerStatsComponent extends Component {
         return format;
     }
 
+    getBodyData(arrObjectCode,isField){
+        let bodyData = [];
+       
+        if( this.state.dataPlayer && this.state.dataPlayer.players) {
+            for (let i = 0; i < this.state.dataPlayer.players.length; i++) {
+                let player = this.state.dataPlayer.players[i];
+                let row = [];
+                row.push(player.jerseyNumber ? player.jerseyNumber : '00');
+                let name = player.firstName + player.middleName + player.lastName;
+                row.push(name);
+                if(isField){
+                    row.push(<ToggleComponent key={15}/>);
+                }else{
+                    row.push(<Integer key={1} className="order" min={1} max={999}/>);
+                }
+
+                for (let j = 0; j < arrObjectCode.length; j++) {
+                    let temp = arrObjectCode[j];
+                    if (temp.type == "Calculated") {
+                        row.push("11");
+                    } else {
+                        row.push(<Float numOfDecimal={2} min={0} max={999} />);
+                    }
+                }
+                bodyData.push(row);
+            }
+        }
+        return bodyData;
+    }
+
     render() {
 
         let headerData1 = [
             <SortIcon text={"#"} key={16}/>,
             <SortIcon text={"NAME"} key={17}/>,
             <SortIcon text={"ORDER"} key={18}/>,
-            "AB",
+        ];
+        let arrCode1 = [  "AB",
             "R",
             "H",
             "2B",
@@ -72,68 +103,59 @@ export default class PlayerStatsComponent extends Component {
             "SB",
             "CS",
             "SP",
-            "AVG"
-        ];
-        let bodyData1 = [
-            ["01", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["02", "Issau Rave", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["03", "Sandran Muc", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["04", "Bati Huci", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["06", "Doti Hane", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["09", "Pharan Candia", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["19", "Not tival", <Integer key={1} className="order" defaultValue={3} min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={3} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4}  defaultValue={3}/>, <Float numOfDecimal={2} min={0} max={999}  key={5} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={6} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={7} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={8} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={9} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={10} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={11} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={12} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={13} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={14} defaultValue={3} />, "3"],
-            ["11", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["31", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["34", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["56", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["32", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["87", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["41", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-            ["54", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />, <Float numOfDecimal={2} min={0} max={999}  key={9} />, <Float numOfDecimal={2} min={0} max={999}  key={10} />, <Float numOfDecimal={2} min={0} max={999}  key={11} />, <Float numOfDecimal={2} min={0} max={999}  key={12} />, <Float numOfDecimal={2} min={0} max={999}  key={13} />, <Float numOfDecimal={2} min={0} max={999}  key={14} />, "2.3"],
-        ];
+            "AVG"];
+        headerData1 = headerData1.concat(arrCode1);
+        let arrObjectCode1 = [];
+        for(let i = 0 ; i < arrCode1.length; i++){
+            let temp = this.getFormat(arrCode1[i]);
+            arrObjectCode1.push(temp);
+        }
+        let bodyData1 = this.getBodyData(arrObjectCode1,false);
+
 
         let headerData2 = [
             <SortIcon text={"#"} key={16}/>,
             <SortIcon text={"NAME"} key={17}/>,
             <SortIcon text={"ORDER"} key={18}/>,
-            "IP",
+
+        ];
+        let arrCode2 = [ "IP",
             "H",
             "R",
             "ER",
             "BB",
             "SO",
             "HR",
-            "ERA"
-        ];
-        let bodyData2 = [
-            ["01", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["02", "Issau Rave", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["03", "Sandran Muc", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["04", "Bati Huci", <Integer key={1} className="order" min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["06", "Doti Hane", <Integer key={1} className="order" min={1} max={999}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["09", "Pharan Candia", <Integer key={1} className="order" min={1} max={999}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["19", "Not tival", <Integer key={1} className="order" defaultValue={3} min={1} max={999}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />,<Float numOfDecimal={2} min={0} max={999}  key={2} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={3} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4}  defaultValue={3}/>, <Float numOfDecimal={2} min={0} max={999}  key={5} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={6} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={6} defaultValue={3} />, <Float numOfDecimal={2} min={0} max={999}  key={6} defaultValue={3} />],
-            ["11", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ["31", "Sarah Love", <Integer key={1} className="order" min={1} max={999}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />, <Float numOfDecimal={2} min={0} max={999}  key={5} />, <Float numOfDecimal={2} min={0} max={999}  key={6} />, <Float numOfDecimal={2} min={0} max={999}  key={7} />, <Float numOfDecimal={2} min={0} max={999}  key={8} />],
-            ];
+            "ERA"];
+        headerData2 = headerData2.concat(arrCode2);
+        let arrObjectCode2 = [];
+        for(let i = 0 ; i < arrCode2.length; i++){
+            let temp = this.getFormat(arrCode2[i]);
+            arrObjectCode2.push(temp);
+        }
+        let bodyData2 = this.getBodyData(arrObjectCode2,false);
+
 
         let headerData3 = [
             <SortIcon text={"#"} key={16}/>,
             <SortIcon text={"NAME"} key={17}/>,
             "FIELDED",
+
+        ];
+        let arrCode3 = [
             "E",
             "A",
             "PO",
             "FPCT"
         ];
-        let bodyData3 = [
-            ["01", "Sarah Love", <ToggleComponent key={1}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />],
-            ["02", "Issau Rave", <ToggleComponent key={1}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />],
-            ["03", "Sandran Muc", <ToggleComponent key={1}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />],
-            ["04", "Bati Huci", <ToggleComponent key={1}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />],
-            ["06", "Doti Hane", <ToggleComponent key={1}/>, <Float numOfDecimal={2} min={0} max={999}  key={2} />,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />],
-            ["09", "Pharan Candia", <ToggleComponent key={1}/>,<Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={2} />, <Float numOfDecimal={2} min={0} max={999}  key={3} />, <Float numOfDecimal={2} min={0} max={999}  key={4} />],
-            ];
+        headerData3 = headerData3.concat(arrCode3);
+        let arrObjectCode3 = [];
+        for(let i = 0 ; i < arrCode3.length; i++){
+            let temp = this.getFormat(arrCode3[i]);
+            arrObjectCode3.push(temp);
+        }
+        let bodyData3 = this.getBodyData(arrObjectCode3,true);
+
 
         let headerData = [];
         let bodyData = [];
@@ -156,16 +178,20 @@ export default class PlayerStatsComponent extends Component {
                 break;
 
         }
+       if(bodyData.length > 0){
+           return (
 
-        return (
+               <div id="player-stats-wrapper-container">
 
-            <div id="player-stats-wrapper-container">
+                   <TableComponent header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
+                   <style>{css}</style>
+               </div>
 
-                <TableComponent header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
-                <style>{css}</style>
-            </div>
+           );
+       }else{
+           return null;
+       }
 
-        );
 
     }
 }
