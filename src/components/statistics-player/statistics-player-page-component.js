@@ -23,6 +23,7 @@ export default class PlayerStatsPageComponent extends Component {
             submitResult:true,
             statisticsDefinitions:[],
             dataPlayer:null,
+            arrPerPerson:null,
             currentTab:0,
         };
     }
@@ -62,7 +63,7 @@ export default class PlayerStatsPageComponent extends Component {
         let season = "a2Cp0000000AdmdEAC";
 
         Service.getFormat(season, competitionId).then(data => {
-            console.log(data);
+            // console.log(data);
             if (data && data.data) {
                 if(data.data.Statisticsdefinition){
 
@@ -113,6 +114,31 @@ export default class PlayerStatsPageComponent extends Component {
             });
         });
 
+
+        //get perPlayer
+        let fixtureteam = '';
+        let fixtureparticipant = '';
+        let category = '';
+        let stat_code = null;
+        Service.getIndividualPlayer(sportID,season,competitionId, division, round, fixture, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
+            console.log(data);
+            if (data) {
+                this.setState({
+                    arrPerPerson:data,
+                });
+
+            }else{
+                this.setState({
+                    arrPerPerson:null,
+                });
+            }
+
+
+        }).catch(error => {
+            this.setState({
+                arrPerPerson:null,
+            });
+        });
 
     }
 
@@ -227,6 +253,7 @@ export default class PlayerStatsPageComponent extends Component {
                                       statisticsDefinitions={this.state.statisticsDefinitions}
                                       currentTab={this.state.currentTab}
                                       dataPlayer={this.state.dataPlayer}
+                                      arrPerPerson={this.state.arrPerPerson}
                 />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>

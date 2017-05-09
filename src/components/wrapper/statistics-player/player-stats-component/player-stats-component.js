@@ -19,7 +19,7 @@ export default class PlayerStatsComponent extends Component {
             currentTab: this.props.currentTab,
             dataPlayer: this.props.dataPlayer,
             statisticsDefinitions: this.props.statisticsDefinitions,
-
+            arrPerPerson: this.props.arrPerPerson,
         };
 
     }
@@ -38,6 +38,7 @@ export default class PlayerStatsComponent extends Component {
             currentTab:nextProps.currentTab,
             dataPlayer:nextProps.dataPlayer,
             statisticsDefinitions:nextProps.statisticsDefinitions,
+            arrPerPerson:nextProps.arrPerPerson,
         });
 
     }
@@ -53,9 +54,28 @@ export default class PlayerStatsComponent extends Component {
         return format;
     }
 
-    getBodyData(arrObjectCode,isField){
+     getItemValue(playerSfId, code, category){
+
+       if(this.state.arrPerPerson){
+           for(let i= 0 ; i < this.state.arrPerPerson.length; i++){
+               let temp = this.state.arrPerPerson[i];
+               if(temp.player == playerSfId && temp.code == code && temp.category == category){
+                   console.log('playerSfId',playerSfId);
+                   console.log('code',code);
+                   console.log('category',category);
+                   return temp.value;
+               }
+           }
+           return null;
+       }
+       return null;
+
+
+     }
+
+    getBodyData(arrObjectCode,category,isField){
         let bodyData = [];
-       
+
         if( this.state.dataPlayer && this.state.dataPlayer.players) {
             for (let i = 0; i < this.state.dataPlayer.players.length; i++) {
                 let player = this.state.dataPlayer.players[i];
@@ -74,7 +94,12 @@ export default class PlayerStatsComponent extends Component {
                     if (temp.type == "Calculated") {
                         row.push("11");
                     } else {
-                        row.push(<Float numOfDecimal={2} min={0} max={999} />);
+
+                        let value = this.getItemValue(player.playerSfid,temp.code,category);
+                       
+                            row.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={value} />);
+
+
                     }
                 }
                 bodyData.push(row);
@@ -110,7 +135,7 @@ export default class PlayerStatsComponent extends Component {
             let temp = this.getFormat(arrCode1[i]);
             arrObjectCode1.push(temp);
         }
-        let bodyData1 = this.getBodyData(arrObjectCode1,false);
+        let bodyData1 = this.getBodyData(arrObjectCode1,'Batting',false);
 
 
         let headerData2 = [
@@ -133,7 +158,7 @@ export default class PlayerStatsComponent extends Component {
             let temp = this.getFormat(arrCode2[i]);
             arrObjectCode2.push(temp);
         }
-        let bodyData2 = this.getBodyData(arrObjectCode2,false);
+        let bodyData2 = this.getBodyData(arrObjectCode2,'Pitching',false);
 
 
         let headerData3 = [
@@ -154,7 +179,7 @@ export default class PlayerStatsComponent extends Component {
             let temp = this.getFormat(arrCode3[i]);
             arrObjectCode3.push(temp);
         }
-        let bodyData3 = this.getBodyData(arrObjectCode3,true);
+        let bodyData3 = this.getBodyData(arrObjectCode3,'Fielding',true);
 
 
         let headerData = [];
@@ -201,6 +226,7 @@ PlayerStatsComponent.propTypes = {
     sportID: PropTypes.number,
     currentTab: PropTypes.number,
     dataPlayer: PropTypes.object,
+    arrPerPerson: PropTypes.object,
 };
 
 PlayerStatsComponent.defaultProps = {
