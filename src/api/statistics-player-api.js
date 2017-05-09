@@ -14,7 +14,7 @@ export function getFormat(season, competitionId) {
         season:season,
     };
 
-    return CommonApi.httpGet(path, param);
+    return CommonApi.httpGetPlayerStat(path, param);
 }
 
 export function getPlayer(season,competition,division, round, fixture) {
@@ -29,5 +29,5 @@ export function getPlayer(season,competition,division, round, fixture) {
 
     };
 
-    return CommonApi.httpGet(path, param);
+    return CommonApi.httpGetPlayerStat(path, param);
 }

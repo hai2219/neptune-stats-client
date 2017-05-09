@@ -1,16 +1,19 @@
 {
     "LOCAL_URL": "http://localhost",
     "LOCAL_PORT": "3003",
-    "API_GET": "/api/get",
-    "SERVER_URL": "http://128.199.90.210:8082",
+    "PLAYER_STAT_API_HOST": "http://128.199.90.210",
+    "PLAYER_STAT_API_PORT": "8082",
+    "PLAYER_STAT_POST" : "/playerstart/post",
+    "PLAYER_STAT_GET" : "/playerstart/get",
+    "PLAYER_STAT_API_SSL": false,
 
     "AUTHORIZATION": "Basic ZGV2OmRldjIwMTY=",
     "X_API_KEY": "XrVL2DyqsA3hIF3oIfbQU7bAF7EtfRSH1ln6RL22",
 
     "PLAYER_STAT_GET_FORMAT_PATH": "/sport/Baseball/season/{season}/competition/{competitionId}/StatisticsDefinitions",
-    "PLAYER_STAT_GET_PLAYER_PATH": "/sport/Baseball/season/{season}/competition/{competition}/division/{division}/round/{round}/fixture/{fixture}/Players"
+    "PLAYER_STAT_GET_PLAYER_PATH": "/sport/Baseball/season/{season}/competition/{competition}/division/{division}/round/{round}/fixture/{fixture}/Players",
 
-
+    "PLAYER_STAT_SAVE_PER_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/playerstatistics"
 
 
 }

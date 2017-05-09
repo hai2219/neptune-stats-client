@@ -36,6 +36,35 @@ const routes = () => {
         request(options, callback);
     });
 
+    router.get('/playerstart/get/*', function (req, res) {
+        let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
+
+        let url = appConfig.PLAYER_STAT_API_HOST +':' +  appConfig.PLAYER_STAT_API_PORT + '/' + req.params[0] + search;
+        const options = {
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': appConfig.AUTHORIZATION,
+                'x-api-key': appConfig.X_API_KEY,
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+            }
+        };
+
+        function callback(error, response, body) {
+
+            console.log(body);
+            if (!error && (response.statusCode == 200 || response.statusCode == 404)) {
+                res.send(body);
+            } else {
+                res.send(error);
+            }
+        }
+
+        request(options, callback);
+    });
+
     router.get('/cgi/get/*', function (req, res) {
         let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
         const url = appConfig.CGI_URL + '/' + req.params[0] + search;
@@ -218,6 +247,44 @@ const routes = () => {
         request(options, callback);
 
 
+    });
+
+    router.post('/playerstart/post/*', function (req, res) {
+        let _http = http;
+        if (appConfig.PLAYER_STAT_API_SSL) {
+            _http = https;
+        }
+        try {
+            let post_options = {
+                host: appConfig.PLAYER_STAT_API_HOST,
+                port: appConfig.PLAYER_STAT_API_PORT,
+                path: '/' + req.params[0],
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            // Set up the request
+            let post_req = _http.request(post_options, function (response) {
+                let data = "";
+                response.on('data', function (chunk) {
+                    data += chunk;
+                });
+                response.on('end', function () {
+                    res.send(data);
+                }).on('error', function (e) {
+                    res.send(e);
+                });
+            });
+            // post the data
+            post_req.write(JSON.stringify(req.body));
+            post_req.on('error', function (e) {
+                res.send(e);
+            });
+            post_req.end();
+        } catch (e) {
+            res.send(e);
+        }
     });
 
 

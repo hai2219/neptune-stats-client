@@ -4,9 +4,9 @@
 import request from 'request';
 const Config = require('../../config');
 
-export function httpGet(path, param) {
+export function httpGetPlayerStat(path, param) {
     return new Promise(function (resolve, reject) {
-        let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.API_GET + path, param);
+        let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_GET + path, param);
        console.log(url);
         request.get(  url ,{timeout: 12000}, function (error, response, body) {
 
@@ -22,7 +22,33 @@ export function httpGet(path, param) {
     });
 }
 
+export function httpPostPlayerStat(path, param, data={}) {
+    return new Promise(function (resolve, reject) {
+        let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_POST + path, param);
+        let _headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        };
 
+        fetch(url, {
+            method: 'POST',
+            headers: _headers,
+            body: JSON.stringify(data)
+        }) .then(response => response.json())
+            .then((response) => {
+                if (response) {
+
+                    return resolve(response);
+
+                }else {
+                    return reject(response.body);
+                }
+
+            }).catch((error) => {
+            return error;
+        });
+    });
+}
 
 export function actualUrlParse(path, obj = null) {
     let newUrl = path;
