@@ -42,6 +42,17 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
+    getFormat(key){
+        let format = {"code":key,"type":"Entry","formula":null};
+        for (let i = 0 ; i < this.state.statisticsDefinitions.length; i++){
+            let temp = this.state.statisticsDefinitions[i];
+             if(key == temp.code){
+                 return temp;
+             }
+        }
+        return format;
+    }
+
     render() {
 
         let headerData1 = [

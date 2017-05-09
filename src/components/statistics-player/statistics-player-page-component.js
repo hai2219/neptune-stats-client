@@ -218,7 +218,7 @@ const css = `
  
   .statistics-player-container {
         width:100%;
-        height:100px;
+        height:100%;
         background-color:  rgba(241,245,248,1);
 
     }
