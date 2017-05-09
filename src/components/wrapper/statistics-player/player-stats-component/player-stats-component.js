@@ -4,7 +4,7 @@
 "use strict";
 
 import React, {Component} from "react";
-import TableComponent from  '../../../common/table/table-component';
+import TableScrollHorizontal from  '../../../common/table/table-scroll-horizontal-component';
 import SortIcon from '../../../common/icon/sort-icon-component';
 import Integer from '../../../common/input/input-integer-component';
 import Float from '../../../common/input/input-float-component';
@@ -208,7 +208,7 @@ export default class PlayerStatsComponent extends Component {
 
                <div id="player-stats-wrapper-container">
 
-                   <TableComponent header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
+                   <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "30%"}} styleScroll={{width: "70%"}} header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
                    <style>{css}</style>
                </div>
 
@@ -280,23 +280,23 @@ const css = `
         font-family: Roboto;
     }
     
-    #player-stats-wrapper-container tr:nth-child(odd) td {
+    #player-stats-wrapper-container tr:nth-child(odd) {
         background: #fbfbfc;
     }
     
-    #player-stats-wrapper-container tr td:nth-child(1) {
+    #player-stats-wrapper-container .horizontal-scroll-freeze tr td:nth-child(1) {
         width: 50px;
     }
     
-    #player-stats-wrapper-container tr td:nth-child(2) {
+    #player-stats-wrapper-container .horizontal-scroll-freeze tr td:nth-child(2) {
         width: 130px;
         text-align: left;
     }
-    #player-stats-wrapper-container tr th:nth-child(2) {
+    #player-stats-wrapper-container .horizontal-scroll-freeze tr th:nth-child(2) {
         text-align: left;
     }
    
-    #player-stats-wrapper-container tr td:nth-child(3) {
+    #player-stats-wrapper-container .horizontal-scroll-freeze tr td:nth-child(3) {
         width: 100px;
     }
     
