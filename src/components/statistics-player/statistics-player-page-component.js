@@ -28,7 +28,34 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     componentDidMount() {
+        //save person
+        let dataObject = [{
+            fixture_participant_id:  1233,
+            category: 'Batting',
+            code: 'R',
+            value: 1
+        },{
+            fixture_participant_id:  1244,
+            category: 'Fielding',
+            code: 'H',
+            value: 3
+        },{
+            fixture_participant_id:  1773,
+            category: 'Pitching',
+            code: 'R',
+            value: 8
+        }];
+        let sportID = 'baseball';
+        let seasonID = 'a2Cp0000000ADThEAO';
+        let compID = 'a2Cp00222000ADU0EAB';
+        let divID = 'a2Cp005550ADU0EAO';
+        let roundID = 12121;
+        let fixtureID = 234234;
 
+        Service.savePerPerson(sportID,seasonID,compID, divID, roundID, fixtureID,dataObject).then(data => {
+            console.log(data);
+
+        });
 
         //get statistic definition
         let competitionId = "a0Ap0000004douyEAA";

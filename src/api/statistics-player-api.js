@@ -31,3 +31,19 @@ export function getPlayer(season,competition,division, round, fixture) {
 
     return CommonApi.httpGetPlayerStat(path, param);
 }
+
+export function savePerPerson(sport,season,comp, div, round, fixture,data) {
+         let path = Config.PLAYER_STAT_GET_PLAYER_PATH;
+
+        const param = {
+            sport_id: sport,
+            season_id: season,
+            comp_id: comp,
+            div_id: div,
+            round_id: round,
+            fixture_id:fixture
+
+        };
+
+    return CommonApi.httpPostPlayerStat(path,param,data);
+}
