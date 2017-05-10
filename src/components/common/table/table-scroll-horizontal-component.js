@@ -100,7 +100,7 @@ export default class TableScrollHorizontal extends Component {
     }
 
     renderFreeze() {
-        const props = Object.assign({}, this.props);
+        const props = Object.assign({}, this.props) || null;
         delete props.colsFreeze;
         delete props.styleFreeze;
         delete props.styleScroll;
@@ -111,7 +111,7 @@ export default class TableScrollHorizontal extends Component {
     }
 
     renderScroll() {
-        const props = Object.assign({}, this.props);
+        const props = Object.assign({}, this.props) || null;
         delete props.colsFreeze;
         delete props.styleFreeze;
         delete props.styleScroll;
@@ -122,7 +122,7 @@ export default class TableScrollHorizontal extends Component {
     }
 
     render() {
-        const props = Object.assign({}, this.props);
+        const props = Object.assign({}, this.props) || null;
         delete props.colsFreeze;
         delete props.styleFreeze;
         delete props.styleScroll;
