@@ -2,7 +2,7 @@
  * @copyright 2017 @ NEXLE
  * @author rocachien
  * @create 2017/05/09 14:06
- * @update 2017/05/09 14:06
+ * @update 2017/05/10 11:51
  * @file common/table/table-scroll-horizontal-component.js
  */
 "use strict";
@@ -16,7 +16,7 @@ import TableComponent from  './table-component';
  * @example
  *
  *
- * <TableScrollHorizontal className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} numOfDecimal={2} min={-999} max={999}/>
+ * <TableScrollHorizontal colsFreeze={3} header={headerData} body={bodyData} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} headerStyle={{color: '#4a4a4a'}} />
  */
 
 export default class TableScrollHorizontal extends Component {
