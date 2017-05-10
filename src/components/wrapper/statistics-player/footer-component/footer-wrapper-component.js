@@ -80,7 +80,7 @@ const css = `
         width:100%;
         height: 73px;
         background-color:   rgba(241,245,248,1);
-        
+        clear: both;
 
     }
    
