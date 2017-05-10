@@ -20,6 +20,7 @@ export default class PlayerStatsPageComponent extends Component {
             dataSource: [],
             isShowPopup:false,
             isShowModel:false,
+            isShowModelLeaveTab:false,
             submitResult:true,
             statisticsDefinitions:[],
             dataPlayer:null,
@@ -27,7 +28,7 @@ export default class PlayerStatsPageComponent extends Component {
             currentTab:0,
         };
 
-        this.isEditStats = false;
+        this.isEditStats = true;
     }
 
     componentDidMount() {
@@ -149,9 +150,9 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     onSave() {
-        // this.setState({
-        //     isShowPopup:true,
-        // })
+        this.setState({
+            isShowModel:true,
+        })
 
     }
 
@@ -164,17 +165,30 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     onChangeTab(index) {
-        this.setState({currentTab: index});
+       console.log('changeTab');
+        if(this.isEditStats){
+            this.setState({currentTab: index,isShowModelLeaveTab: true});
+        }else{
+            this.setState({currentTab: index});
+        }
     }
 
     cancelConfirm() {
-
         this.setState({isShowModel: false});
 
     }
 
     yesConfirm() {
         this.setState({isShowModel: false});
+    }
+
+    cancelLeaveTab() {
+        this.setState({isShowModelLeaveTab: false});
+
+    }
+
+    yesLeaveTab() {
+        this.setState({isShowModelLeaveTab: false});
     }
 
     renderPopup(){
@@ -242,6 +256,25 @@ export default class PlayerStatsPageComponent extends Component {
         return null;
     }
 
+    renderModelLeaveTab(){
+        if(this.state.isShowModelLeaveTab){
+            let title = 'Do you want to leave this tab?';
+            let question = 'Changes you made may not be saved.';
+
+            let cancelConfirm = ()=> this.cancelLeaveTab();
+            let yesConfirm = ()=> this.yesLeaveTab();
+            return(
+                <div>
+                    <ModalComponent title={title} question={question}
+                                    cancel="Stay"
+                                    yes="Leave"
+                                    cancelConfirm={cancelConfirm} yesConfirm={yesConfirm}/>
+                    <style>{css}</style>
+                </div>
+            );
+        }
+        return null;
+    }
     render() {
 
         let onSave = ()=> this.onSave();
@@ -253,6 +286,7 @@ export default class PlayerStatsPageComponent extends Component {
             <div className="statistics-player-container">
                 {this.renderPopup()}
                 {this.renderModel()}
+                {this.renderModelLeaveTab()}
                 <HeaderComponent onSave={onSave}
                                  onChangeTab={onChangeTab}
                 />

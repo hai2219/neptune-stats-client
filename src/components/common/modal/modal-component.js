@@ -53,8 +53,8 @@ export default class PopUpComponent extends React.Component {
                             </p>
                         </div>
                         <div className="bottom-modal">
-                            <button className="cancel-btn" onClick={handleCancel}> Cancel</button>
-                            <button className="yes-btn" onClick={handleYes}> Yes</button>
+                            <button className="cancel-btn" onClick={handleCancel}> {this.props.cancel ? this.props.cancel : "Cancel"}</button>
+                            <button className="yes-btn" onClick={handleYes}>  {this.props.yes ? this.props.yes : "Yes"}</button>
                         </div>
                     </div>
                     <style>{css}</style>
@@ -74,6 +74,8 @@ PopUpComponent.propTypes = {
     yesConfirm: PropTypes.func,
     cancelConfirm: PropTypes.func,
     containerStyle: PropTypes.object,
+    cancel: PropTypes.string,
+    yes: PropTypes.string,
 };
 
 
