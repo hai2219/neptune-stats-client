@@ -149,6 +149,20 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
+    getCanvasParam() {
+        const {canvas_param} = this.props;
+        if(canvas_param){
+            let param = (new Buffer(canvas_param, 'base64')).toString('ascii');
+            let paramObj = JSON.parse(param);
+            if (paramObj) {
+                console.log('paramObj',paramObj);
+                return paramObj;
+            }
+        }
+
+        return null;
+    }
+
     onSave() {
         this.setState({
             isShowModel:true,
@@ -165,7 +179,7 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     onChangeTab(index) {
-       console.log('changeTab');
+
         if(this.isEditStats){
             this.setState({currentTab: index,isShowModelLeaveTab: true});
         }else{
@@ -276,33 +290,37 @@ export default class PlayerStatsPageComponent extends Component {
         return null;
     }
     render() {
+        if(this.getCanvasParam()) {
 
-        let onSave = ()=> this.onSave();
-        let onChange = (data)=> this.onChange(data);
-        let onEditStats = (isEdit)=> this.onEditStats(isEdit);
-        let onChangeTab = (index)=> this.onChangeTab(index);
+            let onSave = ()=> this.onSave();
+            let onChange = (data)=> this.onChange(data);
+            let onEditStats = (isEdit)=> this.onEditStats(isEdit);
+            let onChangeTab = (index)=> this.onChangeTab(index);
 
-        return (
-            <div className="statistics-player-container">
-                {this.renderPopup()}
-                {this.renderModel()}
-                {this.renderModelLeaveTab()}
-                <HeaderComponent onSave={onSave}
-                                 onChangeTab={onChangeTab}
-                />
-                <PlayerStatsComponent sportID = {7}
-                                      onChange={onChange}
-                                      statisticsDefinitions={this.state.statisticsDefinitions}
-                                      currentTab={this.state.currentTab}
-                                      dataPlayer={this.state.dataPlayer}
-                                      arrPerPerson={this.state.arrPerPerson}
-                                      onEditStats={onEditStats}
-                />
-                <FooterComponent onSave={onSave} />
-                <style>{css}</style>
-            </div>
+            return (
+                <div className="statistics-player-container">
+                    {this.renderPopup()}
+                    {this.renderModel()}
+                    {this.renderModelLeaveTab()}
+                    <HeaderComponent onSave={onSave}
+                                     onChangeTab={onChangeTab}
+                    />
+                    <PlayerStatsComponent sportID={7}
+                                          onChange={onChange}
+                                          statisticsDefinitions={this.state.statisticsDefinitions}
+                                          currentTab={this.state.currentTab}
+                                          dataPlayer={this.state.dataPlayer}
+                                          arrPerPerson={this.state.arrPerPerson}
+                                          onEditStats={onEditStats}
+                    />
+                    <FooterComponent onSave={onSave}/>
+                    <style>{css}</style>
+                </div>
 
-        );
+            );
+        }else{
+            return null;
+        }
 
     }
 
