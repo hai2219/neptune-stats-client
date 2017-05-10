@@ -243,7 +243,7 @@ export default class PlayerStatsComponent extends Component {
 
                <div id="player-stats-wrapper-container">
 
-                   <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "30%"}} styleScroll={{width: "70%"}} header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
+                   <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
                    <style>{css}</style>
                </div>
 
@@ -262,10 +262,11 @@ PlayerStatsComponent.propTypes = {
     currentTab: PropTypes.number,
     dataPlayer: PropTypes.object,
     arrPerPerson: PropTypes.array,
+
+    onEditStats: PropTypes.func
 };
 
 PlayerStatsComponent.defaultProps = {
-    sportID: 7,
     currentTab: 1,
 };
 

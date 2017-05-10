@@ -26,6 +26,8 @@ export default class PlayerStatsPageComponent extends Component {
             arrPerPerson:null,
             currentTab:0,
         };
+
+        this.isEditStats = false;
     }
 
     componentDidMount() {
@@ -153,6 +155,10 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
+    onEditStats(isEdit) {
+        this.isEditStats = isEdit || false;
+    }
+
     onChange(data) {
         this.setState({dataSource: data});
     }
@@ -240,6 +246,7 @@ export default class PlayerStatsPageComponent extends Component {
 
         let onSave = ()=> this.onSave();
         let onChange = (data)=> this.onChange(data);
+        let onEditStats = (isEdit)=> this.onEditStats(isEdit);
         let onChangeTab = (index)=> this.onChangeTab(index);
 
         return (
@@ -249,11 +256,13 @@ export default class PlayerStatsPageComponent extends Component {
                 <HeaderComponent onSave={onSave}
                                  onChangeTab={onChangeTab}
                 />
-                <PlayerStatsComponent onChange={onChange}
+                <PlayerStatsComponent sportID = {7}
+                                      onChange={onChange}
                                       statisticsDefinitions={this.state.statisticsDefinitions}
                                       currentTab={this.state.currentTab}
                                       dataPlayer={this.state.dataPlayer}
                                       arrPerPerson={this.state.arrPerPerson}
+                                      onEditStats={onEditStats}
                 />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>
