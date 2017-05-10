@@ -60,9 +60,7 @@ export default class PlayerStatsComponent extends Component {
            for(let i= 0 ; i < this.state.arrPerPerson.length; i++){
                let temp = this.state.arrPerPerson[i];
                if(temp.player == playerSfId && temp.code == code && temp.category == category){
-                   console.log('playerSfId',playerSfId);
-                   console.log('code',code);
-                   console.log('category',category);
+
                    return temp.value;
                }
            }
@@ -72,6 +70,37 @@ export default class PlayerStatsComponent extends Component {
 
 
      }
+
+     getArrCodeParam(strMath){
+
+         var matches =  strMath.match(/[^[\]]+(?=])/g);
+         return matches;
+
+     }
+
+    calculateAvg(playerSfId, arrCode, category, mathExpress){
+
+        if(arrCode && arrCode.length > 0){
+            let math = mathExpress;
+            for(let i = 0 ; i < arrCode.length; i++){
+                let code = arrCode[i];
+                let value = this.getItemValue(playerSfId,code,category) ;
+
+                if(value){
+                    console.log('value',value);
+                    math = math.replace('[' + code + ']',value);
+                }else{
+                    math = math.replace('[' + code + ']', 0);
+                }
+            }
+            // console.log('arrCode',arrCode);
+            //console.log('math',math);
+            return eval(math);
+        }
+        return null;
+
+    }
+
 
     getBodyData(arrObjectCode,category,isField){
         let bodyData = [];
@@ -92,13 +121,19 @@ export default class PlayerStatsComponent extends Component {
                 for (let j = 0; j < arrObjectCode.length; j++) {
                     let temp = arrObjectCode[j];
                     if (temp.type == "Calculated") {
-                        row.push("11");
+                        let arrMathCode = this.getArrCodeParam(temp.formula);
+                        let calculateAvg = this.calculateAvg(player.playerSfid,arrMathCode,category,temp.formula);
+                        if (calculateAvg){
+                            row.push(calculateAvg);
+                        }else{
+                            row.push('');
+                        }
+
                     } else {
 
                         let value = this.getItemValue(player.playerSfid,temp.code,category);
                        
                             row.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={value} />);
-
 
                     }
                 }
@@ -226,7 +261,7 @@ PlayerStatsComponent.propTypes = {
     sportID: PropTypes.number,
     currentTab: PropTypes.number,
     dataPlayer: PropTypes.object,
-    arrPerPerson: PropTypes.object,
+    arrPerPerson: PropTypes.array,
 };
 
 PlayerStatsComponent.defaultProps = {
