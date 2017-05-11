@@ -33,17 +33,11 @@ export default class PlayerStatsComponent extends Component {
     }
 
     componentDidMount() {
-
+        this.parseData();
     }
 
     componentWillUnmount(){
 
-    }
-
-    componentDidUpdate (prevProps, prevState) {
-        if (prevProps.dataPlayer !== this.props.dataPlayer) {
-            this.parseData();
-        }
     }
 
     parseData() {
@@ -51,16 +45,6 @@ export default class PlayerStatsComponent extends Component {
         this.parseFormatData();
         this.parseHeaderData();
         this.parseBodyData();
-    }
-
-    componentWillReceiveProps(nextProps){
-        this.setState({
-            currentTab:nextProps.currentTab,
-        });
-
-        if (nextProps.currentTab !== this.props.currentTab) {
-            this.parseData();
-        }
     }
 
     getItemValue(playerSfId, code, category){
@@ -112,9 +96,9 @@ export default class PlayerStatsComponent extends Component {
         let dataSource = [];
         let category = 1;
 
-        dataPlayer = dataPlayer.players || null;
+        if(!sportID || !this.dataFormat || this.dataFormat.length < 1 || !dataPlayer || !dataPlayer.players || dataPlayer.players.length < 1) return [];
 
-        if(!sportID || !this.dataFormat || this.dataFormat.length < 1 || !dataPlayer || dataPlayer.length < 1) return [];
+        dataPlayer =  dataPlayer.players;
 
         switch (currentTab)
         {
@@ -244,9 +228,9 @@ export default class PlayerStatsComponent extends Component {
     }
 
     renderBody() {
-        let {sportID, currentTab} = this.props;
+        let {currentTab} = this.props;
         let dataBody = [];
-        let isField = sportID == SportConstant.BASEBALL_ID && currentTab == 3 ? true : false;
+        let isField = currentTab == 3 ? true : false;
 
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
@@ -275,26 +259,26 @@ export default class PlayerStatsComponent extends Component {
             });
         }
 
-        this.setState({dataBody: dataBody});
+        this.dataBody = dataBody;
     }
 
     render() {
 
-       if(this.dataHeader.length > 0 && this.state.dataBody.length > 0){
-           return (
+        this.parseData();
 
-               <div id="player-stats-wrapper-container">
+        if(this.dataHeader.length > 0){
+            return (
 
-                   <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={this.state.dataBody} />
-                   <style>{css}</style>
-               </div>
+                <div id="player-stats-wrapper-container">
 
-           );
-       }else{
-           return null;
-       }
+                    <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={this.dataBody} />
+                    <style>{css}</style>
+                </div>
 
-
+            );
+        }else{
+            return null;
+        }
     }
 }
 
