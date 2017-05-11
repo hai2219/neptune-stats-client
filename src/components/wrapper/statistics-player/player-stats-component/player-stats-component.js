@@ -34,7 +34,7 @@ export default class PlayerStatsComponent extends Component {
     }
 
     componentDidMount() {
-         
+
     }
 
     componentWillUnmount(){

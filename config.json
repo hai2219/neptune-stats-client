@@ -11,7 +11,7 @@
     "X_API_KEY": "XrVL2DyqsA3hIF3oIfbQU7bAF7EtfRSH1ln6RL22",
 
     "PLAYER_STAT_GET_FORMAT_PATH": "/sport/Baseball/season/{season}/competition/{competitionId}/StatisticsDefinitions",
-    "PLAYER_STAT_GET_PLAYER_PATH": "/sport/Baseball/season/{season}/competition/{competition}/division/{division}/round/{round}/fixture/{fixture}/Players",
+    "PLAYER_STAT_GET_PLAYER_PATH": "/sport/Baseball/season/{season}/competition/{competition}/division/{division}/round/{round}/fixture/{fixture}/team/{team}/Players",
     "PLAYER_STAT_GET_INDIVIDUAL_CATEGORY_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/fixtureteam/{fixtureteam_id}/fixtureparticipant/{fixtureparticipant_id}/category/{category}/{stat_code}",
     "PLAYER_STAT_GET_INDIVIDUAL_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/fixtureteam/{fixtureteam_id}/fixtureparticipant/{fixtureparticipant_id}/{stat_code}",
 

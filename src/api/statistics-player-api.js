@@ -17,7 +17,7 @@ export function getFormat(season, competitionId) {
     return CommonApi.httpGetPlayerStat(path, param);
 }
 
-export function getPlayer(season,competition,division, round, fixture) {
+export function getPlayer(season,competition,division, round, fixture, team) {
     let path = Config.PLAYER_STAT_GET_PLAYER_PATH;
 
     const param = {
@@ -26,6 +26,7 @@ export function getPlayer(season,competition,division, round, fixture) {
         division: division,
         round: round,
         fixture: fixture,
+        team:team
 
     };
 

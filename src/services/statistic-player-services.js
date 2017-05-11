@@ -7,8 +7,8 @@ export function getFormat(season, competitionId){
     return StatisticsApi.getFormat(season, competitionId);
 }
 
-export function getPlayer(season,competition,division, round, fixture){
-    return StatisticsApi.getPlayer(season,competition,division, round, fixture);
+export function getPlayer(season,competition,division, round, fixture, team){
+    return StatisticsApi.getPlayer(season,competition,division, round, fixture, team);
 }
 
 export function getIndividualPlayer(sport,season,comp, div, round, fixture, fixtureteam, fixtureparticipant, category, stat_code){

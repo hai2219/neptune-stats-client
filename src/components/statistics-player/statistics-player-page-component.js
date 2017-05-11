@@ -62,6 +62,7 @@ export default class PlayerStatsPageComponent extends Component {
             let fixtureID = canvasParam.fixture_id;
             let fixtureteam = canvasParam.fixtureteam_id;
             let fixtureparticipant = canvasParam.fixtureparticipant_id;
+            let team = canvasParam.team_id;
             let category = '';
             let stat_code = null;
 
@@ -98,7 +99,7 @@ export default class PlayerStatsPageComponent extends Component {
 
             //get player
 
-            Service.getPlayer(seasonID,compID,divID, roundID, fixtureID).then(data => {
+            Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
                 console.log('getPlayer',data);
                 if (data.data) {
                     this.setState({
