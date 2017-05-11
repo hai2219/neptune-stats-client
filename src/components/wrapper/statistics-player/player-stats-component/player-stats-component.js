@@ -17,19 +17,12 @@ export default class PlayerStatsComponent extends Component {
 
         super(props);
         this.state = {
-            currentTab: this.props.currentTab,
-            dataPlayer: this.props.dataPlayer,
-            statisticsDefinitions: this.props.statisticsDefinitions,
-            arrPerPerson: this.props.arrPerPerson,
-            loaded: false
+            dataBody: []
         };
 
-        this.currentTab = 0;
-        this.isEditting = false;
         this.dataHeader = []; /** for header of table **/
         this.dataStats = []; /** for stats of table **/
         this.dataFormat = []; /** for header of table **/
-        this.dataBody = []; /** for body of table **/
         this.dataSource = []; /** data source of table **/
 
         if(props.onEditStats) props.onEditStats(false);
@@ -44,29 +37,25 @@ export default class PlayerStatsComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-console.log("=========== componentWillReceiveProps ==============");
 
-        if (nextProps.currentTab != this.props.currentTab) {
-            this.isEditting = false;
-            if(nextProps.onEditStats) nextProps.onEditStats(false);
-
-console.log("=========== componentWillReceiveProps ======== ngon ======");
-        }
     }
 
     componentDidUpdate (prevProps, prevState) {
-console.log("=========== componentDidUpdate ==============");
 
-        if (prevProps.currentTab !== this.props.currentTab) {
-            this.isEditting = false;
+        let isParseData = false;
+        if(this.state.dataBody.length == 0) {
+
+            isParseData = true;
+            this.parseData();
+        }
+
+        if (!isParseData && prevProps.currentTab !== this.props.currentTab) {
             if(prevProps.onEditStats) prevProps.onEditStats(false);
-console.log("=========== componentDidUpdate ======= ngon =======");
-
+            this.parseData();
         }
     }
 
     parseData() {
-console.log("=========== parseData ==============");
 
         const {statisticsDefinitions, dataPlayer, arrPerPerson, currentTab, sportID} = this.props;
 
@@ -266,14 +255,13 @@ console.log("=========== parseData ==============");
             let newRow = row;
 
             if (row.playerId == playerId) {
-                newRow.toggle = !row.toggle;
+                newRow.order = value;
             }
 
             return newRow;
         });
 
         this.renderBody();
-        this.setState({dataSource: this.dataSource});
         if(this.props.onEditStats) this.props.onEditStats(true);
     }
 
@@ -336,18 +324,19 @@ console.log("=========== parseData ==============");
             });
         }
 
-        this.currentTab = currentTab;
-        this.dataBody = dataBody;
+        this.setState({dataBody: dataBody});
     }
 
     render() {
+        let {dataBody} = this.state;
+console.log("========== render ===========");
 
-        if(this.parseData() && this.dataHeader.length > 0){
+        if(this.dataHeader.length > 0 && dataBody && dataBody.length > 0){
             return (
 
                 <div id="player-stats-wrapper-container">
 
-                    <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={this.dataBody} />
+                    <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={dataBody} />
                     <style>{css}</style>
                 </div>
 
