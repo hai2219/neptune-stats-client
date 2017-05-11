@@ -34,7 +34,7 @@ export default class PlayerStatsComponent extends Component {
     }
 
     componentDidMount() {
-        this.parseData();
+         
     }
 
     componentWillUnmount(){
@@ -44,7 +44,7 @@ export default class PlayerStatsComponent extends Component {
     parseData() {
         const {statisticsDefinitions, dataPlayer, arrPerPerson, currentTab, sportID} = this.props;
 
-        if(!statisticsDefinitions || !dataPlayer || !arrPerPerson || !currentTab || !sportID || currentTab == this.currentTab) return false;
+        if(!statisticsDefinitions || !dataPlayer || !arrPerPerson || !currentTab || !sportID ) return false;
 
         this.parseStatsData();
         this.parseFormatData();
