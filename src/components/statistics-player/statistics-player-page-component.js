@@ -182,6 +182,7 @@ export default class PlayerStatsPageComponent extends Component {
                 this.goToTab(index);
             }
         }
+
     }
 
     cancelConfirm() {
