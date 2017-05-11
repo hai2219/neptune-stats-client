@@ -285,10 +285,12 @@ export default class PlayerStatsPageComponent extends Component {
             let yesConfirm = ()=> this.yesLeaveTab();
             return(
                 <div>
-                    <ModalComponent title={title} question={question}
-                                    cancel="Stay"
-                                    yes="Leave"
-                                    cancelConfirm={cancelConfirm} yesConfirm={yesConfirm}/>
+                    <ModalComponent
+                        title={title}
+                        question={question}
+                        cancel="Stay"
+                        yes="Leave"
+                        cancelConfirm={cancelConfirm} yesConfirm={yesConfirm}/>
                     <style>{css}</style>
                 </div>
             );
