@@ -11,6 +11,7 @@ import Float from '../../../common/input/input-float-component';
 import ToggleComponent from '../../../common/toggle/toggle-button-component';
 import * as SportConstant from "../../../../constant/sport-constant";
 import PropTypes from 'prop-types';
+import _ from "lodash";
 
 export default class PlayerStatsComponent extends Component {
     constructor(props) {
@@ -251,22 +252,23 @@ export default class PlayerStatsComponent extends Component {
 
     checkOrderDouble(playerId, value) {
 
-        let found = false;
+        let dataSource = _.cloneDeep(this.dataSource);
 
-        if(!value || value == '') return false;
+        this.dataSource.map(d => {
+            d.orderError = false;
 
-        this.dataSource.map(row => {
-            let newRow = row;
+            if(!d.orderValue || d.orderValue == '') return d;
 
-            if(row.playerId != playerId && row.orderValue == value) {
-                found = true;
-                newRow.orderError = true;
+            for(let i = 0; i < dataSource.length; i++) {
+                let s = dataSource[i];
+
+                if(d.playerId != s.playerId && d.orderValue == s.orderValue) {
+                    d.orderError = true;
+                }
             }
 
-            return newRow;
+            return d;
         });
-
-        return found;
     }
 
     onChangeOrder(playerId, value) {
@@ -278,15 +280,13 @@ export default class PlayerStatsComponent extends Component {
 
                 newRow.orderError = false;
 
-                if(this.checkOrderDouble(playerId, value)) {
-                    newRow.orderError = true;
-                }
-
                 newRow.orderValue = value;
             }
 
             return newRow;
         });
+
+        this.checkOrderDouble(playerId, value);
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
@@ -305,7 +305,28 @@ export default class PlayerStatsComponent extends Component {
         });
 
         this.renderBody();
-        this.setState({dataSource: this.dataSource});
+        if(this.props.onEditStats) this.props.onEditStats(true);
+    }
+
+    onChangeStats(playerId, value) {
+
+        this.dataSource.map(row => {
+            let newRow = row;
+
+            this.dataFormat.map(f => {
+                if (f.type != "Calculated") {
+
+                    if(playerId == row.playerId) {
+                        newRow[f.code] = value;
+                    }
+                }
+            });
+
+            return newRow;
+        });
+
+        this.renderBody();
+        if(this.props.onEditStats) this.props.onEditStats(true);
     }
 
     renderBody() {
@@ -344,8 +365,10 @@ export default class PlayerStatsComponent extends Component {
                         renderRow.push("");
                     } else {
 
-                        if((isField && row.isField) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
-                            renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} />);
+                        let onChangeStats = (value) => this.onChangeStats(playerId, value);
+
+                        if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
+                            renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
                         } else {
                             renderRow.push("");
                         }
