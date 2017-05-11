@@ -25,12 +25,14 @@ export default class PlayerStatsComponent extends Component {
         };
 
         this.currentTab = 0;
+        this.isEditting = false;
         this.dataHeader = []; /** for header of table **/
         this.dataStats = []; /** for stats of table **/
         this.dataFormat = []; /** for header of table **/
         this.dataBody = []; /** for body of table **/
         this.dataSource = []; /** data source of table **/
 
+        if(props.onEditStats) props.onEditStats(false);
     }
 
     componentDidMount() {
@@ -41,10 +43,34 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
+    componentWillReceiveProps(nextProps) {
+console.log("=========== componentWillReceiveProps ==============");
+
+        if (nextProps.currentTab != this.props.currentTab) {
+            this.isEditting = false;
+            if(nextProps.onEditStats) nextProps.onEditStats(false);
+
+console.log("=========== componentWillReceiveProps ======== ngon ======");
+        }
+    }
+
+    componentDidUpdate (prevProps, prevState) {
+console.log("=========== componentDidUpdate ==============");
+
+        if (prevProps.currentTab !== this.props.currentTab) {
+            this.isEditting = false;
+            if(prevProps.onEditStats) prevProps.onEditStats(false);
+console.log("=========== componentDidUpdate ======= ngon =======");
+
+        }
+    }
+
     parseData() {
+console.log("=========== parseData ==============");
+
         const {statisticsDefinitions, dataPlayer, arrPerPerson, currentTab, sportID} = this.props;
 
-        if(!statisticsDefinitions || !dataPlayer || !arrPerPerson || !currentTab || !sportID ) return false;
+        if(!statisticsDefinitions || !dataPlayer || !arrPerPerson || !currentTab || !sportID) return false;
 
         this.parseStatsData();
         this.parseFormatData();
@@ -122,7 +148,7 @@ export default class PlayerStatsComponent extends Component {
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
-            dataRow.order = '';
+            dataRow.order = player.orderNumber;
             dataRow.toggle = false;
 
             this.dataFormat.map(f => {
@@ -233,6 +259,41 @@ export default class PlayerStatsComponent extends Component {
         this.dataHeader = dataHeader;
     }
 
+    onChangeOrder(playerId, value) {
+        console.log(playerId, value);
+
+        this.dataSource.map(row => {
+            let newRow = row;
+
+            if (row.playerId == playerId) {
+                newRow.toggle = !row.toggle;
+            }
+
+            return newRow;
+        });
+
+        this.renderBody();
+        this.setState({dataSource: this.dataSource});
+        if(this.props.onEditStats) this.props.onEditStats(true);
+    }
+
+    onChangeToggle(playerId) {
+        console.log("===== onChangeToggle ====", playerId);
+
+        this.dataSource.map(row => {
+            let newRow = row;
+
+            if (row.playerId == playerId) {
+                newRow.toggle = !row.toggle;
+            }
+
+            return newRow;
+        });
+
+        this.renderBody();
+        this.setState({dataSource: this.dataSource});
+    }
+
     renderBody() {
         let {currentTab} = this.props;
         let dataBody = [];
@@ -241,14 +302,19 @@ export default class PlayerStatsComponent extends Component {
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
                 let renderRow = [];
+                const playerId = row.playerId;
 
                 renderRow.push(row.num);
                 renderRow.push(row.name);
 
                 if(isField){
-                    renderRow.push(<ToggleComponent />);
+                    let onChangeToggle = (id) => this.onChangeToggle(id);
+
+                    renderRow.push(<ToggleComponent id={""+row.playerId} isChecked={row.toggle} onChange={onChangeToggle}/>);
                 }else{
-                    renderRow.push(<Integer className="order" min={1} max={999} />);
+                    let onChangeOrder = (value) => this.onChangeOrder(playerId, value);
+
+                    renderRow.push(<Integer className="order" min={1} max={999} defaultValue={row.order} onBlur={onChangeOrder}/>);
                 }
 
                 this.dataFormat.map(f => {
@@ -257,7 +323,12 @@ export default class PlayerStatsComponent extends Component {
                         renderRow.push("");
                     } else {
 
-                        renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} />);
+                        if((isField && row.isField) || (!isField && row.order && parseInt(row.order) > 0)){
+                            renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} />);
+                        } else {
+                            renderRow.push("");
+                        }
+
                     }
                 });
 
