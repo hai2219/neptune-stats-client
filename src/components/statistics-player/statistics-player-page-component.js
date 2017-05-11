@@ -26,9 +26,9 @@ export default class PlayerStatsPageComponent extends Component {
             statisticsDefinitions:[],
             dataPlayer:null,
             arrPerPerson:null,
-            currentTab:0,
+            currentTab:1,
         };
-        this.currentTab = 0;
+        this.currentTab = 1;
         this.isEditStats = true;
     }
 
@@ -202,8 +202,10 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     goToTab(index){
-        this.setState({isShowModelLeaveTab: false ,currentTab:  index});
+        console.log('currentTabItem',index);
         this.refs.header.onChangeTab();
+        this.setState({isShowModelLeaveTab: false ,currentTab:  index});
+
     }
 
     renderPopup(){

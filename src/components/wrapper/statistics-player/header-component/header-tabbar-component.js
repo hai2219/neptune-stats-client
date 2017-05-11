@@ -36,10 +36,11 @@ export default class HeaderTabbarComponent extends Component {
         if(this.props.onClickTab){
             this.props.onClickTab( this.currentTabItem.id);
         }
-        console.log('currentTabItem',this.currentTabItem.id);
+        // console.log('currentTabItem',this.currentTabItem.id);
     }
 
     onChangeTab(){
+        // console.log(' this.currentTabItem.id', this.currentTabItem.id);
         this.tabItems.map(n=>{
             n.selected = (n.id ==  this.currentTabItem.id)? true : false;
             return n;
