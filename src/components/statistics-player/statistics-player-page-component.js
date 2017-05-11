@@ -32,116 +32,107 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     componentDidMount() {
-        //save person
-        let dataObject = [{
-            fixture_participant_id:  1233,
-            category: 'Batting',
-            code: 'R',
-            value: 1
-        },{
-            fixture_participant_id:  1244,
-            category: 'Fielding',
-            code: 'H',
-            value: 3
-        },{
-            fixture_participant_id:  1773,
-            category: 'Pitching',
-            code: 'R',
-            value: 8
-        }];
-        let sportID = 'baseball';
-        let seasonID = 'a2Cp0000000ADThEAO';
-        let compID = 'a2Cp00222000ADU0EAB';
-        let divID = 'a2Cp005550ADU0EAO';
-        let roundID = 12121;
-        let fixtureID = 234234;
 
-        Service.savePerPerson(sportID,seasonID,compID, divID, roundID, fixtureID,dataObject).then(data => {
-            console.log(data);
 
-        });
+        let canvasParam = this.getCanvasParam();
+        if(canvasParam){
+            //save person
+            let dataObject = [{
+                fixture_participant_id:  1233,
+                category: 'Batting',
+                code: 'R',
+                value: 1
+            },{
+                fixture_participant_id:  1244,
+                category: 'Fielding',
+                code: 'H',
+                value: 3
+            },{
+                fixture_participant_id:  1773,
+                category: 'Pitching',
+                code: 'R',
+                value: 8
+            }];
+            let sportID = canvasParam.sport_id;
+            let seasonID = canvasParam.season_id;
+            let compID = canvasParam.comp_id;
+            let divID = canvasParam.div_id;
+            let roundID = canvasParam.round_id;
+            let fixtureID = canvasParam.fixture_id;
+            let fixtureteam = canvasParam.fixtureteam_id;
+            let fixtureparticipant = canvasParam.fixtureparticipant_id;
+            let category = '';
+            let stat_code = null;
 
-        //get statistic definition
-        let competitionId = "a0Ap0000004douyEAA";
-        let season = "a2Cp0000000AdmdEAC";
+            Service.savePerPerson(sportID,seasonID,compID, divID, roundID, fixtureID,dataObject).then(data => {
+                // console.log(data);
 
-        Service.getFormat(season, competitionId).then(data => {
-            // console.log(data);
-            if (data && data.data) {
-                if(data.data.Statisticsdefinition){
+            });
 
-                    this.setState({
-                        statisticsDefinitions:data.data.Statisticsdefinition,
-                    });
+            //get statistic definition
+
+
+            Service.getFormat(seasonID, compID).then(data => {
+                console.log('getFormat',data);
+                if (data && data.data) {
+                    if(data.data.Statisticsdefinition){
+
+                        this.setState({
+                            statisticsDefinitions:data.data.Statisticsdefinition,
+                        });
+                    }else{
+                        this.setState({
+                            statisticsDefinitions:[],
+                        });
+                    }
+
                 }else{
                     this.setState({
                         statisticsDefinitions:[],
                     });
                 }
 
-            }else{
-                this.setState({
-                    statisticsDefinitions:[],
-                });
-            }
 
+            })
 
-        }).catch(error => {
-            this.setState({
-                statisticsDefinitions:[],
-            });
-        });
+            //get player
 
-        //get player
-
-        let division = "a0Ap0000004g9eZEAQ";
-        let round = 9826;
-        let fixture = 54514;
-        Service.getPlayer(season,competitionId,division, round, fixture).then(data => {
-            //console.log(data);
-            if (data.data) {
-                this.setState({
-                    dataPlayer:data.data,
+            Service.getPlayer(seasonID,compID,divID, roundID, fixtureID).then(data => {
+                console.log('getPlayer',data);
+                if (data.data) {
+                    this.setState({
+                        dataPlayer:data.data,
                     });
 
-            }else{
-                this.setState({
-                    dataPlayer:null,
-                });
-            }
+                }else{
+                    this.setState({
+                        dataPlayer:null,
+                    });
+                }
 
 
-        }).catch(error => {
-            this.setState({
-                dataPlayer:null,
-            });
-        });
+            })
 
 
-        //get perPlayer
-        let fixtureteam = '';
-        let fixtureparticipant = '';
-        let category = '';
-        let stat_code = null;
-        Service.getIndividualPlayer(sportID,season,competitionId, division, round, fixture, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
-            console.log(data);
-            if (data) {
-                this.setState({
-                    arrPerPerson:data,
-                });
+            //get perPlayer
 
-            }else{
-                this.setState({
-                    arrPerPerson:null,
-                });
-            }
+            Service.getIndividualPlayer(sportID,seasonID,compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
+                console.log('getIndividualPlayer',data);
+                if (data) {
+                    this.setState({
+                        arrPerPerson:data,
+                    });
+
+                }else{
+                    this.setState({
+                        arrPerPerson:null,
+                    });
+                }
 
 
-        }).catch(error => {
-            this.setState({
-                arrPerPerson:null,
-            });
-        });
+            })
+
+        }
 
     }
 
@@ -155,7 +146,7 @@ export default class PlayerStatsPageComponent extends Component {
             let param = (new Buffer(canvas_param, 'base64')).toString('ascii');
             let paramObj = JSON.parse(param);
             if (paramObj) {
-                console.log('paramObj',paramObj);
+                // console.log('paramObj',paramObj);
                 return paramObj;
             }
         }
@@ -181,13 +172,13 @@ export default class PlayerStatsPageComponent extends Component {
     onClickTab(index) {
         if(this.state.currentTab != index){
 
-        this.currentTab = index;
-        if(this.isEditStats){
-            this.setState({isShowModelLeaveTab: true});
-        }else{
-            // this.setState({currentTab: index});
-            this.goToTab(index);
-        }
+            this.currentTab = index;
+            if(this.isEditStats){
+                this.setState({isShowModelLeaveTab: true});
+            }else{
+                // this.setState({currentTab: index});
+                this.goToTab(index);
+            }
         }
     }
 
@@ -206,7 +197,7 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     yesLeaveTab() {
-       this.goToTab(this.currentTab);
+        this.goToTab(this.currentTab);
     }
 
     goToTab(index){
@@ -216,48 +207,48 @@ export default class PlayerStatsPageComponent extends Component {
 
     renderPopup(){
 
-                 let fail = " Player Stats haven't been saved.";
-                 let success = " Player Stats have been saved.";
-                 let failSpan = "Unsuccessful.";
-                 let successSpan = "Successful.";
-                 let content = this.state.submitResult ?  success : fail;
-                 let spanContent = this.state.submitResult ? successSpan :  failSpan;
+        let fail = " Player Stats haven't been saved.";
+        let success = " Player Stats have been saved.";
+        let failSpan = "Unsuccessful.";
+        let successSpan = "Successful.";
+        let content = this.state.submitResult ?  success : fail;
+        let spanContent = this.state.submitResult ? successSpan :  failSpan;
 
-            let spanStyle = {
-                fontWeight: 'bold',
-                marginLeft: '20px',
+        let spanStyle = {
+            fontWeight: 'bold',
+            marginLeft: '20px',
 
-            };
-            let styleSuccess = {
-                height: '72px',
-                fontSize: '20px',
-                fontFamily: 'Roboto',
-                lineHeight: '72px',
-                textAlign: 'left',
-                backgroundColor: 'rgba(0,173,85,1)',
-            };
-            let styleFail = {
-                height: '72px',
-                fontSize: '20px',
-                fontFamily: 'Roboto',
-                lineHeight: '72px',
-                textAlign: 'left',
-                backgroundColor: 'rgba(212,0,20,1)',
-            };
-               let style = this.state.submitResult ? styleSuccess : styleFail;
+        };
+        let styleSuccess = {
+            height: '72px',
+            fontSize: '20px',
+            fontFamily: 'Roboto',
+            lineHeight: '72px',
+            textAlign: 'left',
+            backgroundColor: 'rgba(0,173,85,1)',
+        };
+        let styleFail = {
+            height: '72px',
+            fontSize: '20px',
+            fontFamily: 'Roboto',
+            lineHeight: '72px',
+            textAlign: 'left',
+            backgroundColor: 'rgba(212,0,20,1)',
+        };
+        let style = this.state.submitResult ? styleSuccess : styleFail;
 
-            return(
-                <div>
-                    <PopupComponent
-                        content={content}
-                        spanContent={spanContent}
-                        spanStyle={spanStyle}
-                        style={style}
-                        isOnline={!this.state.isShowPopup}
-                    />
-                    <style>{css}</style>
-                </div>
-            );
+        return(
+            <div>
+                <PopupComponent
+                    content={content}
+                    spanContent={spanContent}
+                    spanStyle={spanStyle}
+                    style={style}
+                    isOnline={!this.state.isShowPopup}
+                />
+                <style>{css}</style>
+            </div>
+        );
 
     }
 
@@ -270,8 +261,8 @@ export default class PlayerStatsPageComponent extends Component {
             let yesConfirm = ()=> this.yesConfirm();
             return(
                 <div>
-                <ModalComponent title={title} question={question}
-                                cancelConfirm={cancelConfirm} yesConfirm={yesConfirm}/>
+                    <ModalComponent title={title} question={question}
+                                    cancelConfirm={cancelConfirm} yesConfirm={yesConfirm}/>
                     <style>{css}</style>
                 </div>
             );
