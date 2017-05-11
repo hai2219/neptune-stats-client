@@ -2,7 +2,7 @@
  * @copyright 2017 @ NEXLE
  * @author rocachien
  * @create 2017/04/28 14:41
- * @update 2017/05/08 10:07
+ * @update 2017/05/11 19:07
  * @file common/input/input-integer-component.js
  */
 "use strict";
@@ -129,18 +129,20 @@ export default class Integer extends Component {
     }
 
     render() {
-        let {id} = this.props;
+        let {id, style} = this.props;
         const onKeyDown = (event) => this.onKeyDown(event);
         const onKeyUp = (event) => this.onKeyUp(event);
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...this.props} type={"number"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
+            <input {...this.props} type={"number"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} style={style}/>
         );
     }
 }
 
 Integer.propTypes = {
+    style: PropTypes.object,
+
     id: PropTypes.string,
     onBlur: PropTypes.func,
     onChange: PropTypes.func,

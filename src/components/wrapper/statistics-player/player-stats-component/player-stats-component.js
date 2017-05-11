@@ -137,7 +137,8 @@ export default class PlayerStatsComponent extends Component {
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
-            dataRow.order = player.orderNumber;
+            dataRow.orderValue = player.orderNumber;
+            dataRow.orderError = false;
             dataRow.toggle = false;
 
             this.dataFormat.map(f => {
@@ -248,14 +249,40 @@ export default class PlayerStatsComponent extends Component {
         this.dataHeader = dataHeader;
     }
 
+    checkOrderDouble(playerId, value) {
+
+        let found = false;
+
+        if(!value || value == '') return false;
+
+        this.dataSource.map(row => {
+            let newRow = row;
+
+            if(row.playerId != playerId && row.orderValue == value) {
+                found = true;
+                newRow.orderError = true;
+            }
+
+            return newRow;
+        });
+
+        return found;
+    }
+
     onChangeOrder(playerId, value) {
-        console.log(playerId, value);
 
         this.dataSource.map(row => {
             let newRow = row;
 
             if (row.playerId == playerId) {
-                newRow.order = value;
+
+                newRow.orderError = false;
+
+                if(this.checkOrderDouble(playerId, value)) {
+                    newRow.orderError = true;
+                }
+
+                newRow.orderValue = value;
             }
 
             return newRow;
@@ -266,7 +293,6 @@ export default class PlayerStatsComponent extends Component {
     }
 
     onChangeToggle(playerId) {
-        console.log("===== onChangeToggle ====", playerId);
 
         this.dataSource.map(row => {
             let newRow = row;
@@ -301,8 +327,15 @@ export default class PlayerStatsComponent extends Component {
                     renderRow.push(<ToggleComponent id={""+row.playerId} isChecked={row.toggle} onChange={onChangeToggle}/>);
                 }else{
                     let onChangeOrder = (value) => this.onChangeOrder(playerId, value);
+                    let inputStyle = {};
 
-                    renderRow.push(<Integer className="order" min={1} max={999} defaultValue={row.order} onBlur={onChangeOrder}/>);
+                    if(row.orderError){
+                        inputStyle = {border: "1px solid rgb(244, 66, 66)"};
+                    } else {
+                        inputStyle = {border: "1px solid rgb(0, 151, 222)"};
+                    }
+
+                    renderRow.push(<Integer className="order" min={1} max={999} style={inputStyle} defaultValue={row.orderValue} onBlur={onChangeOrder}/>);
                 }
 
                 this.dataFormat.map(f => {
@@ -311,7 +344,7 @@ export default class PlayerStatsComponent extends Component {
                         renderRow.push("");
                     } else {
 
-                        if((isField && row.isField) || (!isField && row.order && parseInt(row.order) > 0)){
+                        if((isField && row.isField) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
                             renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} />);
                         } else {
                             renderRow.push("");
@@ -329,7 +362,6 @@ export default class PlayerStatsComponent extends Component {
 
     render() {
         let {dataBody} = this.state;
-console.log("========== render ===========");
 
         if(this.dataHeader.length > 0 && dataBody && dataBody.length > 0){
             return (
