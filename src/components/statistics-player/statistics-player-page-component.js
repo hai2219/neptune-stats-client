@@ -175,6 +175,7 @@ export default class PlayerStatsPageComponent extends Component {
 
             this.currentTab = index;
             if(this.isEditStats){
+                document.body.style.overflow = 'hidden';
                 this.setState({isShowModelLeaveTab: true});
             }else{
                 // this.setState({currentTab: index});
@@ -193,11 +194,13 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     cancelLeaveTab() {
+        document.body.style.overflow = 'auto';
         this.setState({isShowModelLeaveTab: false});
 
     }
 
     yesLeaveTab() {
+        document.body.style.overflow = 'auto';
         this.goToTab(this.currentTab);
     }
 
