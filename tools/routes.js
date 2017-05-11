@@ -27,7 +27,6 @@ const routes = () => {
 
         function callback(error, response, body) {
 
-            console.log(body);
             if (!error && (response.statusCode == 200 || response.statusCode == 404)) {
                 res.send(body);
             } else {
@@ -56,7 +55,6 @@ const routes = () => {
 
         function callback(error, response, body) {
 
-            console.log(body);
             if (!error && (response.statusCode == 200 || response.statusCode == 404)) {
                 res.send(body);
             } else {
@@ -86,7 +84,6 @@ const routes = () => {
             let consumerSecret = bodyArray[0];
             let encoded_envelope = bodyArray[1];
             let check = crypto.createHmac("sha256", canvas_consumer_secret).update(encoded_envelope).digest("base64");
-            console.log(check);
             if (check === consumerSecret) {
                 envelope = JSON.parse(new Buffer(encoded_envelope, "base64").toString("ascii"));
 

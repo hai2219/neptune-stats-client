@@ -24,6 +24,7 @@ export default class PlayerStatsComponent extends Component {
             loaded: false
         };
 
+        this.currentTab = 0;
         this.dataHeader = []; /** for header of table **/
         this.dataStats = []; /** for stats of table **/
         this.dataFormat = []; /** for header of table **/
@@ -41,10 +42,16 @@ export default class PlayerStatsComponent extends Component {
     }
 
     parseData() {
+        const {statisticsDefinitions, dataPlayer, arrPerPerson, currentTab, sportID} = this.props;
+
+        if(!statisticsDefinitions || !dataPlayer || !arrPerPerson || !currentTab || !sportID || currentTab == this.currentTab) return false;
+
         this.parseStatsData();
         this.parseFormatData();
         this.parseHeaderData();
         this.parseBodyData();
+
+        return true;
     }
 
     getItemValue(playerSfId, code, category){
@@ -65,8 +72,7 @@ export default class PlayerStatsComponent extends Component {
 
     getArrCodeParam(strMath){
 
-        var matches =  strMath.match(/[^[\]]+(?=])/g);
-        return matches;
+        return strMath.match(/[^[\]]+(?=])/g);
 
     }
 
@@ -110,7 +116,7 @@ export default class PlayerStatsComponent extends Component {
         for (let i = 0; i < dataPlayer.length; i++) {
             let player = dataPlayer[i];
             let dataRow = {};
-            let name = player.firstName + " " + player.middleName + " " + player.lastName;
+            let name = player.firstName + " " + (player.middleName || "") + " " + player.lastName;
 
             dataRow.playerId = player.playerId;
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
@@ -259,14 +265,13 @@ export default class PlayerStatsComponent extends Component {
             });
         }
 
+        this.currentTab = currentTab;
         this.dataBody = dataBody;
     }
 
     render() {
 
-        this.parseData();
-
-        if(this.dataHeader.length > 0){
+        if(this.parseData() && this.dataHeader.length > 0){
             return (
 
                 <div id="player-stats-wrapper-container">
