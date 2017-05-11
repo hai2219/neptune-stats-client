@@ -151,6 +151,9 @@ export default class TableScrollHorizontal extends Component {
 TableScrollHorizontal.propTypes = {
     styleScroll: PropTypes.object,
     styleFreeze: PropTypes.object,
+    headerStyle: PropTypes.object,
+    header: PropTypes.array,
+    body: PropTypes.array,
     colsFreeze: PropTypes.number,
 };
 

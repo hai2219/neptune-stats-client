@@ -65,8 +65,7 @@ export default class PlayerStatsComponent extends Component {
 
     getArrCodeParam(strMath){
 
-        var matches =  strMath.match(/[^[\]]+(?=])/g);
-        return matches;
+        return strMath.match(/[^[\]]+(?=])/g);
 
     }
 
