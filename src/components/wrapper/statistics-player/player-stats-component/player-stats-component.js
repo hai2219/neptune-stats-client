@@ -9,6 +9,7 @@ import SortIcon from '../../../common/icon/sort-icon-component';
 import Integer from '../../../common/input/input-integer-component';
 import Float from '../../../common/input/input-float-component';
 import ToggleComponent from '../../../common/toggle/toggle-button-component';
+import * as SportConstant from "../../../../constant/sport-constant";
 import PropTypes from 'prop-types';
 
 export default class PlayerStatsComponent extends Component {
@@ -20,7 +21,14 @@ export default class PlayerStatsComponent extends Component {
             dataPlayer: this.props.dataPlayer,
             statisticsDefinitions: this.props.statisticsDefinitions,
             arrPerPerson: this.props.arrPerPerson,
+            loaded: false
         };
+
+        this.dataHeader = []; /** for header of table **/
+        this.dataStats = []; /** for stats of table **/
+        this.dataFormat = []; /** for header of table **/
+        this.dataBody = []; /** for body of table **/
+        this.dataSource = []; /** data source of table **/
 
     }
 
@@ -32,51 +40,51 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
-    componentWillReceiveProps(nextProps){
+    componentDidUpdate (prevProps, prevState) {
+        if (prevProps.dataPlayer !== this.props.dataPlayer) {
+            this.parseData();
+        }
+    }
 
+    parseData() {
+        this.parseStatsData();
+        this.parseFormatData();
+        this.parseHeaderData();
+        this.parseBodyData();
+    }
+
+    componentWillReceiveProps(nextProps){
         this.setState({
             currentTab:nextProps.currentTab,
-            dataPlayer:nextProps.dataPlayer,
-            statisticsDefinitions:nextProps.statisticsDefinitions,
-            arrPerPerson:nextProps.arrPerPerson,
         });
 
-    }
-
-    getFormat(key){
-        let format = {"code":key,"type":"Entry","formula":null};
-        for (let i = 0 ; i < this.state.statisticsDefinitions.length; i++){
-            let temp = this.state.statisticsDefinitions[i];
-             if(key == temp.code){
-                 return temp;
-             }
+        if (nextProps.currentTab !== this.props.currentTab) {
+            this.parseData();
         }
-        return format;
     }
 
-     getItemValue(playerSfId, code, category){
+    getItemValue(playerSfId, code, category){
 
-       if(this.state.arrPerPerson){
-           for(let i= 0 ; i < this.state.arrPerPerson.length; i++){
-               let temp = this.state.arrPerPerson[i];
-               if(temp.player == playerSfId && temp.code == code && temp.category == category){
+        if(this.dataStats){
+            for(let i= 0 ; i < this.dataStats.length; i++){
+                let temp = this.dataStats[i];
 
-                   return temp.value;
-               }
-           }
-           return null;
-       }
-       return null;
+                if(temp.player == playerSfId && temp.code == code && temp.category == category){
 
+                    return temp.value;
+                }
+            }
+            return null;
+        }
+        return null;
+    }
 
-     }
+    getArrCodeParam(strMath){
 
-     getArrCodeParam(strMath){
+        var matches =  strMath.match(/[^[\]]+(?=])/g);
+        return matches;
 
-         var matches =  strMath.match(/[^[\]]+(?=])/g);
-         return matches;
-
-     }
+    }
 
     calculateAvg(playerSfId, arrCode, category, mathExpress){
 
@@ -87,163 +95,197 @@ export default class PlayerStatsComponent extends Component {
                 let value = this.getItemValue(playerSfId,code,category) ;
 
                 if(value){
-                    console.log('value',value);
                     math = math.replace('[' + code + ']',value);
                 }else{
                     math = math.replace('[' + code + ']', 0);
                 }
             }
-            // console.log('arrCode',arrCode);
-            //console.log('math',math);
             return eval(math);
         }
         return null;
 
     }
 
+    parseBodyData() {
 
-    getBodyData(arrObjectCode,category,isField){
-        let bodyData = [];
+        let {sportID, currentTab, dataPlayer} = this.props;
+        let dataSource = [];
+        let category = 1;
 
-        if( this.state.dataPlayer && this.state.dataPlayer.players) {
-            for (let i = 0; i < this.state.dataPlayer.players.length; i++) {
-                let player = this.state.dataPlayer.players[i];
-                let row = [];
-                row.push(player.jerseyNumber ? player.jerseyNumber : '00');
-                let name = player.firstName + player.middleName + player.lastName;
-                row.push(name);
-                if(isField){
-                    row.push(<ToggleComponent key={15}/>);
-                }else{
-                    row.push(<Integer key={1} className="order" min={1} max={999}/>);
+        dataPlayer = dataPlayer.players || null;
+
+        if(!sportID || !this.dataFormat || this.dataFormat.length < 1 || !dataPlayer || dataPlayer.length < 1) return [];
+
+        switch (currentTab)
+        {
+            case 1: category = "Batting"; break;
+            case 2: category = "Pitching"; break;
+            case 3: category = "Fielding"; break;
+        }
+
+        for (let i = 0; i < dataPlayer.length; i++) {
+            let player = dataPlayer[i];
+            let dataRow = {};
+            let name = player.firstName + " " + player.middleName + " " + player.lastName;
+
+            dataRow.playerId = player.playerId;
+            dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
+            dataRow.name = name;
+            dataRow.category = category;
+            dataRow.order = '';
+            dataRow.toggle = false;
+
+            this.dataFormat.map(f => {
+                if (f.type == "Calculated") {
+
+                    dataRow[f.code] = f.formula;
+                } else {
+
+                    dataRow[f.code] = this.getItemValue(player.playerSfid, f.code, category);
                 }
+            });
 
-                for (let j = 0; j < arrObjectCode.length; j++) {
-                    let temp = arrObjectCode[j];
-                    if (temp.type == "Calculated") {
-                        let arrMathCode = this.getArrCodeParam(temp.formula);
-                        let calculateAvg = this.calculateAvg(player.playerSfid,arrMathCode,category,temp.formula);
-                        if (calculateAvg){
-                            row.push(calculateAvg);
-                        }else{
-                            row.push('');
-                        }
+            dataSource.push(dataRow);
+        }
 
-                    } else {
+        this.dataSource = dataSource;
 
-                        let value = this.getItemValue(player.playerSfid,temp.code,category);
-                       
-                            row.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={value} />);
+        this.renderBody();
+    }
 
-                    }
+    parseFormatData() {
+        let {sportID, currentTab, statisticsDefinitions} = this.props;
+        let code = [];
+        let dataFormat = [];
+
+        if(!sportID || !statisticsDefinitions || statisticsDefinitions.length <= 0) return [];
+
+        currentTab = currentTab ? currentTab : 1;
+
+
+
+        if(sportID == SportConstant.BASEBALL_ID) {
+            switch (currentTab){
+                case 1:
+                    code = ["AB", "R", "H", "2B", "3B", "HR", "RB1", "TB", "BB", "SO", "SB", "CS", "SP", "AVG"]; //Miss: "3B", "RB1", "SP"
+                    break;
+                case 2:
+                    code = ["IP", "H", "R", "ER", "BB", "SO", "HR", "ERA"]; //Miss: "SO", "ERA"
+                    break;
+                case 3:
+                    code = ["E", "A", "PO", "FPCT"]; //Miss "E", "A", "FPCT"
+                    break;
+            }
+        }else {
+            code = ["AB", "R", "H", "2B", "TB", "BB", "SO", "SB", "CS", "SP", "AVG"];
+        }
+
+        for(let i = 0; i < code.length; i++) {
+            let c = code[i];
+
+            for (let j = 0; j < statisticsDefinitions.length; j++) {
+                let s = statisticsDefinitions[j];
+
+                if(c == s.code) {
+                    dataFormat.push({code: c, type: s.type, formula: s.formula});
+                    break;
                 }
-                bodyData.push(row);
             }
         }
-        return bodyData;
+
+        this.dataFormat = dataFormat;
+    }
+
+    parseStatsData() {
+        let {sportID, arrPerPerson} = this.props;
+
+        if(!sportID || !arrPerPerson || arrPerPerson.length <= 0) return [];
+
+        this.dataStats = arrPerPerson;
+    }
+
+    parseHeaderData() {
+        let {sportID, currentTab} = this.props;
+        let dataHeader = [];
+
+        if(!sportID || !this.dataFormat || this.dataFormat.length <= 0) return [];
+
+        currentTab = currentTab ? currentTab : 1;
+
+        if(sportID == SportConstant.BASEBALL_ID) {
+            switch (currentTab){
+                case 1:
+                    dataHeader.push(<SortIcon text={"#"} />);
+                    dataHeader.push(<SortIcon text={"NAME"} />);
+                    dataHeader.push(<SortIcon text={"ORDER"} />);
+                    break;
+                case 2:
+                    dataHeader.push(<SortIcon text={"#"} />);
+                    dataHeader.push(<SortIcon text={"NAME"} />);
+                    dataHeader.push(<SortIcon text={"ORDER"} />);
+                    break;
+                case 3:
+                    dataHeader.push(<SortIcon text={"#"} />);
+                    dataHeader.push(<SortIcon text={"NAME"} />);
+                    dataHeader.push("FIELDED");
+                    break;
+            }
+        }else {
+            dataHeader.push(<SortIcon text={"#"} />);
+            dataHeader.push(<SortIcon text={"NAME"} />);
+            dataHeader.push(<SortIcon text={"ORDER"} />);
+        }
+
+        this.dataFormat.map(f => {
+            dataHeader.push(f.code);
+        });
+
+        this.dataHeader = dataHeader;
+    }
+
+    renderBody() {
+        let {sportID, currentTab} = this.props;
+        let dataBody = [];
+        let isField = sportID == SportConstant.BASEBALL_ID && currentTab == 3 ? true : false;
+
+        if(this.dataSource && this.dataSource.length > 0) {
+            this.dataSource.map(row => {
+                let renderRow = [];
+
+                renderRow.push(row.num);
+                renderRow.push(row.name);
+
+                if(isField){
+                    renderRow.push(<ToggleComponent />);
+                }else{
+                    renderRow.push(<Integer className="order" min={1} max={999} />);
+                }
+
+                this.dataFormat.map(f => {
+                    if (f.type == "Calculated") {
+
+                        renderRow.push("");
+                    } else {
+
+                        renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} />);
+                    }
+                });
+
+                dataBody.push(renderRow);
+            });
+        }
+
+        this.setState({dataBody: dataBody});
     }
 
     render() {
 
-        let headerData1 = [
-            <SortIcon text={"#"} key={16}/>,
-            <SortIcon text={"NAME"} key={17}/>,
-            <SortIcon text={"ORDER"} key={18}/>,
-        ];
-        let arrCode1 = [  "AB",
-            "R",
-            "H",
-            "2B",
-            "3B",
-            "HR",
-            "RB1",
-            "TB",
-            "BB",
-            "SO",
-            "SB",
-            "CS",
-            "SP",
-            "AVG"];
-        headerData1 = headerData1.concat(arrCode1);
-        let arrObjectCode1 = [];
-        for(let i = 0 ; i < arrCode1.length; i++){
-            let temp = this.getFormat(arrCode1[i]);
-            arrObjectCode1.push(temp);
-        }
-        let bodyData1 = this.getBodyData(arrObjectCode1,'Batting',false);
-
-
-        let headerData2 = [
-            <SortIcon text={"#"} key={16}/>,
-            <SortIcon text={"NAME"} key={17}/>,
-            <SortIcon text={"ORDER"} key={18}/>,
-
-        ];
-        let arrCode2 = [ "IP",
-            "H",
-            "R",
-            "ER",
-            "BB",
-            "SO",
-            "HR",
-            "ERA"];
-        headerData2 = headerData2.concat(arrCode2);
-        let arrObjectCode2 = [];
-        for(let i = 0 ; i < arrCode2.length; i++){
-            let temp = this.getFormat(arrCode2[i]);
-            arrObjectCode2.push(temp);
-        }
-        let bodyData2 = this.getBodyData(arrObjectCode2,'Pitching',false);
-
-
-        let headerData3 = [
-            <SortIcon text={"#"} key={16}/>,
-            <SortIcon text={"NAME"} key={17}/>,
-            "FIELDED",
-
-        ];
-        let arrCode3 = [
-            "E",
-            "A",
-            "PO",
-            "FPCT"
-        ];
-        headerData3 = headerData3.concat(arrCode3);
-        let arrObjectCode3 = [];
-        for(let i = 0 ; i < arrCode3.length; i++){
-            let temp = this.getFormat(arrCode3[i]);
-            arrObjectCode3.push(temp);
-        }
-        let bodyData3 = this.getBodyData(arrObjectCode3,'Fielding',true);
-
-
-        let headerData = [];
-        let bodyData = [];
-        switch (this.state.currentTab){
-            case 1:
-                headerData = headerData1;
-                bodyData = bodyData1;
-                break;
-            case 2:
-                headerData = headerData2;
-                bodyData = bodyData2;
-                break;
-            case 3:
-                headerData = headerData3;
-                bodyData = bodyData3;
-                break;
-            default:
-                headerData = headerData1;
-                bodyData = bodyData1;
-                break;
-
-        }
-       if(bodyData.length > 0){
+       if(this.dataHeader.length > 0 && this.state.dataBody.length > 0){
            return (
 
                <div id="player-stats-wrapper-container">
 
-                   <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={headerData} headerStyle={{color: '#4a4a4a'}} body={bodyData} />
+                   <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={this.state.dataBody} />
                    <style>{css}</style>
                </div>
 

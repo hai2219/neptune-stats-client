@@ -9,6 +9,7 @@ import  HeaderComponent from  "../wrapper/statistics-player/header-component/hea
 import  FooterComponent from  "../wrapper/statistics-player/footer-component/footer-wrapper-component";
 import ModalComponent from "../../components/common/modal/modal-component";
 import PopupComponent from "../../components/common/popup/popup-no-internet-component";
+import * as SportConstant from "../../constant/sport-constant";
 import * as Service from  "../../services/statistic-player-services";
 
 export default class PlayerStatsPageComponent extends Component {
@@ -308,27 +309,27 @@ export default class PlayerStatsPageComponent extends Component {
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
 
-            return (
-                <div className="statistics-player-container">
-                    {this.renderPopup()}
-                    {this.renderModel()}
-                    {this.renderModelLeaveTab()}
-                    <HeaderComponent
-                        ref = "header"
-                        onSave={onSave}
-                        onClickTab={onClickTab}
-                    />
-                    <PlayerStatsComponent sportID={7}
-                                          onChange={onChange}
-                                          statisticsDefinitions={this.state.statisticsDefinitions}
-                                          currentTab={this.state.currentTab}
-                                          dataPlayer={this.state.dataPlayer}
-                                          arrPerPerson={this.state.arrPerPerson}
-                                          onEditStats={onEditStats}
-                    />
-                    <FooterComponent onSave={onSave}/>
-                    <style>{css}</style>
-                </div>
+        return (
+            <div className="statistics-player-container">
+                {this.renderPopup()}
+                {this.renderModel()}
+                {this.renderModelLeaveTab()}
+                <HeaderComponent
+                                ref = "header"
+                                onSave={onSave}
+                                onClickTab={onClickTab}
+                />
+                <PlayerStatsComponent sportID = {SportConstant.BASEBALL_ID}
+                                      onChange={onChange}
+                                      statisticsDefinitions={this.state.statisticsDefinitions}
+                                      currentTab={this.state.currentTab}
+                                      dataPlayer={this.state.dataPlayer}
+                                      arrPerPerson={this.state.arrPerPerson}
+                                      onEditStats={onEditStats}
+                />
+                <FooterComponent onSave={onSave} />
+                <style>{css}</style>
+            </div>
 
             );
         }else{

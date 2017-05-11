@@ -149,7 +149,7 @@ const routes = () => {
     router.get('/statistics-example', function (req, res) {
 
         let canvas_param = {
-            "sport_id": "2",
+            "sport_id": "13",
             "season_id": 3,
             "comp_id": 3,
             "div_id": 6,
