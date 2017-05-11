@@ -18,6 +18,8 @@ export default class PlayerStatsComponent extends Component {
 
         super(props);
         this.state = {
+            sort: {numb: true, name: false, order: false},
+            currentSort: "numb",
             dataBody: []
         };
 
@@ -27,6 +29,7 @@ export default class PlayerStatsComponent extends Component {
         this.dataSource = []; /** data source of table **/
 
         if(props.onEditStats) props.onEditStats(false);
+        this.onSortClick = this.onSortClick.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +56,10 @@ export default class PlayerStatsComponent extends Component {
         if (!isParseData && prevProps.currentTab !== this.props.currentTab) {
             if(prevProps.onEditStats) prevProps.onEditStats(false);
             this.parseData();
+        }
+
+        if(prevState.currentSort != this.state.currentSort) {
+            this.renderBody();
         }
     }
 
@@ -212,6 +219,7 @@ export default class PlayerStatsComponent extends Component {
     }
 
     parseHeaderData() {
+        let {sort} = this.state;
         let {sportID, currentTab} = this.props;
         let dataHeader = [];
 
@@ -222,25 +230,21 @@ export default class PlayerStatsComponent extends Component {
         if(sportID == SportConstant.BASEBALL_ID) {
             switch (currentTab){
                 case 1:
-                    dataHeader.push(<SortIcon text={"#"} />);
-                    dataHeader.push(<SortIcon text={"NAME"} />);
-                    dataHeader.push(<SortIcon text={"ORDER"} />);
-                    break;
                 case 2:
-                    dataHeader.push(<SortIcon text={"#"} />);
-                    dataHeader.push(<SortIcon text={"NAME"} />);
-                    dataHeader.push(<SortIcon text={"ORDER"} />);
+                    dataHeader.push(<SortIcon text={"#"} active={sort.numb} onClick={this.onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"NAME"} active={sort.name} onClick={this.onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"ORDER"} active={sort.order} onClick={this.onSortClick}/>);
                     break;
                 case 3:
-                    dataHeader.push(<SortIcon text={"#"} />);
-                    dataHeader.push(<SortIcon text={"NAME"} />);
+                    dataHeader.push(<SortIcon text={"#"} active={sort.numb} onClick={this.onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"NAME"} active={sort.name} onClick={this.onSortClick}/>);
                     dataHeader.push("FIELDED");
                     break;
             }
         }else {
-            dataHeader.push(<SortIcon text={"#"} />);
-            dataHeader.push(<SortIcon text={"NAME"} />);
-            dataHeader.push(<SortIcon text={"ORDER"} />);
+            dataHeader.push(<SortIcon text={"#"} active={sort.numb} onClick={this.onSortClick}/>);
+            dataHeader.push(<SortIcon text={"NAME"} active={sort.name} onClick={this.onSortClick}/>);
+            dataHeader.push(<SortIcon text={"ORDER"} active={sort.order} onClick={this.onSortClick}/>);
         }
 
         this.dataFormat.map(f => {
@@ -332,6 +336,38 @@ export default class PlayerStatsComponent extends Component {
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
+    }
+
+    onSortClick (field, active) {
+// console.log("=========== onSortClick =============");
+
+        let sort = {numb: false, name: false, order: false};
+        let dataSource = this.dataSource;
+        let order = active ? 'asc' : 'desc';
+        let currentSort = field ? field : "numb";
+
+        switch (field) {
+            case "numb":
+                dataSource = _.orderBy(dataSource, ["num"], [order]);
+                sort.numb = active;
+                break;
+            case "name":
+                dataSource = _.orderBy(dataSource, ["name"], [order]);
+                sort.name = active;
+                break;
+            case "order":
+                dataSource = _.orderBy(dataSource, ["orderValue"], [order]);
+                sort.order = active;
+                break;
+        }
+
+        this.dataSource = dataSource;
+
+        this.renderBody();
+
+        this.setState({
+            sort, currentSort
+        });
     }
 
     renderBody() {
