@@ -250,8 +250,8 @@ export default class PlayerStatsComponent extends Component {
         this.dataHeader = dataHeader;
     }
 
-    checkOrderDouble(playerId, value) {
-
+    checkOrderDouble() {
+        let found = false;
         let dataSource = _.cloneDeep(this.dataSource);
 
         this.dataSource.map(d => {
@@ -263,12 +263,15 @@ export default class PlayerStatsComponent extends Component {
                 let s = dataSource[i];
 
                 if(d.playerId != s.playerId && d.orderValue == s.orderValue) {
+                    found = true;
                     d.orderError = true;
                 }
             }
 
             return d;
         });
+
+        return found;
     }
 
     onChangeOrder(playerId, value) {
@@ -286,7 +289,9 @@ export default class PlayerStatsComponent extends Component {
             return newRow;
         });
 
-        this.checkOrderDouble(playerId, value);
+        if(this.checkOrderDouble()) {
+            // TODO: Do not save when order number is double
+        }
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
