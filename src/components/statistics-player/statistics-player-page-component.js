@@ -27,7 +27,7 @@ export default class PlayerStatsPageComponent extends Component {
             arrPerPerson:null,
             currentTab:0,
         };
-
+        this.currentTab = 0;
         this.isEditStats = true;
     }
 
@@ -178,12 +178,16 @@ export default class PlayerStatsPageComponent extends Component {
         this.setState({dataSource: data});
     }
 
-    onChangeTab(index) {
+    onClickTab(index) {
+        if(this.state.currentTab != index){
 
+        this.currentTab = index;
         if(this.isEditStats){
-            this.setState({currentTab: index,isShowModelLeaveTab: true});
+            this.setState({isShowModelLeaveTab: true});
         }else{
-            this.setState({currentTab: index});
+            // this.setState({currentTab: index});
+            this.goToTab(index);
+        }
         }
     }
 
@@ -202,7 +206,12 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     yesLeaveTab() {
-        this.setState({isShowModelLeaveTab: false});
+       this.goToTab(this.currentTab);
+    }
+
+    goToTab(index){
+        this.setState({isShowModelLeaveTab: false ,currentTab:  index});
+        this.refs.header.onChangeTab();
     }
 
     renderPopup(){
@@ -289,21 +298,25 @@ export default class PlayerStatsPageComponent extends Component {
         }
         return null;
     }
+
+
     render() {
         if(this.getCanvasParam()) {
 
             let onSave = ()=> this.onSave();
             let onChange = (data)=> this.onChange(data);
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
-            let onChangeTab = (index)=> this.onChangeTab(index);
+            let onClickTab = (index)=> this.onClickTab(index);
 
             return (
                 <div className="statistics-player-container">
                     {this.renderPopup()}
                     {this.renderModel()}
                     {this.renderModelLeaveTab()}
-                    <HeaderComponent onSave={onSave}
-                                     onChangeTab={onChangeTab}
+                    <HeaderComponent
+                        ref = "header"
+                        onSave={onSave}
+                        onClickTab={onClickTab}
                     />
                     <PlayerStatsComponent sportID={7}
                                           onChange={onChange}

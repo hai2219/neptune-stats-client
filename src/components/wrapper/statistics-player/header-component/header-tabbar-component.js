@@ -18,6 +18,7 @@ export default class HeaderTabbarComponent extends Component {
                { id:2, label: (<span>Pitching</span>), selected: false},
                 { id:3, label: (<span>Fielding</span>), selected: false}
             ];
+        this.currentTabItem =  this.tabItems[0];
 
     }
 
@@ -31,18 +32,25 @@ export default class HeaderTabbarComponent extends Component {
 
     onClick(item){
 
+        this.currentTabItem = item;
+        if(this.props.onClickTab){
+            this.props.onClickTab( this.currentTabItem.id);
+        }
+        console.log('currentTabItem',this.currentTabItem.id);
+    }
 
+    onChangeTab(){
         this.tabItems.map(n=>{
-            n.selected = (n.id == item.id)? true : false;
+            n.selected = (n.id ==  this.currentTabItem.id)? true : false;
             return n;
         });
 
         this.setState({
-            currentTab: item.id
+            currentTab:  this.currentTabItem.id
         });
 
         if(this.props.onChangeTab){
-            this.props.onChangeTab(item.id);
+            this.props.onChangeTab( this.currentTabItem.id);
         }
     }
 
@@ -67,7 +75,7 @@ export default class HeaderTabbarComponent extends Component {
 }
 
 HeaderTabbarComponent.propTypes = {
-
+    onClickTab: PropTypes.func,
     onChangeTab: PropTypes.func,
 };
 

@@ -32,17 +32,25 @@ export default class HeaderWrapperComponent extends Component {
         }
     }
 
-    onChangeTab(index){
-        if(this.props.onChangeTab){
-            this.props.onChangeTab(index);
+    onClickTab(index){
+        if(this.props.onClickTab){
+            this.props.onClickTab(index);
         }
     }
 
+    onChangeTab(){
+        if(this.refs.tabbar){
+            this.refs.tabbar.onChangeTab();
+        }
+
+    }
+
     renderTabbar(){
-        const onChangeTab = (index) => this.onChangeTab(index);
+        const onClickTab = (index) => this.onClickTab(index);
         return (
             <Tabbar
-                onChangeTab={onChangeTab}/>
+                ref = "tabbar"
+                onClickTab={onClickTab}/>
         );
     }
 
@@ -70,8 +78,8 @@ export default class HeaderWrapperComponent extends Component {
                 {this.renderTabbar()}
                 <Button
                     onClick={onClick}
-                   text="Update & Save Player Stats"
-                   style={buttonStyle}
+                    text="Update & Save Player Stats"
+                    style={buttonStyle}
                 />
                 <style>{css}</style>
             </div>
@@ -84,7 +92,7 @@ export default class HeaderWrapperComponent extends Component {
 
 HeaderWrapperComponent.propTypes = {
     onSave: PropTypes.func,
-    onChangeTab: PropTypes.func,
+    onClickTab: PropTypes.func,
 };
 
 HeaderWrapperComponent.defaultProps = {
