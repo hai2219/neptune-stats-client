@@ -3,7 +3,7 @@
     "LOCAL_PORT": "3003",
     "PLAYER_STAT_API_HOST": "http://128.199.90.210",
     "PLAYER_STAT_API_PORT": "8082",
-    "PLAYER_STAT_API_HEROKU_HOST": "http://128.199.90.210",
+    "PLAYER_STAT_API_HEROKU_HOST": "http://neptune-stats-api.herokuapp.com",
     "PLAYER_STAT_API_HEROKU_PORT": "",
     "PLAYER_STAT_HEROKU_POST" : "/heroku/post",
     "PLAYER_STAT_HEROKU_GET" : "/heroku/get",

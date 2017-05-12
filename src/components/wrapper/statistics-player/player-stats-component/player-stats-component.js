@@ -344,11 +344,14 @@ export default class PlayerStatsComponent extends Component {
     }
 
     onSaved(){
+
         if(this.checkOrderDouble()) {
-            if(this.props.onSaved){
-                this.props.onSaved(fail,'fail');
+
+            if(this.props.onShowToast){
+                this.props.onShowToast(3);
             }
         }else{
+
             let arrParam = [];
             this.dataSource.map(row => {
 
@@ -359,7 +362,7 @@ export default class PlayerStatsComponent extends Component {
                             fixture_participant_id:  row.playerId,
                             category: row.category,
                             code: f.code,
-                            value: row[f.code]
+                            value: parseFloat(row[f.code])
 
                     };
                         arrParam.push(obj);
@@ -377,11 +380,21 @@ export default class PlayerStatsComponent extends Component {
                 let divID = canvasParam.div_id;
                 let roundID = canvasParam.round_id;
                 let fixtureID = canvasParam.fixture_id;
+                // console.log('canvasParam',canvasParam);
+                // console.log('arrParam',arrParam);
 
-
+;
                 Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
-                    console.log("savePlayer" ,data);
 
+                    if(this.props.onShowToast){
+                        this.props.onShowToast(1);
+                    }
+
+                }).catch(error => {
+
+                    if(this.props.onShowToast){
+                        this.props.onShowToast(2);
+                    }
                 });
 
             }
@@ -537,8 +550,8 @@ PlayerStatsComponent.propTypes = {
     dataPlayer: PropTypes.object,
     arrPerPerson: PropTypes.array,
     onEditStats: PropTypes.func,
-    onSaved: PropTypes.func,
-    canvasParam: PropTypes.object
+    canvasParam: PropTypes.object,
+    onShowToast: PropTypes.func,
 };
 
 PlayerStatsComponent.defaultProps = {

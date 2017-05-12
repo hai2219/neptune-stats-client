@@ -22,7 +22,7 @@ export default class PlayerStatsPageComponent extends Component {
             isShowPopup:false,
             isShowModel:false,
             isShowModelLeaveTab:false,
-            submitResult:true,
+            submitResult:1,//1 :success, 2 fail, 3 duplicate
             statisticsDefinitions:[],
             dataPlayer:null,
             arrPerPerson:null,
@@ -91,7 +91,11 @@ export default class PlayerStatsPageComponent extends Component {
                 }
 
 
-            })
+            }).catch(error => {
+                this.setState({
+                    statisticsDefinitions:[],
+                });
+            });
 
             //get player
 
@@ -109,7 +113,11 @@ export default class PlayerStatsPageComponent extends Component {
                 }
 
 
-            })
+            }).catch(error => {
+                this.setState({
+                    dataPlayer:null,
+                });
+            });
 
 
             //get perPlayer
@@ -128,7 +136,11 @@ export default class PlayerStatsPageComponent extends Component {
                 }
 
 
-            })
+            }).catch(error => {
+                this.setState({
+                    arrPerPerson:null,
+                });
+            });
 
         }
 
@@ -210,14 +222,27 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
+    onShowToast( type){
+        console.log('type',type);
+            this.setState({
+                isShowPopup:true,
+                submitResult:type,
+            });
+
+    }
+
+    closedPopup(){
+        this.setState({
+            isShowPopup:false,
+        });
+    }
+
     renderPopup(){
 
         let fail = " Player Stats haven't been saved.";
         let success = " Player Stats have been saved.";
         let failSpan = "Unsuccessful.";
         let successSpan = "Successful.";
-        let content = this.state.submitResult ?  success : fail;
-        let spanContent = this.state.submitResult ? successSpan :  failSpan;
 
         let spanStyle = {
             fontWeight: 'bold',
@@ -240,8 +265,28 @@ export default class PlayerStatsPageComponent extends Component {
             textAlign: 'left',
             backgroundColor: 'rgba(212,0,20,1)',
         };
-        let style = this.state.submitResult ? styleSuccess : styleFail;
+        let content =   fail;
+        let spanContent =    failSpan;
+        let style =   styleFail;
+        switch (this.state.submitResult){
+            case 1:
+                 content =  success;
+                 spanContent = successSpan ;
+                 style =  styleSuccess ;
+                break;
+            case 2:
+                content =  fail;
+                spanContent = failSpan ;
+                style =  styleFail ;
+                break;
+            case 3:
+                content =  "Another player was already assigned the same number. Please correct your input before saving";
+                spanContent = null ;
+                style =  styleFail ;
+                break;
+        }
 
+        let closedPopup = ()=> this.closedPopup();
         return(
             <div>
                 <PopupComponent
@@ -250,6 +295,7 @@ export default class PlayerStatsPageComponent extends Component {
                     spanStyle={spanStyle}
                     style={style}
                     isOnline={!this.state.isShowPopup}
+                    onClick={closedPopup}
                 />
                 <style>{css}</style>
             </div>
@@ -306,6 +352,8 @@ export default class PlayerStatsPageComponent extends Component {
             let onChange = (data)=> this.onChange(data);
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
+            let onShowToast = (type)=> this.onShowToast(type);
+
 
         return (
             <div className="statistics-player-container">
@@ -324,6 +372,7 @@ export default class PlayerStatsPageComponent extends Component {
                                       dataPlayer={this.state.dataPlayer}
                                       arrPerPerson={this.state.arrPerPerson}
                                       onEditStats={onEditStats}
+                                      onShowToast={onShowToast}
                                       canvasParam={canvasParam}
                                       ref = "playerStats"
                 />

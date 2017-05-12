@@ -81,8 +81,9 @@ export function httpPostHerokuPlayerStat(path, param, data={}) {
             method: 'POST',
             headers: _headers,
             body: JSON.stringify(data)
-        }) .then(response => response.json())
-            .then((response) => {
+        }) .then(response =>  response.json()
+        ) .then((response) => {
+
                 if (response) {
 
                     return resolve(response);
@@ -92,10 +93,34 @@ export function httpPostHerokuPlayerStat(path, param, data={}) {
                 }
 
             }).catch((error) => {
-            return error;
+
+            return reject(error);
         });
     });
 }
+
+// export function httpPostHerokuPlayerStat(path, param, data={}) {
+//     return new Promise(function (resolve, reject) {
+//         let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_HEROKU_POST + path, param);
+//         let _headers = {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         };
+//
+//         fetch(url, {
+//             method: 'POST',
+//             headers: _headers,
+//             body: JSON.stringify(data)
+//         }) .then(response => {
+//             return resolve(response);
+//         }).catch((error) => {
+//
+//
+//             return error;
+//         });
+//     });
+// }
+
 
 export function actualUrlParse(path, obj = null) {
     let newUrl = path;
