@@ -30,7 +30,6 @@ export default class PlayerStatsComponent extends Component {
         this.dataSource = []; /** data source of table **/
 
         if(props.onEditStats) props.onEditStats(false);
-        this.onSortClick = this.onSortClick.bind(this);
     }
 
     componentDidMount() {
@@ -56,12 +55,13 @@ export default class PlayerStatsComponent extends Component {
         }
 
         if(prevState.currentSort != this.state.currentSort) {
+            this.parseHeaderData();
             this.renderBody();
         }
     }
 
     parseData() {
-
+        const {currentSort} = this.state;
         const {statisticsDefinitions, dataPlayer, arrPerPerson, currentTab, sportID} = this.props;
 
         if(!statisticsDefinitions || !dataPlayer || !arrPerPerson || !currentTab || !sportID) return false;
@@ -70,8 +70,8 @@ export default class PlayerStatsComponent extends Component {
         this.parseFormatData();
         this.parseHeaderData();
         this.parseBodyData();
-
-        return true;
+        this.sortTable(currentSort, true);
+        this.renderBody();
     }
 
     getItemValue(playerSfId, code, category){
@@ -158,8 +158,6 @@ export default class PlayerStatsComponent extends Component {
         });
 
         this.dataSource = dataSource;
-
-        this.renderBody();
     }
 
     parseFormatData() {
@@ -170,8 +168,6 @@ export default class PlayerStatsComponent extends Component {
         if(!sportID || !statisticsDefinitions || statisticsDefinitions.length <= 0) return [];
 
         currentTab = currentTab ? currentTab : 1;
-
-
 
         if(sportID == SportConstant.BASEBALL_ID) {
             switch (currentTab){
@@ -261,25 +257,26 @@ export default class PlayerStatsComponent extends Component {
         if(!sportID || !this.dataFormat || this.dataFormat.length <= 0) return [];
 
         currentTab = currentTab ? currentTab : 1;
+        const onSortClick = (id, active) => this.onSortClick(id, active);
 
         if(sportID == SportConstant.BASEBALL_ID) {
             switch (currentTab){
                 case 1:
                 case 2:
-                    dataHeader.push(<SortIcon text={"#"} active={sort.numb} onClick={this.onSortClick}/>);
-                    dataHeader.push(<SortIcon text={"NAME"} active={sort.name} onClick={this.onSortClick}/>);
-                    dataHeader.push(<SortIcon text={"ORDER"} active={sort.order} onClick={this.onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"#"} id={'numb'} active={sort.numb} onClick={onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"NAME"} id={'name'} active={sort.name} onClick={onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"ORDER"} id={'order'} active={sort.order} onClick={onSortClick}/>);
                     break;
                 case 3:
-                    dataHeader.push(<SortIcon text={"#"} active={sort.numb} onClick={this.onSortClick}/>);
-                    dataHeader.push(<SortIcon text={"NAME"} active={sort.name} onClick={this.onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"#"} id={'numb'} active={sort.numb} onClick={onSortClick}/>);
+                    dataHeader.push(<SortIcon text={"NAME"} id={'name'} active={sort.name} onClick={onSortClick}/>);
                     dataHeader.push("FIELDED");
                     break;
             }
         }else {
-            dataHeader.push(<SortIcon text={"#"} active={sort.numb} onClick={this.onSortClick}/>);
-            dataHeader.push(<SortIcon text={"NAME"} active={sort.name} onClick={this.onSortClick}/>);
-            dataHeader.push(<SortIcon text={"ORDER"} active={sort.order} onClick={this.onSortClick}/>);
+            dataHeader.push(<SortIcon text={"#"} id={'numb'} active={sort.numb} onClick={onSortClick}/>);
+            dataHeader.push(<SortIcon text={"NAME"} id={'name'} active={sort.name} onClick={onSortClick}/>);
+            dataHeader.push(<SortIcon text={"ORDER"} id={'order'} active={sort.order} onClick={onSortClick}/>);
         }
 
         this.dataFormat.map(f => {
@@ -321,7 +318,7 @@ export default class PlayerStatsComponent extends Component {
             if (row.playerId == playerId) {
 
                 newRow.orderError = false;
-
+                newRow.isChange = true;
                 newRow.orderValue = value;
             }
 
@@ -373,10 +370,7 @@ export default class PlayerStatsComponent extends Component {
                 let divID = canvasParam.div_id;
                 let roundID = canvasParam.round_id;
                 let fixtureID = canvasParam.fixture_id;
-                // console.log('canvasParam',canvasParam);
-                // console.log('arrParam',arrParam);
 
-;
                 Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
 
                     if(this.props.onShowToast){
@@ -433,7 +427,7 @@ export default class PlayerStatsComponent extends Component {
         if(this.props.onEditStats) this.props.onEditStats(true);
     }
 
-    onSortClick (field, active) {
+    sortTable (field, active) {
 
         let sort = {numb: false, name: false, order: false};
         let dataSource = this.dataSource;
@@ -457,11 +451,15 @@ export default class PlayerStatsComponent extends Component {
 
         this.dataSource = dataSource;
 
-        this.renderBody();
-
         this.setState({
             sort, currentSort
         });
+    }
+
+    onSortClick (field, active) {
+
+        this.sortTable(field, active);
+        this.renderBody();
     }
 
     renderBody() {
