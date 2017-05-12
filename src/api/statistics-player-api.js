@@ -137,8 +137,8 @@ export function getIndividualPlayer(sport,season,comp, div, round, fixture, fixt
 
 }
 
-export function savePerPerson(sport,season,comp, div, round, fixture,data) {
-         let path = Config.PLAYER_STAT_GET_PLAYER_PATH;
+export function savePlayer(sport,season,comp, div, round, fixture,data) {
+         let path = Config.PLAYER_STAT_SAVE_PLAYER_PATH;
 
         const param = {
             sport_id: sport,
@@ -150,5 +150,5 @@ export function savePerPerson(sport,season,comp, div, round, fixture,data) {
 
         };
 
-    return CommonApi.httpPostPlayerStat(path,param,data);
+    return CommonApi.httpPostHerokuPlayerStat(path,param,data);
 }

@@ -66,10 +66,6 @@ export default class PlayerStatsPageComponent extends Component {
             let category = '';
             let stat_code = null;
 
-            Service.savePerPerson(sportID,seasonID,compID, divID, roundID, fixtureID,dataObject).then(data => {
-                // console.log(data);
-
-            });
 
             //get statistic definition
 
@@ -193,6 +189,7 @@ export default class PlayerStatsPageComponent extends Component {
 
     yesConfirm() {
         this.setState({isShowModel: false});
+        this.refs.playerStats.onSaved();
     }
 
     cancelLeaveTab() {
@@ -302,7 +299,8 @@ export default class PlayerStatsPageComponent extends Component {
 
 
     render() {
-        if(this.getCanvasParam()) {
+        let canvasParam = this.getCanvasParam();
+        if(canvasParam) {
 
             let onSave = ()=> this.onSave();
             let onChange = (data)=> this.onChange(data);
@@ -326,6 +324,8 @@ export default class PlayerStatsPageComponent extends Component {
                                       dataPlayer={this.state.dataPlayer}
                                       arrPerPerson={this.state.arrPerPerson}
                                       onEditStats={onEditStats}
+                                      canvasParam={canvasParam}
+                                      ref = "playerStats"
                 />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>

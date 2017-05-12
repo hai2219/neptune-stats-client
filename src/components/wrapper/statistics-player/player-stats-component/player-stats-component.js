@@ -12,6 +12,7 @@ import ToggleComponent from '../../../common/toggle/toggle-button-component';
 import * as SportConstant from "../../../../constant/sport-constant";
 import PropTypes from 'prop-types';
 import _ from "lodash";
+import * as Service from  "../../../../services/statistic-player-services";
 
 export default class PlayerStatsComponent extends Component {
     constructor(props) {
@@ -302,6 +303,52 @@ export default class PlayerStatsComponent extends Component {
         if(this.props.onEditStats) this.props.onEditStats(true);
     }
 
+    onSaved(){
+        if(this.checkOrderDouble()) {
+            if(this.props.onSaved){
+                this.props.onSaved(fail,'fail');
+            }
+        }else{
+            let arrParam = [];
+            this.dataSource.map(row => {
+
+                if (row.isChange == true) {
+
+                    this.dataFormat.map(f => {
+                        let obj = {
+                            fixture_participant_id:  row.playerId,
+                            category: row.category,
+                            code: f.code,
+                            value: row[f.code]
+
+                    };
+                        arrParam.push(obj);
+
+                    });
+
+                }
+
+            });
+            if(arrParam.length > 0 ){
+                const {canvasParam} = this.props;
+                let sportID = canvasParam.sport_id;
+                let seasonID = canvasParam.season_id;
+                let compID = canvasParam.comp_id;
+                let divID = canvasParam.div_id;
+                let roundID = canvasParam.round_id;
+                let fixtureID = canvasParam.fixture_id;
+
+
+                Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
+                    console.log("savePlayer" ,data);
+
+                });
+
+            }
+
+        }
+    }
+
     onChangeToggle(playerId) {
 
         this.dataSource.map(row => {
@@ -450,8 +497,9 @@ PlayerStatsComponent.propTypes = {
     currentTab: PropTypes.number,
     dataPlayer: PropTypes.object,
     arrPerPerson: PropTypes.array,
-
-    onEditStats: PropTypes.func
+    onEditStats: PropTypes.func,
+    onSaved: PropTypes.func,
+    canvasParam: PropTypes.object
 };
 
 PlayerStatsComponent.defaultProps = {

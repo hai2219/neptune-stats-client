@@ -3,6 +3,10 @@
     "LOCAL_PORT": "3003",
     "PLAYER_STAT_API_HOST": "http://128.199.90.210",
     "PLAYER_STAT_API_PORT": "8082",
+    "PLAYER_STAT_API_HEROKU_HOST": "http://128.199.90.210",
+    "PLAYER_STAT_API_HEROKU_PORT": "",
+    "PLAYER_STAT_HEROKU_POST" : "/heroku/post",
+    "PLAYER_STAT_HEROKU_GET" : "/heroku/get",
     "PLAYER_STAT_POST" : "/playerstart/post",
     "PLAYER_STAT_GET" : "/playerstart/get",
     "PLAYER_STAT_API_SSL": false,
@@ -15,7 +19,7 @@
     "PLAYER_STAT_GET_INDIVIDUAL_CATEGORY_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/fixtureteam/{fixtureteam_id}/fixtureparticipant/{fixtureparticipant_id}/category/{category}/{stat_code}",
     "PLAYER_STAT_GET_INDIVIDUAL_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/fixtureteam/{fixtureteam_id}/fixtureparticipant/{fixtureparticipant_id}/{stat_code}",
 
-    "PLAYER_STAT_SAVE_PER_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/playerstatistics"
+    "PLAYER_STAT_SAVE_PLAYER_PATH": "/sport/{sport_id}/season/{season_id}/competition/{comp_id}/division/{div_id}/round/{round_id}/fixture/{fixture_id}/playerstatistics"
 
 
 }
