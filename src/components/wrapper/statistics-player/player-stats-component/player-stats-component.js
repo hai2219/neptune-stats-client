@@ -148,6 +148,7 @@ export default class PlayerStatsComponent extends Component {
             dataRow.orderValue = player.orderNumber;
             dataRow.orderError = false;
             dataRow.toggle = false;
+            dataRow.isChange = false;
 
             this.dataFormat.map(f => {
                 if (f.type == "Calculated") {
@@ -371,9 +372,9 @@ export default class PlayerStatsComponent extends Component {
     }
 
     renderBody() {
-        let {currentTab} = this.props;
+        let {sportID, currentTab} = this.props;
         let dataBody = [];
-        let isField = currentTab == 3 ? true : false;
+        let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
 
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
