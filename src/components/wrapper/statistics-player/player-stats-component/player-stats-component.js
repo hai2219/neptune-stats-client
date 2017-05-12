@@ -428,6 +428,9 @@ export default class PlayerStatsComponent extends Component {
     }
 
     sortTable (field, active) {
+        let {sportID, currentTab} = this.props;
+        let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
+        field = isField ? "numb" : field;
 
         let sort = {numb: false, name: false, order: false};
         let dataSource = this.dataSource;
