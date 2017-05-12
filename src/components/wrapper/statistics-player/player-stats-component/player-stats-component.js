@@ -146,7 +146,7 @@ export default class PlayerStatsComponent extends Component {
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
-            dataRow.orderValue = player.orderNumber;
+            dataRow.orderValue = currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
@@ -183,17 +183,57 @@ export default class PlayerStatsComponent extends Component {
         if(sportID == SportConstant.BASEBALL_ID) {
             switch (currentTab){
                 case 1:
-                    code = ["AB", "R", "H", "2B", "3B", "HR", "RB1", "TB", "BB", "SO", "SB", "CS", "SP", "AVG"]; //Miss: "3B", "RB1", "SP"
+                    code = [
+                        {code: "AB", name: "AB"},
+                        {code: "R", name: "R"},
+                        {code: "H", name: "H"},
+                        {code: "2B", name: "2B"},
+                        {code: "3B", name: "3B"},
+                        {code: "HR", name: "HR"},
+                        {code: "RBI", name: "RBI"},
+                        {code: "TB", name: "TB"},
+                        {code: "BB", name: "BB"},
+                        {code: "K", name: "SO(K)"},
+                        {code: "SB", name: "SB"},
+                        {code: "CS", name: "CS"},
+                        {code: "SP", name: "SP"},
+                        {code: "BA", name: "AVG"}
+                    ];
+
                     break;
                 case 2:
-                    code = ["IP", "H", "R", "ER", "BB", "SO", "HR", "ERA"]; //Miss: "SO", "ERA"
+                    code = [
+                        {code: "IP", name: "IP"},
+                        {code: "H", name: "H"},
+                        {code: "R", name: "R"},
+                        {code: "ER", name: "ER"},
+                        {code: "BB", name: "BB"},
+                        {code: "K", name: "SO(K)"},
+                        {code: "HR", name: "HR"}
+                    ];
+
                     break;
                 case 3:
-                    code = ["E", "A", "PO", "FPCT"]; //Miss "E", "A", "FPCT"
+                    code = [
+                        {code: "E", name: "E"},
+                        {code: "A", name: "A"},
+                        {code: "PO", name: "PO"}
+                    ];
+
                     break;
             }
         }else {
-            code = ["AB", "R", "H", "2B", "TB", "BB", "SO", "SB", "CS", "SP", "AVG"];
+            code = [
+                {code: "AB", name: "AB"},
+                {code: "R", name: "R"},
+                {code: "HR", name: "HR"},
+                {code: "RBI", name: "RBI"},
+                {code: "TB", name: "TB"},
+                {code: "BB", name: "BB"},
+                {code: "K", name: "SO(K)"},
+                {code: "SB", name: "SB"},
+                {code: "CS", name: "CS"}
+            ];
         }
 
         for(let i = 0; i < code.length; i++) {
@@ -202,8 +242,8 @@ export default class PlayerStatsComponent extends Component {
             for (let j = 0; j < statisticsDefinitions.length; j++) {
                 let s = statisticsDefinitions[j];
 
-                if(c == s.code) {
-                    dataFormat.push({code: c, type: s.type, formula: s.formula});
+                if(c.code == s.code) {
+                    dataFormat.push({code: c.code, name: c.name, type: s.type, formula: s.formula});
                     break;
                 }
             }
@@ -250,7 +290,7 @@ export default class PlayerStatsComponent extends Component {
         }
 
         this.dataFormat.map(f => {
-            dataHeader.push(f.code);
+            dataHeader.push(f.name);
         });
 
         this.dataHeader = dataHeader;
@@ -387,7 +427,6 @@ export default class PlayerStatsComponent extends Component {
     }
 
     onSortClick (field, active) {
-// console.log("=========== onSortClick =============");
 
         let sort = {numb: false, name: false, order: false};
         let dataSource = this.dataSource;
@@ -457,7 +496,7 @@ export default class PlayerStatsComponent extends Component {
                         let onChangeStats = (value) => this.onChangeStats(playerId, value);
 
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
-                            renderRow.push(<Float numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
+                            renderRow.push(<Float id={row.playerId.toString()} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
                         } else {
                             renderRow.push("");
                         }
