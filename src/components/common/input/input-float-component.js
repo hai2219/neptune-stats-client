@@ -2,7 +2,7 @@
  * @copyright 2017 @ NEXLE
  * @author rocachien
  * @create 2017/05/08 10:03
- * @update 2017/05/08 16:25
+ * @update 2017/05/12 13:48
  * @file common/input/input-float-component.js
  */
 "use strict";
@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
  * @example
  *
  *
- * <Float className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} numOfDecimal={2} min={-999} max={999}/>
+ * <Float className="finalScoreInput" id={id} ref={id} key={id} style={inputStyle} onBlur={onBlur} defaultValue={input} numOfDecimal={2} min={-999} max={999}/>
  */
 
 const KeyCode = {
@@ -166,7 +166,7 @@ export default class Float extends Component {
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...inputProps} type={"text"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
+            <input {...inputProps} type={"text"} id={id} ref={id} key={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
         );
     }
 }
