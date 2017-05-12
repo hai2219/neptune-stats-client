@@ -152,3 +152,28 @@ export function savePlayer(sport,season,comp, div, round, fixture,data) {
 
     return CommonApi.httpPostHerokuPlayerStat(path,param,data);
 }
+
+export function saveOrder(sport,season,comp, div, round, fixture,data) {
+    let path = Config.PLAYER_STAT_SAVE_ORDER_PATH;
+
+    const param = {
+        sport_id: sport,
+        season_id: season,
+        comp_id: comp,
+        div_id: div,
+        round_id: round,
+        fixture_id:fixture
+
+    };
+
+    return CommonApi.httpPostHerokuPlayerStat(path,param,data);
+}
+
+
+
+
+
+
+
+
+

@@ -335,6 +335,8 @@ export default class PlayerStatsComponent extends Component {
 
     onSaved(){
 
+
+
         if(this.checkOrderDouble()) {
 
             if(this.props.onShowToast){
@@ -343,6 +345,7 @@ export default class PlayerStatsComponent extends Component {
         }else{
 
             let arrParam = [];
+            let arrOrderParam = [];
             this.dataSource.map(row => {
 
                 if (row.isChange == true) {
@@ -359,17 +362,46 @@ export default class PlayerStatsComponent extends Component {
 
                     });
 
+
+                    let objOrder = {
+                        fixture_participant_id:  row.playerId,
+                        category: row.category,
+                        order: parseInt(row.orderValue),
+
+
+                    };
+                    arrOrderParam.push(objOrder);
+
                 }
 
             });
+            //save order
+            let {sport, currentTab,canvasParam} = this.props;
+            let sportID = canvasParam.sport_id;
+            let seasonID = canvasParam.season_id;
+            let compID = canvasParam.comp_id;
+            let divID = canvasParam.div_id;
+            let roundID = canvasParam.round_id;
+            let fixtureID = canvasParam.fixture_id;
+
+            let isField = (sport == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
+            if(isField){
+
+            }else{
+                if(arrOrderParam.length > 0 ) {
+                    Service.saveOrder(sportID, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
+                        console.log('succes order');
+
+                    }).catch(error => {
+                        console.log('fail order');
+
+                    });
+                }
+            }
+            //save cell
             if(arrParam.length > 0 ){
-                const {canvasParam} = this.props;
-                let sportID = canvasParam.sport_id;
-                let seasonID = canvasParam.season_id;
-                let compID = canvasParam.comp_id;
-                let divID = canvasParam.div_id;
-                let roundID = canvasParam.round_id;
-                let fixtureID = canvasParam.fixture_id;
+
+
 
                 Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
 

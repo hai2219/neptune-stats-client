@@ -19,3 +19,6 @@ export function savePlayer(sport,season,comp, div, round, fixture,data) {
     return StatisticsApi.savePlayer(sport,season,comp, div, round, fixture,data);
 }
 
+export function saveOrder(sport,season,comp, div, round, fixture,data) {
+    return StatisticsApi.saveOrder(sport,season,comp, div, round, fixture,data);
+}
