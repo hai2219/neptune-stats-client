@@ -37,7 +37,16 @@ export default class PlayerStatsComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        let {sportID, currentTab} = nextProps;
+        let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
 
+        if (isField && nextProps.currentTab !== this.props.currentTab && this.state.currentSort == "order") {
+
+            this.setState({
+                sort: {numb: true, name: false, order: false},
+                currentSort: "numb",
+            });
+        }
     }
 
     componentDidUpdate (prevProps, prevState) {
@@ -460,9 +469,6 @@ export default class PlayerStatsComponent extends Component {
     }
 
     sortTable (field, active) {
-        let {sportID, currentTab} = this.props;
-        let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
-        field = isField ? "numb" : field;
 
         let sort = {numb: false, name: false, order: false};
         let dataSource = this.dataSource;
