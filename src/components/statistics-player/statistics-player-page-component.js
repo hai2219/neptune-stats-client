@@ -306,7 +306,7 @@ export default class PlayerStatsPageComponent extends Component {
     renderModel(){
         if(this.state.isShowModel){
             let title = 'CONFIRMATION';
-            let question = 'Are you sure you want to save these scores?';
+            let question = 'Are you sure you want to save these stats?';
 
             let cancelConfirm = ()=> this.cancelConfirm();
             let yesConfirm = ()=> this.yesConfirm();
