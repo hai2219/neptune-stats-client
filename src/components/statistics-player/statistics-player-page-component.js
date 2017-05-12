@@ -27,6 +27,7 @@ export default class PlayerStatsPageComponent extends Component {
             dataPlayer:null,
             arrPerPerson:null,
             currentTab:1,
+            isShowDialogToggle:false
         };
         this.currentTab = 1;
         this.isEditStats = true;
@@ -223,12 +224,19 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     onShowToast( type){
-        console.log('type',type);
+
             this.setState({
                 isShowPopup:true,
                 submitResult:type,
             });
 
+    }
+
+    onShowDailogToggle(show){
+        this.setState({
+            isShowDialogToggle:show,
+
+        });
     }
 
     closedPopup(){
@@ -353,6 +361,7 @@ export default class PlayerStatsPageComponent extends Component {
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
+            let onShowDailogToggle = (show)=> this.onShowDailogToggle(show);
 
 
         return (
@@ -373,6 +382,7 @@ export default class PlayerStatsPageComponent extends Component {
                                       arrPerPerson={this.state.arrPerPerson}
                                       onEditStats={onEditStats}
                                       onShowToast={onShowToast}
+                                      onShowDailogToggle={onShowDailogToggle}
                                       canvasParam={canvasParam}
                                       ref = "playerStats"
                 />
