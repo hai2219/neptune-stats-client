@@ -408,6 +408,7 @@ export default class PlayerStatsComponent extends Component {
 
                     if(playerId == row.playerId) {
                         newRow[f.code] = value;
+                        newRow.isChange = true;
                     }
                 }
             });
