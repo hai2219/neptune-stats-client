@@ -37,10 +37,6 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
-    componentWillUnmount(){
-
-    }
-
     componentWillReceiveProps(nextProps) {
 
     }
