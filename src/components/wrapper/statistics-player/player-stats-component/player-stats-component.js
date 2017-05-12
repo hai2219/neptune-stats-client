@@ -37,10 +37,6 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
-    componentWillUnmount(){
-
-    }
-
     componentWillReceiveProps(nextProps) {
 
     }
@@ -128,8 +124,6 @@ export default class PlayerStatsComponent extends Component {
 
         if(!sportID || !this.dataFormat || this.dataFormat.length < 1 || !dataPlayer || !dataPlayer.players || dataPlayer.players.length < 1) return [];
 
-        dataPlayer =  dataPlayer.players;
-
         switch (currentTab)
         {
             case 1: category = "Batting"; break;
@@ -137,8 +131,7 @@ export default class PlayerStatsComponent extends Component {
             case 3: category = "Fielding"; break;
         }
 
-        for (let i = 0; i < dataPlayer.length; i++) {
-            let player = dataPlayer[i];
+        dataPlayer.players.map(player => {
             let dataRow = {};
             let name = player.firstName + " " + (player.middleName || "") + " " + player.lastName;
 
@@ -162,7 +155,7 @@ export default class PlayerStatsComponent extends Component {
             });
 
             dataSource.push(dataRow);
-        }
+        });
 
         this.dataSource = dataSource;
 
@@ -428,6 +421,7 @@ export default class PlayerStatsComponent extends Component {
 
                     if(playerId == row.playerId) {
                         newRow[f.code] = value;
+                        newRow.isChange = true;
                     }
                 }
             });
@@ -497,7 +491,7 @@ export default class PlayerStatsComponent extends Component {
                         inputStyle = {border: "1px solid rgb(0, 151, 222)"};
                     }
 
-                    renderRow.push(<Integer className="order" min={1} max={999} style={inputStyle} defaultValue={row.orderValue} onBlur={onChangeOrder}/>);
+                    renderRow.push(<Integer className="order" id={row.category + row.playerId} min={1} max={999} style={inputStyle} defaultValue={row.orderValue} onBlur={onChangeOrder}/>);
                 }
 
                 this.dataFormat.map(f => {
@@ -509,7 +503,7 @@ export default class PlayerStatsComponent extends Component {
                         let onChangeStats = (value) => this.onChangeStats(playerId, value);
 
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
-                            renderRow.push(<Float id={row.playerId.toString()} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
+                            renderRow.push(<Float id={row.category + row.playerId} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
                         } else {
                             renderRow.push("");
                         }

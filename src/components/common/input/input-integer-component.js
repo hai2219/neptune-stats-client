@@ -2,7 +2,7 @@
  * @copyright 2017 @ NEXLE
  * @author rocachien
  * @create 2017/04/28 14:41
- * @update 2017/05/11 19:07
+ * @update 2017/05/12 13:47
  * @file common/input/input-integer-component.js
  */
 "use strict";
@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
  * @example
  *
  *
- * <Integer className="finalScoreInput" id={id} ref={id} style={inputStyle} onBlur={onBlur} defaultValue={input} min={-999} max={999}/>
+ * <Integer className="finalScoreInput" id={id} ref={id} key={id} style={inputStyle} onBlur={onBlur} defaultValue={input} min={-999} max={999}/>
  */
 
 const KeyCode = {
@@ -135,7 +135,7 @@ export default class Integer extends Component {
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...this.props} type={"number"} id={id} ref={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} style={style}/>
+            <input {...this.props} type={"number"} id={id} ref={id} key={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} style={style}/>
         );
     }
 }
