@@ -320,7 +320,7 @@ export default class PlayerStatsComponent extends Component {
         return found;
     }
 
-    onConfirmOrderOff(playerId) {
+    onConfirmOrderEmpty(playerId) {
 
         this.dataSource.map(row => {
             let newRow = row;
@@ -333,6 +333,7 @@ export default class PlayerStatsComponent extends Component {
                 });
 
                 newRow.isChange = false;
+                newRow.isOrderChange = false;
             }
 
             return newRow;
@@ -355,7 +356,7 @@ export default class PlayerStatsComponent extends Component {
 
                 if((!value || value.length == 0) && this.props.onShowDailogToggle && orderValue > 0 && row.isChange) {
                     isConfirm = true;
-                    const onAccept = () => this.onConfirmOrderOff(playerId);
+                    const onAccept = () => this.onConfirmOrderEmpty(playerId);
 
                     this.props.onShowDailogToggle(2, onAccept);
                 }
