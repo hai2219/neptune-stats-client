@@ -27,7 +27,7 @@ export default class PlayerStatsPageComponent extends Component {
             dataPlayer:null,
             arrPerPerson:null,
             currentTab:1,
-            isShowDialogToggle:false
+            showDialogToggle:0
         };
         this.currentTab = 1;
         this.isEditStats = true;
@@ -208,6 +208,19 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
+    onYesToggle(){
+        this.setState({
+            showDialogToggle:0,
+
+        });
+    }
+
+    onCancelToggle(){
+        this.setState({
+            showDialogToggle:0,
+
+        });
+    }
     onShowToast( type){
 
             this.setState({
@@ -217,9 +230,9 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
-    onShowDailogToggle(show){
+    onShowDailogToggle(type){
         this.setState({
-            isShowDialogToggle:show,
+            showDialogToggle:type,
 
         });
     }
@@ -336,6 +349,50 @@ export default class PlayerStatsPageComponent extends Component {
         return null;
     }
 
+    renderModelTonggle(){
+
+        let title = 'Do you want to enable edit this row?';
+        let question = '';
+
+            switch (this.state.showDialogToggle){
+                case 0:
+                    return null;
+                case 1: //show toggle
+                    title = 'Do you want to enable edit this row?';
+
+                    break;
+                case 2:  //hide toggle
+                    title = 'Do you want to disable edit this row?';
+
+                    break;
+                case 3: //show order
+                    title = 'Do you want to enable edit this row?';
+
+                    break;
+                case 2:  //hide oder
+                    title = 'Do you want to disable edit this row?';
+
+                    break;
+            }
+
+            let onCancelToggle = ()=> this.onCancelToggle();
+            let onYesToggle = ()=> this.onYesToggle();
+            return(
+                <div>
+                    <ModalComponent
+                        title={title}
+                        question={question}
+                        cancel="Cancel"
+                        yes="Yes"
+                        cancelConfirm={onCancelToggle} yesConfirm={onYesToggle}/>
+                    <style>{css}</style>
+                </div>
+            );
+
+
+    }
+
+
 
     render() {
         let canvasParam = this.getCanvasParam();
@@ -346,7 +403,7 @@ export default class PlayerStatsPageComponent extends Component {
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
-            let onShowDailogToggle = (show)=> this.onShowDailogToggle(show);
+            let onShowDailogToggle = (type)=> this.onShowDailogToggle(type);
 
 
         return (
@@ -354,6 +411,7 @@ export default class PlayerStatsPageComponent extends Component {
                 {this.renderPopup()}
                 {this.renderModel()}
                 {this.renderModelLeaveTab()}
+                {this.renderModelTonggle()}
                 <HeaderComponent
                                 ref = "header"
                                 onSave={onSave}
