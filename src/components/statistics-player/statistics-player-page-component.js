@@ -224,7 +224,7 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     goToTab(index){
-        console.log('currentTabItem',index);
+
         this.refs.header.onChangeTab();
         this.setState({isShowModelLeaveTab: false ,currentTab:  index});
 
@@ -416,14 +416,16 @@ export default class PlayerStatsPageComponent extends Component {
 
         let title = 'Do you want to enable edit this row?';
         let question = '';
-
+        let style = {};
             switch (this.state.showDialogToggle){
                 case 0:
                     return null;
                 case 1: //show toggle
                     title = 'Do you want to off this fielded?';
                     question = 'Changes you made may not be saved.';
-
+                    style={
+                        height: '242px',
+                    };
                     break;
                 case 2:  //hide toggle
                     title = 'Do you want to disable edit this row?';
@@ -446,6 +448,7 @@ export default class PlayerStatsPageComponent extends Component {
                     <ModalComponent
                         title={title}
                         question={question}
+                        containerStyle={style}
                         cancel="Cancel"
                         yes="Yes"
                         cancelConfirm={onCancelToggle} yesConfirm={onYesToggle}/>
