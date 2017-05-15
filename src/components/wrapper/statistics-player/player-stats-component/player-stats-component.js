@@ -140,6 +140,8 @@ export default class PlayerStatsComponent extends Component {
             case 3: category = "Fielding"; break;
         }
 
+        // console.log('getPlayer',dataPlayer.players);
+
         dataPlayer.players.map(player => {
             let dataRow = {};
             let name = player.firstName + " " + (player.middleName || "") + " " + player.lastName;
@@ -450,6 +452,7 @@ export default class PlayerStatsComponent extends Component {
 
             return newRow;
         });
+
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);

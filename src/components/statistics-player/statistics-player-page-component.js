@@ -61,7 +61,7 @@ export default class PlayerStatsPageComponent extends Component {
         let canvasParam = this.getCanvasParam();
         if(canvasParam){
             //save person
-
+console.log('canvasParam',canvasParam);
             let sportID = canvasParam.sport_id;
             let seasonID = canvasParam.season_id;
             let compID = canvasParam.comp_id;
@@ -108,8 +108,9 @@ export default class PlayerStatsPageComponent extends Component {
             //get player
 
             Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
-                console.log('getPlayer',data);
+
                 if (data.data) {
+
                     this.setState({
                         dataPlayer:data.data,
                     });
