@@ -235,6 +235,8 @@ export default class PlayerStatsPageComponent extends Component {
             showDialogToggle:0,
 
         });
+
+        if(this.onAccept) this.onAccept();
     }
 
     onCancelToggle(){
@@ -242,6 +244,8 @@ export default class PlayerStatsPageComponent extends Component {
             showDialogToggle:0,
 
         });
+
+        if(this.onCancel) this.onCancel();
     }
     onShowToast( type){
 
@@ -252,7 +256,11 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
-    onShowDailogToggle(type){
+    onShowDailogToggle(type, onCancel, onAccept){
+
+        if(onCancel) this.onCancel = onCancel;
+        if(onAccept) this.onAccept = onAccept;
+
         this.setState({
             showDialogToggle:type,
 
@@ -458,7 +466,7 @@ export default class PlayerStatsPageComponent extends Component {
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
-            let onShowDailogToggle = (type)=> this.onShowDailogToggle(type);
+            let onShowDailogToggle = (type, onCancel, onAccept)=> this.onShowDailogToggle(type, onCancel, onAccept);
 
 
         return (

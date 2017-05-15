@@ -94,8 +94,10 @@ const css = `
     i.fa-times,.fa-times-circle{
       color:rgba(255,255,255,.55);
       position:absolute;
-      top:9px;   
-      right:10px;
+      top:0;   
+      right:0;
+      font-size: 30px;
+      margin: 21px;
     }
     
 `;

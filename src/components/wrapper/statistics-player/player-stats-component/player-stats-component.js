@@ -504,6 +504,21 @@ export default class PlayerStatsComponent extends Component {
         this.renderBody();
     }
 
+    onConfirmToggleOff() {
+
+        if(this.props.onShowDailogToggle) {
+            const onCancel = () => {
+                console.log("======= onCancel =========");
+            };
+            const onAccept = () => {
+                console.log("======= onAccept =========");
+            };
+
+
+            this.props.onShowDailogToggle(1, onCancel, onAccept);
+        }
+    }
+
     renderBody() {
         let {sportID, currentTab} = this.props;
         let dataBody = [];
@@ -586,6 +601,7 @@ PlayerStatsComponent.propTypes = {
     onEditStats: PropTypes.func,
     canvasParam: PropTypes.object,
     onShowToast: PropTypes.func,
+    onShowDailogToggle: PropTypes.func,
 };
 
 PlayerStatsComponent.defaultProps = {
