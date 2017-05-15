@@ -139,7 +139,7 @@ console.log("===== getCalculated:", formula);
             case 3: category = "Fielding"; break;
         }
 
-        // console.log('getPlayer',dataPlayer.players);
+        console.log('getPlayer',dataPlayer.players);
 
         dataPlayer.players.map(player => {
             let dataRow = {};
@@ -169,6 +169,7 @@ console.log("===== getCalculated:", formula);
         });
 
         this.dataSource = dataSource;
+        console.log('dataSource',dataSource);
     }
 
     parseFormatData() {
@@ -575,7 +576,7 @@ console.log("===== getCalculated:", formula);
         let {sportID, currentTab} = this.props;
         let dataBody = [];
         let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
-
+          console.log('this.dataSource',this.dataSource);
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
                 let renderRow = [];
@@ -621,7 +622,7 @@ console.log("===== getCalculated:", formula);
                 dataBody.push(renderRow);
             });
         }
-
+        console.log('data body:',dataBody);
         this.setState({dataBody: dataBody});
     }
 
@@ -642,7 +643,8 @@ console.log("===== getCalculated:", formula);
 
             <div id="player-stats-wrapper-container">
 
-                {this.loading() > 0 && <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={dataBody} />}
+                {this.loading() > 0 && <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader}
+                                                              headerStyle={{color: '#4a4a4a'}} body={dataBody} />}
                 {this.loading() == 0 && <div className="no-stats-entry">Have no player statistics</div>}
                 {this.loading() < 0 && <div className="no-stats-entry">Loading..</div>}
                 <style>{css}</style>
