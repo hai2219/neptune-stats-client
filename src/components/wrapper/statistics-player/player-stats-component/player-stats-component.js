@@ -105,23 +105,22 @@ export default class PlayerStatsComponent extends Component {
 
     }
 
-    calculateAvg(playerSfId, arrCode, category, mathExpress){
+    getCalculated(rowData, formula){
 
-        if(arrCode && arrCode.length > 0){
-            let math = mathExpress;
-            for(let i = 0 ; i < arrCode.length; i++){
-                let code = arrCode[i];
-                let value = this.getItemValue(playerSfId,code,category) ;
+        if(!formula || formula.length < 3) return null;
 
-                if(value){
-                    math = math.replace('[' + code + ']',value);
-                }else{
-                    math = math.replace('[' + code + ']', 0);
-                }
+        this.dataFormat.map(f => {
+            if (f.type != "Calculated") {
+                let code = '[' + f.code + ']';
+
+                formula = _.replace(formula,new RegExp(code,"g"), rowData[f.code]);
+console.log("===== getCalculated:", formula);
+
+
             }
-            return eval(math);
-        }
-        return null;
+        });
+
+        return eval(formula);
 
     }
 
@@ -154,11 +153,12 @@ export default class PlayerStatsComponent extends Component {
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
+            dataRow.isOrderChange = false;
 
             this.dataFormat.map(f => {
                 if (f.type == "Calculated") {
 
-                    dataRow[f.code] = f.formula;
+                    dataRow[f.code] = f.formula;//this.getCalculated(row, f.formula));
                 } else {
 
                     dataRow[f.code] = this.getItemValue(player.playerSfid, f.code, category);
@@ -321,24 +321,58 @@ export default class PlayerStatsComponent extends Component {
         return found;
     }
 
-    onChangeOrder(playerId, value) {
+    onConfirmOrderEmpty(playerId) {
 
         this.dataSource.map(row => {
             let newRow = row;
 
             if (row.playerId == playerId) {
+                newRow.orderValue = '';
 
-                newRow.orderError = false;
-                newRow.isChange = true;
-                newRow.orderValue = value;
+                this.dataFormat.map(f => {
+                    newRow[f.code] = '';
+                });
+
+                newRow.isChange = false;
+                newRow.isOrderChange = false;
             }
 
             return newRow;
         });
 
-        if(this.checkOrderDouble()) {
-            // TODO: Do not save when order number is double
-        }
+        this.checkOrderDouble();
+
+        this.renderBody();
+        if(this.props.onEditStats) this.props.onEditStats(true);
+    }
+
+    onChangeOrder(playerId, value) {
+
+        this.dataSource.map(row => {
+            let newRow = row;
+            let isConfirm = false;
+
+            if (row.playerId == playerId) {
+                const orderValue = parseInt(row.orderValue) || 0;
+
+                if((!value || value.length == 0) && this.props.onShowDailogToggle && orderValue > 0 && row.isChange) {
+                    isConfirm = true;
+                    const onAccept = () => this.onConfirmOrderEmpty(playerId);
+
+                    this.props.onShowDailogToggle(2, onAccept);
+                }
+
+                if (!isConfirm) {
+                    newRow.orderError = false;
+                    newRow.isOrderChange = true;
+                    newRow.orderValue = value;
+                }
+            }
+
+            return newRow;
+        });
+
+        this.checkOrderDouble();
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
@@ -357,7 +391,7 @@ export default class PlayerStatsComponent extends Component {
             let arrOrderParam = [];
             this.dataSource.map(row => {
 
-                if (row.isChange == true) {
+                if (row.isChange == true || row.isOrderChange == true) {
 
                     this.dataFormat.map(f => {
                         let obj = {
@@ -399,7 +433,6 @@ export default class PlayerStatsComponent extends Component {
             }else{
                 if(arrOrderParam.length > 0 ) {
                     Service.saveOrder(sportID, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
-                        console.log('succes order');
                         //save cell
                         if(arrParam.length > 0 ){
 
@@ -421,7 +454,6 @@ export default class PlayerStatsComponent extends Component {
                         }
 
                     }).catch(error => {
-                        console.log('fail order');
                         if(this.props.onShowToast){
                             this.props.onShowToast(2);
                         }
@@ -494,13 +526,17 @@ export default class PlayerStatsComponent extends Component {
     }
 
     onConfirmToggleOff(playerId) {
-        console.log("======= onAccept =========");
 
         this.dataSource.map(row => {
             let newRow = row;
 
             if (row.playerId == playerId) {
-                newRow.toggle = !row.toggle;
+                newRow.toggle = false;
+                newRow.isChange = false;
+
+                this.dataFormat.map(f => {
+                    newRow[f.code] = '';
+                });
             }
 
             return newRow;
@@ -521,11 +557,7 @@ export default class PlayerStatsComponent extends Component {
                 isConfirm = true;
                 const onAccept = () => this.onConfirmToggleOff(playerId);
 
-                const onCancel = () => {
-                    console.log("======= onCancel =========");
-                };
-
-                this.props.onShowDailogToggle(1, onCancel, onAccept);
+                this.props.onShowDailogToggle(1, onAccept);
             }
 
             if (row.playerId == playerId && !isConfirm) {
@@ -572,12 +604,12 @@ export default class PlayerStatsComponent extends Component {
                 this.dataFormat.map(f => {
                     if (f.type == "Calculated") {
 
-                        renderRow.push("");
+                        renderRow.push(row[f.code]);
                     } else {
 
-                        let onChangeStats = (value) => this.onChangeStats(playerId, value);
-
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
+                            let onChangeStats = (value) => this.onChangeStats(playerId, value);
+
                             renderRow.push(<Float id={row.category + row.playerId} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
                         } else {
                             renderRow.push("");
@@ -593,22 +625,29 @@ export default class PlayerStatsComponent extends Component {
         this.setState({dataBody: dataBody});
     }
 
-    render() {
+    loading() {
         let {dataBody} = this.state;
 
         if(this.dataHeader.length > 0 && dataBody && dataBody.length > 0){
-            return (
-
-                <div id="player-stats-wrapper-container">
-
-                    <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={dataBody} />
-                    <style>{css}</style>
-                </div>
-
-            );
-        }else{
-            return null;
+            return 1;
         }
+
+        return -1;
+    }
+
+    render() {
+        let {dataBody} = this.state;
+
+        return (
+
+            <div id="player-stats-wrapper-container">
+
+                {this.loading() > 0 && <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader} headerStyle={{color: '#4a4a4a'}} body={dataBody} />}
+                {this.loading() == 0 && <div className="no-stats-entry">Have no player statistics</div>}
+                {this.loading() < 0 && <div className="no-stats-entry">Loading..</div>}
+                <style>{css}</style>
+            </div>
+        );
     }
 }
 
@@ -633,6 +672,11 @@ const css = `
         background-color: rgba(241,245,248,1);
     }
     
+    #player-stats-wrapper-container .no-stats-entry {
+        text-align: center;
+        padding: 100px;
+        background-color: white;
+    }
     #player-stats-wrapper-container thead {
         background-color: white;
     }

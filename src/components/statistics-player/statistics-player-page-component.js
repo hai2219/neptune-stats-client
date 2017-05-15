@@ -8,6 +8,7 @@ import PlayerStatsComponent from "../wrapper/statistics-player/player-stats-comp
 import  HeaderComponent from  "../wrapper/statistics-player/header-component/header-wrapper-component";
 import  FooterComponent from  "../wrapper/statistics-player/footer-component/footer-wrapper-component";
 import ModalComponent from "../../components/common/modal/modal-component";
+import LoadingComponent from '../../components/common/loading/loading-component';
 import PopupComponent from "../../components/common/popup/popup-no-internet-component";
 import * as SportConstant from "../../constant/sport-constant";
 import * as Service from  "../../services/statistic-player-services";
@@ -35,6 +36,8 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     componentDidMount() {
+
+        this.showLoading(true);
 
         //listen internet connect
         let cb = (e)=> {
@@ -245,8 +248,6 @@ console.log('canvasParam',canvasParam);
             showDialogToggle:0,
 
         });
-
-        if(this.onCancel) this.onCancel();
     }
     onShowToast( type){
 
@@ -257,9 +258,8 @@ console.log('canvasParam',canvasParam);
 
     }
 
-    onShowDailogToggle(type, onCancel, onAccept){
+    onShowDailogToggle(type, onAccept){
 
-        if(onCancel) this.onCancel = onCancel;
         if(onAccept) this.onAccept = onAccept;
 
         this.setState({
@@ -273,6 +273,17 @@ console.log('canvasParam',canvasParam);
             isShowPopup:false,
         });
     }
+
+    showLoading(show) {
+        if(this.refs.loading && show){
+            this.refs.loading.show();
+        }
+
+        if(this.refs.loading && !show){
+            this.refs.loading.hide();
+        }
+    }
+
     renderNoInternetPopup(){
 
         if(this.state.isOnline == true){
@@ -428,22 +439,16 @@ console.log('canvasParam',canvasParam);
                         height: '242px',
                     };
                     break;
-                case 2:  //hide toggle
-                    title = 'Do you want to disable edit this row?';
-
-                    break;
-                case 3: //show order
-                    title = 'Do you want to enable edit this row?';
-
-                    break;
-                case 2:  //hide oder
-                    title = 'Do you want to disable edit this row?';
+                case 2: //show order
+                    title = 'Do you want to remove this order?';
+                    question = 'Changes you made may not be saved.';
 
                     break;
             }
 
             let onCancelToggle = ()=> this.onCancelToggle();
             let onYesToggle = ()=> this.onYesToggle();
+
             return(
                 <div>
                     <ModalComponent
@@ -471,7 +476,7 @@ console.log('canvasParam',canvasParam);
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
-            let onShowDailogToggle = (type, onCancel, onAccept)=> this.onShowDailogToggle(type, onCancel, onAccept);
+            let onShowDailogToggle = (type, onAccept)=> this.onShowDailogToggle(type, onAccept);
 
 
         return (
@@ -500,6 +505,7 @@ console.log('canvasParam',canvasParam);
                 />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>
+                <LoadingComponent ref="loading"/>
             </div>
 
             );
