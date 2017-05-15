@@ -27,7 +27,8 @@ export default class PlayerStatsPageComponent extends Component {
             dataPlayer:null,
             arrPerPerson:null,
             currentTab:1,
-            showDialogToggle:0
+            showDialogToggle:0,
+            isOnline:navigator.onLine
         };
         this.currentTab = 1;
         this.isEditStats = true;
@@ -35,6 +36,27 @@ export default class PlayerStatsPageComponent extends Component {
 
     componentDidMount() {
 
+        //listen internet connect
+        let cb = (e)=> {
+
+            if(e.type == 'offline'){
+                this.setState({
+                    isOnline:false,
+                });
+
+            }else{
+                this.setState({
+                    isOnline:true,
+                });
+                // window.location.reload();
+                location.reload(true);
+            }
+
+        };
+
+        window.addEventListener('offline', cb);
+        window.addEventListener('online',cb);
+        //
 
         let canvasParam = this.getCanvasParam();
         if(canvasParam){
@@ -242,7 +264,40 @@ export default class PlayerStatsPageComponent extends Component {
             isShowPopup:false,
         });
     }
+    renderNoInternetPopup(){
 
+        if(this.state.isOnline == true){
+            return null;
+
+        }else{
+            let style = {
+                height: '72px',
+                fontSize: '20px',
+                fontFamily: 'Roboto',
+                lineHeight: '72px',
+                textAlign: 'left',
+            };
+            let spanStyle = {
+                fontWeight: 'bold',
+                marginLeft: '20px',
+
+            };
+            let spanContent =    " ";
+            let content = " No Internet Connection!";
+            return    (
+                <div>
+                <PopupComponent
+                    style={style}
+                    content={content}
+                    spanStyle={spanStyle}
+                    spanContent={spanContent}
+                />
+                <style>{css}</style>
+            </div>
+            );
+        }
+
+    }
     renderPopup(){
 
         let fail = " Player Stats haven't been saved.";
@@ -408,6 +463,7 @@ export default class PlayerStatsPageComponent extends Component {
 
         return (
             <div className="statistics-player-container">
+                {this.renderNoInternetPopup()}
                 {this.renderPopup()}
                 {this.renderModel()}
                 {this.renderModelLeaveTab()}
