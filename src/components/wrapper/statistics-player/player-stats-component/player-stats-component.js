@@ -438,7 +438,7 @@ console.log("===== getCalculated:", formula);
                         if(arrParam.length > 0 ){
 
 
-
+console.log('arrParam',arrParam);
                             Service.savePlayer(sportName,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
 
                                 if(this.props.onShowToast){
@@ -468,20 +468,17 @@ console.log("===== getCalculated:", formula);
 
 
 
-    onChangeStats(playerId, value) {
+    onChangeStats(playerId, value, code) {
 
         this.dataSource.map(row => {
             let newRow = row;
 
-            this.dataFormat.map(f => {
-                if (f.type != "Calculated") {
-
-                    if(playerId == row.playerId) {
-                        newRow[f.code] = value;
-                        newRow.isChange = true;
-                    }
-                }
-            });
+            if(playerId == row.playerId ) {
+                console.log('playerId',playerId);
+                console.log(' row.playerId', row.playerId);
+                newRow[code] = value;
+                newRow.isChange = true;
+            }
 
             return newRow;
         });
@@ -609,7 +606,7 @@ console.log("===== getCalculated:", formula);
                     } else {
 
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
-                            let onChangeStats = (value) => this.onChangeStats(playerId, value);
+                            let onChangeStats = (value) => this.onChangeStats(playerId, value, f.code);
 
                             renderRow.push(<Float id={row.category + row.playerId} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
                         } else {

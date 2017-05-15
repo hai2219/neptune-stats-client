@@ -132,7 +132,7 @@ export function actualUrlParse(path, obj = null) {
     let newUrl = path;
     if (typeof obj == 'object') {
         for (let i in obj) {
-            let param = encodeURIComponent( obj[i]);
+            let param =  encodeURIComponent( obj[i]);
             newUrl = newUrl.replace("{" + i + "}", param);
         }
         return newUrl;
