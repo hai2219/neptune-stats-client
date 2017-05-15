@@ -39,22 +39,7 @@ export default class PlayerStatsPageComponent extends Component {
         let canvasParam = this.getCanvasParam();
         if(canvasParam){
             //save person
-            let dataObject = [{
-                fixture_participant_id:  1233,
-                category: 'Batting',
-                code: 'R',
-                value: 1
-            },{
-                fixture_participant_id:  1244,
-                category: 'Fielding',
-                code: 'H',
-                value: 3
-            },{
-                fixture_participant_id:  1773,
-                category: 'Pitching',
-                code: 'R',
-                value: 8
-            }];
+
             let sportID = canvasParam.sport_id;
             let seasonID = canvasParam.season_id;
             let compID = canvasParam.comp_id;

@@ -344,8 +344,6 @@ export default class PlayerStatsComponent extends Component {
 
     onSaved(){
 
-
-
         if(this.checkOrderDouble()) {
 
             if(this.props.onShowToast){
@@ -400,32 +398,35 @@ export default class PlayerStatsComponent extends Component {
                 if(arrOrderParam.length > 0 ) {
                     Service.saveOrder(sportID, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
                         console.log('succes order');
+                        //save cell
+                        if(arrParam.length > 0 ){
+
+
+
+                            Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
+
+                                if(this.props.onShowToast){
+                                    this.props.onShowToast(1);
+                                }
+
+                            }).catch(error => {
+
+                                if(this.props.onShowToast){
+                                    this.props.onShowToast(2);
+                                }
+                            });
+
+                        }
 
                     }).catch(error => {
                         console.log('fail order');
-
+                        if(this.props.onShowToast){
+                            this.props.onShowToast(2);
+                        }
                     });
                 }
             }
-            //save cell
-            if(arrParam.length > 0 ){
 
-
-
-                Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
-
-                    if(this.props.onShowToast){
-                        this.props.onShowToast(1);
-                    }
-
-                }).catch(error => {
-
-                    if(this.props.onShowToast){
-                        this.props.onShowToast(2);
-                    }
-                });
-
-            }
 
         }
     }
