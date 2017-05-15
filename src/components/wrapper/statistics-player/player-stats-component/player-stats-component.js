@@ -99,29 +99,42 @@ export default class PlayerStatsComponent extends Component {
         return null;
     }
 
-    getArrCodeParam(strMath){
+    findAndReplace(string, target, replacement) {
 
-        return strMath.match(/[^[\]]+(?=])/g);
+        var i = 0, length = string.length;
 
+        for (i; i < length; i++) {
+
+            string = string.replace(target, replacement);
+
+        }
+
+        return string;
     }
 
-    getCalculated(rowData, formula){
+    getCalculated(rowData, formula, code){
 
         if(!formula || formula.length < 3) return null;
 
         this.dataFormat.map(f => {
-            if (f.type != "Calculated") {
-                let code = '[' + f.code + ']';
+            if (f.code != code && f.type != "Calculated") {
+                let code = "[" + f.code + "]";
+                let val = parseFloat(rowData[f.code]);
 
-                formula = _.replace(formula,new RegExp(code,"g"), rowData[f.code]);
-console.log("===== getCalculated:", formula);
-
-
+                if(!isNaN(val)){
+                    formula = this.findAndReplace(formula, code, val);
+                }
             }
         });
 
-        return eval(formula);
+        try {
+            return eval(formula).toFixed(2);
+        }
+        catch(err) {
+            return "";
+        }
 
+        return "";
     }
 
     parseBodyData() {
@@ -139,8 +152,6 @@ console.log("===== getCalculated:", formula);
             case 3: category = "Fielding"; break;
         }
 
-        console.log('getPlayer',dataPlayer.players);
-
         dataPlayer.players.map(player => {
             let dataRow = {};
             let name = player.firstName + " " + (player.middleName || "") + " " + player.lastName;
@@ -149,7 +160,7 @@ console.log("===== getCalculated:", formula);
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
-            dataRow.orderValue = currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
+            dataRow.orderValue = 2;//currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
@@ -158,7 +169,7 @@ console.log("===== getCalculated:", formula);
             this.dataFormat.map(f => {
                 if (f.type == "Calculated") {
 
-                    dataRow[f.code] = f.formula;//this.getCalculated(row, f.formula));
+                    dataRow[f.code] = f.formula;
                 } else {
 
                     dataRow[f.code] = this.getItemValue(player.playerSfid, f.code, category);
@@ -169,7 +180,6 @@ console.log("===== getCalculated:", formula);
         });
 
         this.dataSource = dataSource;
-        console.log('dataSource',dataSource);
     }
 
     parseFormatData() {
@@ -434,11 +444,8 @@ console.log("===== getCalculated:", formula);
             }else{
                 if(arrOrderParam.length > 0 ) {
                     Service.saveOrder(sportName, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
-                        //save cell
                         if(arrParam.length > 0 ){
 
-
-console.log('arrParam',arrParam);
                             Service.savePlayer(sportName,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
 
                                 if(this.props.onShowToast){
@@ -466,16 +473,12 @@ console.log('arrParam',arrParam);
         }
     }
 
-
-
     onChangeStats(playerId, value, code) {
 
         this.dataSource.map(row => {
             let newRow = row;
 
             if(playerId == row.playerId ) {
-                console.log('playerId',playerId);
-                console.log(' row.playerId', row.playerId);
                 newRow[code] = value;
                 newRow.isChange = true;
             }
@@ -573,7 +576,7 @@ console.log('arrParam',arrParam);
         let {sportID, currentTab} = this.props;
         let dataBody = [];
         let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
-          console.log('this.dataSource',this.dataSource);
+
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
                 let renderRow = [];
@@ -602,7 +605,8 @@ console.log('arrParam',arrParam);
                 this.dataFormat.map(f => {
                     if (f.type == "Calculated") {
 
-                        renderRow.push(row[f.code]);
+                        let val = this.getCalculated(row, f.formula, f.code) || "";
+                        renderRow.push(<div className="calculated">{val}</div>);
                     } else {
 
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
@@ -619,7 +623,6 @@ console.log('arrParam',arrParam);
                 dataBody.push(renderRow);
             });
         }
-        console.log('data body:',dataBody);
         this.setState({dataBody: dataBody});
     }
 
@@ -676,6 +679,12 @@ const css = `
         padding: 100px;
         background-color: white;
     }
+    
+    #player-stats-wrapper-container .calculated {
+        font-weight: bold;
+        font-size: 15px;
+    }
+    
     #player-stats-wrapper-container thead {
         background-color: white;
     }
