@@ -166,7 +166,7 @@ export default class Float extends Component {
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...inputProps} type={"text"} id={id} ref={id} key={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
+            <input {...inputProps} type={"number"} id={id} ref={id} key={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} />
         );
     }
 }
