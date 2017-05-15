@@ -244,8 +244,6 @@ export default class PlayerStatsPageComponent extends Component {
             showDialogToggle:0,
 
         });
-
-        if(this.onCancel) this.onCancel();
     }
     onShowToast( type){
 
@@ -256,9 +254,8 @@ export default class PlayerStatsPageComponent extends Component {
 
     }
 
-    onShowDailogToggle(type, onCancel, onAccept){
+    onShowDailogToggle(type, onAccept){
 
-        if(onCancel) this.onCancel = onCancel;
         if(onAccept) this.onAccept = onAccept;
 
         this.setState({
@@ -427,22 +424,16 @@ export default class PlayerStatsPageComponent extends Component {
                         height: '242px',
                     };
                     break;
-                case 2:  //hide toggle
-                    title = 'Do you want to disable edit this row?';
-
-                    break;
-                case 3: //show order
-                    title = 'Do you want to enable edit this row?';
-
-                    break;
-                case 2:  //hide oder
-                    title = 'Do you want to disable edit this row?';
+                case 2: //show order
+                    title = 'Do you want to remove this order?';
+                    question = 'Changes you made may not be saved.';
 
                     break;
             }
 
             let onCancelToggle = ()=> this.onCancelToggle();
             let onYesToggle = ()=> this.onYesToggle();
+
             return(
                 <div>
                     <ModalComponent
@@ -470,7 +461,7 @@ export default class PlayerStatsPageComponent extends Component {
             let onEditStats = (isEdit)=> this.onEditStats(isEdit);
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
-            let onShowDailogToggle = (type, onCancel, onAccept)=> this.onShowDailogToggle(type, onCancel, onAccept);
+            let onShowDailogToggle = (type, onAccept)=> this.onShowDailogToggle(type, onAccept);
 
 
         return (

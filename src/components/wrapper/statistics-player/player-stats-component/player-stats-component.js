@@ -152,6 +152,7 @@ export default class PlayerStatsComponent extends Component {
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
+            dataRow.isOrderChange = false;
 
             this.dataFormat.map(f => {
                 if (f.type == "Calculated") {
@@ -319,24 +320,57 @@ export default class PlayerStatsComponent extends Component {
         return found;
     }
 
-    onChangeOrder(playerId, value) {
+    onConfirmOrderOff(playerId) {
 
         this.dataSource.map(row => {
             let newRow = row;
 
             if (row.playerId == playerId) {
+                newRow.orderValue = '';
 
-                newRow.orderError = false;
-                newRow.isChange = true;
-                newRow.orderValue = value;
+                this.dataFormat.map(f => {
+                    newRow[f.code] = '';
+                });
+
+                newRow.isChange = false;
             }
 
             return newRow;
         });
 
-        if(this.checkOrderDouble()) {
-            // TODO: Do not save when order number is double
-        }
+        this.checkOrderDouble();
+
+        this.renderBody();
+        if(this.props.onEditStats) this.props.onEditStats(true);
+    }
+
+    onChangeOrder(playerId, value) {
+
+        this.dataSource.map(row => {
+            let newRow = row;
+            let isConfirm = false;
+
+            if (row.playerId == playerId) {
+                const orderValue = parseInt(row.orderValue) || 0;
+
+                if((!value || value.length == 0) && this.props.onShowDailogToggle && orderValue > 0 && row.isChange) {
+                    isConfirm = true;
+                    const onAccept = () => this.onConfirmOrderOff(playerId);
+
+                    this.props.onShowDailogToggle(2, onAccept);
+                }
+
+                if (!isConfirm) {
+                    newRow.orderError = false;
+                    newRow.isOrderChange = true;
+                    newRow.orderValue = value;
+                }
+            }
+
+            return newRow;
+        });
+
+        this.checkOrderDouble();
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
@@ -355,7 +389,7 @@ export default class PlayerStatsComponent extends Component {
             let arrOrderParam = [];
             this.dataSource.map(row => {
 
-                if (row.isChange == true) {
+                if (row.isChange == true || row.isOrderChange == true) {
 
                     this.dataFormat.map(f => {
                         let obj = {
@@ -397,7 +431,6 @@ export default class PlayerStatsComponent extends Component {
             }else{
                 if(arrOrderParam.length > 0 ) {
                     Service.saveOrder(sportID, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
-                        console.log('succes order');
                         //save cell
                         if(arrParam.length > 0 ){
 
@@ -419,7 +452,6 @@ export default class PlayerStatsComponent extends Component {
                         }
 
                     }).catch(error => {
-                        console.log('fail order');
                         if(this.props.onShowToast){
                             this.props.onShowToast(2);
                         }
@@ -491,13 +523,17 @@ export default class PlayerStatsComponent extends Component {
     }
 
     onConfirmToggleOff(playerId) {
-        console.log("======= onAccept =========");
 
         this.dataSource.map(row => {
             let newRow = row;
 
             if (row.playerId == playerId) {
-                newRow.toggle = !row.toggle;
+                newRow.toggle = false;
+                newRow.isChange = false;
+
+                this.dataFormat.map(f => {
+                    newRow[f.code] = '';
+                });
             }
 
             return newRow;
@@ -518,11 +554,7 @@ export default class PlayerStatsComponent extends Component {
                 isConfirm = true;
                 const onAccept = () => this.onConfirmToggleOff(playerId);
 
-                const onCancel = () => {
-                    console.log("======= onCancel =========");
-                };
-
-                this.props.onShowDailogToggle(1, onCancel, onAccept);
+                this.props.onShowDailogToggle(1, onAccept);
             }
 
             if (row.playerId == playerId && !isConfirm) {
