@@ -8,6 +8,7 @@ import PlayerStatsComponent from "../wrapper/statistics-player/player-stats-comp
 import  HeaderComponent from  "../wrapper/statistics-player/header-component/header-wrapper-component";
 import  FooterComponent from  "../wrapper/statistics-player/footer-component/footer-wrapper-component";
 import ModalComponent from "../../components/common/modal/modal-component";
+import LoadingComponent from '../../components/common/loading/loading-component';
 import PopupComponent from "../../components/common/popup/popup-no-internet-component";
 import * as SportConstant from "../../constant/sport-constant";
 import * as Service from  "../../services/statistic-player-services";
@@ -35,6 +36,8 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     componentDidMount() {
+
+        this.showLoading(true);
 
         //listen internet connect
         let cb = (e)=> {
@@ -269,6 +272,17 @@ export default class PlayerStatsPageComponent extends Component {
             isShowPopup:false,
         });
     }
+
+    showLoading(show) {
+        if(this.refs.loading && show){
+            this.refs.loading.show();
+        }
+
+        if(this.refs.loading && !show){
+            this.refs.loading.hide();
+        }
+    }
+
     renderNoInternetPopup(){
 
         if(this.state.isOnline == true){
@@ -490,6 +504,7 @@ export default class PlayerStatsPageComponent extends Component {
                 />
                 <FooterComponent onSave={onSave} />
                 <style>{css}</style>
+                <LoadingComponent ref="loading"/>
             </div>
 
             );
