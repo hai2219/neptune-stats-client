@@ -420,26 +420,26 @@ console.log("===== getCalculated:", formula);
 
             });
             //save order
-            let {sport, currentTab,canvasParam} = this.props;
-            let sportID = canvasParam.sport_id;
+            let {sportID, currentTab,canvasParam} = this.props;
+            let sportName = canvasParam.sport_id;
             let seasonID = canvasParam.season_id;
             let compID = canvasParam.comp_id;
             let divID = canvasParam.div_id;
             let roundID = canvasParam.round_id;
             let fixtureID = canvasParam.fixture_id;
 
-            let isField = (sport == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
+            let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
             if(isField){
 
             }else{
                 if(arrOrderParam.length > 0 ) {
-                    Service.saveOrder(sportID, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
+                    Service.saveOrder(sportName, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
                         //save cell
                         if(arrParam.length > 0 ){
 
 
 
-                            Service.savePlayer(sportID,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
+                            Service.savePlayer(sportName,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
 
                                 if(this.props.onShowToast){
                                     this.props.onShowToast(1);

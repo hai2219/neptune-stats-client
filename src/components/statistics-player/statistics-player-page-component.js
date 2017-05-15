@@ -33,6 +33,8 @@ export default class PlayerStatsPageComponent extends Component {
         };
         this.currentTab = 1;
         this.isEditStats = true;
+        this.loading = {format: false, player: false, stats: false};
+        this.loadingTimeout = null;
     }
 
     componentDidMount() {
@@ -83,17 +85,12 @@ console.log('canvasParam',canvasParam);
 
             Service.getFormat(seasonID, compID).then(data => {
                 console.log('getFormat',data);
-                if (data && data.data) {
-                    if(data.data.Statisticsdefinition){
+                this.loading.format = true;
 
-                        this.setState({
-                            statisticsDefinitions:data.data.Statisticsdefinition,
-                        });
-                    }else{
-                        this.setState({
-                            statisticsDefinitions:[],
-                        });
-                    }
+                if (data && data.data && data.data.Statisticsdefinition) {
+                    this.setState({
+                        statisticsDefinitions:data.data.Statisticsdefinition,
+                    });
 
                 }else{
                     this.setState({
@@ -111,6 +108,8 @@ console.log('canvasParam',canvasParam);
             //get player
 
             Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
+
+                this.loading.player = true;
 
                 if (data.data) {
 
@@ -136,6 +135,9 @@ console.log('canvasParam',canvasParam);
 
             Service.getIndividualPlayer(sportID,seasonID,compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
                 console.log('getIndividualPlayer',data);
+
+                this.loading.stats = true;
+
                 if (data) {
                     this.setState({
                         arrPerPerson:data,
@@ -155,6 +157,14 @@ console.log('canvasParam',canvasParam);
             });
 
         }
+
+        this.loadingTimeout = setInterval(()=>{
+            if(this.loading.format && this.loading.player && this.loading.stats) {
+
+                this.showLoading(false);
+                clearInterval(this.loadingTimeout);
+            }
+        }, 100);
 
     }
 
@@ -479,34 +489,34 @@ console.log('canvasParam',canvasParam);
             let onShowDailogToggle = (type, onAccept)=> this.onShowDailogToggle(type, onAccept);
 
 
-        return (
-            <div className="statistics-player-container">
-                {this.renderNoInternetPopup()}
-                {this.renderPopup()}
-                {this.renderModel()}
-                {this.renderModelLeaveTab()}
-                {this.renderModelTonggle()}
-                <HeaderComponent
-                                ref = "header"
-                                onSave={onSave}
-                                onClickTab={onClickTab}
-                />
-                <PlayerStatsComponent sportID = {SportConstant.BASEBALL_ID}
-                                      onChange={onChange}
-                                      statisticsDefinitions={this.state.statisticsDefinitions}
-                                      currentTab={this.state.currentTab}
-                                      dataPlayer={this.state.dataPlayer}
-                                      arrPerPerson={this.state.arrPerPerson}
-                                      onEditStats={onEditStats}
-                                      onShowToast={onShowToast}
-                                      onShowDailogToggle={onShowDailogToggle}
-                                      canvasParam={canvasParam}
-                                      ref = "playerStats"
-                />
-                <FooterComponent onSave={onSave} />
-                <style>{css}</style>
-                <LoadingComponent ref="loading"/>
-            </div>
+            return (
+                <div className="statistics-player-container">
+                    {this.renderNoInternetPopup()}
+                    {this.renderPopup()}
+                    {this.renderModel()}
+                    {this.renderModelLeaveTab()}
+                    {this.renderModelTonggle()}
+                    <HeaderComponent
+                                    ref = "header"
+                                    onSave={onSave}
+                                    onClickTab={onClickTab}
+                    />
+                    <PlayerStatsComponent sportID = {SportConstant.BASEBALL_ID}
+                                          onChange={onChange}
+                                          statisticsDefinitions={this.state.statisticsDefinitions}
+                                          currentTab={this.state.currentTab}
+                                          dataPlayer={this.state.dataPlayer}
+                                          arrPerPerson={this.state.arrPerPerson}
+                                          onEditStats={onEditStats}
+                                          onShowToast={onShowToast}
+                                          onShowDailogToggle={onShowDailogToggle}
+                                          canvasParam={canvasParam}
+                                          ref = "playerStats"
+                    />
+                    <FooterComponent onSave={onSave} />
+                    <style>{css}</style>
+                    <LoadingComponent ref="loading"/>
+                </div>
 
             );
         }else{
