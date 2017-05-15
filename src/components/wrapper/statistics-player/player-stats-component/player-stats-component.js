@@ -431,21 +431,7 @@ export default class PlayerStatsComponent extends Component {
         }
     }
 
-    onChangeToggle(playerId) {
 
-        this.dataSource.map(row => {
-            let newRow = row;
-
-            if (row.playerId == playerId) {
-                newRow.toggle = !row.toggle;
-            }
-
-            return newRow;
-        });
-
-        this.renderBody();
-        if(this.props.onEditStats) this.props.onEditStats(true);
-    }
 
     onChangeStats(playerId, value) {
 
@@ -504,19 +490,50 @@ export default class PlayerStatsComponent extends Component {
         this.renderBody();
     }
 
-    onConfirmToggleOff() {
+    onConfirmToggleOff(playerId) {
+        console.log("======= onAccept =========");
 
-        if(this.props.onShowDailogToggle) {
-            const onCancel = () => {
-                console.log("======= onCancel =========");
-            };
-            const onAccept = () => {
-                console.log("======= onAccept =========");
-            };
+        this.dataSource.map(row => {
+            let newRow = row;
 
+            if (row.playerId == playerId) {
+                newRow.toggle = !row.toggle;
+            }
 
-            this.props.onShowDailogToggle(1, onCancel, onAccept);
-        }
+            return newRow;
+        });
+
+        this.renderBody();
+        if(this.props.onEditStats) this.props.onEditStats(true);
+    }
+
+    onChangeToggle(playerId) {
+
+        this.dataSource.map(row => {
+            let newRow = row;
+            let isConfirm = false;
+
+            if (row.playerId == playerId && row.toggle && this.props.onShowDailogToggle && row.isChange) {
+
+                isConfirm = true;
+                const onAccept = () => this.onConfirmToggleOff(playerId);
+
+                const onCancel = () => {
+                    console.log("======= onCancel =========");
+                };
+
+                this.props.onShowDailogToggle(1, onCancel, onAccept);
+            }
+
+            if (row.playerId == playerId && !isConfirm) {
+                newRow.toggle = !row.toggle;
+            }
+
+            return newRow;
+        });
+
+        this.renderBody();
+        if(this.props.onEditStats) this.props.onEditStats(true);
     }
 
     renderBody() {

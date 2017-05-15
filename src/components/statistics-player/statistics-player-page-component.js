@@ -421,7 +421,8 @@ export default class PlayerStatsPageComponent extends Component {
                 case 0:
                     return null;
                 case 1: //show toggle
-                    title = 'Do you want to enable edit this row?';
+                    title = 'Do you want to off this fielded?';
+                    question = 'Changes you made may not be saved.';
 
                     break;
                 case 2:  //hide toggle
