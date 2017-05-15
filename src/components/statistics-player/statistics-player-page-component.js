@@ -452,7 +452,9 @@ console.log('canvasParam',canvasParam);
                 case 2: //show order
                     title = 'Do you want to remove this order?';
                     question = 'Changes you made may not be saved.';
-
+                    style={
+                        height: '242px',
+                    };
                     break;
             }
 
