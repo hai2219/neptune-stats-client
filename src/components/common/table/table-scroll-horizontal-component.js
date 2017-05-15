@@ -2,7 +2,7 @@
  * @copyright 2017 @ NEXLE
  * @author rocachien
  * @create 2017/05/09 14:06
- * @update 2017/05/10 11:51
+ * @update 2017/05/15 19:30
  * @file common/table/table-scroll-horizontal-component.js
  */
 "use strict";
@@ -48,7 +48,7 @@ export default class TableScrollHorizontal extends Component {
         const {colsFreeze, body} = this.props;
         let freezeBodyData = [];
 
-        if(body && colsFreeze && body.length > colsFreeze) {
+        if(body && colsFreeze && body.length > 0 && body[0].length > colsFreeze) {
             body.map(row => {
                 let newRow = [];
                 row.map((b, index) => {
@@ -83,7 +83,7 @@ export default class TableScrollHorizontal extends Component {
         const {colsFreeze, body} = this.props;
         let scrollBodyData = [];
 
-        if(body && colsFreeze && body.length > colsFreeze) {
+        if(body && colsFreeze && body.length > 0 && body[0].length > colsFreeze) {
             body.map(row => {
                 let newRow = [];
                 row.map((b, index) => {
