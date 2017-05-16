@@ -720,6 +720,9 @@ const css = `
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         box-shadow: none;
+        background: transparent;
+        -webkit-appearance: none;
+        -moz-appearance: none;
     }
     
     #player-stats-wrapper-container input.order {
