@@ -1,5 +1,5 @@
 {
-    "LOCAL_URL": "http://192.168.151.182",
+    "LOCAL_URL": "http://localhost",
     "LOCAL_PORT": "3003",
     "PLAYER_STAT_API_HOST": "http://128.199.90.210",
     "PLAYER_STAT_API_PORT": "8082",

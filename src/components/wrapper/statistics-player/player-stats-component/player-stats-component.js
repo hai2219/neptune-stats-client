@@ -579,6 +579,7 @@ export default class PlayerStatsComponent extends Component {
 
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
+console.log("========================= renderBody ===============================");
                 let renderRow = [];
                 const playerId = row.playerId;
 
@@ -603,6 +604,7 @@ export default class PlayerStatsComponent extends Component {
                 }
 
                 this.dataFormat.map(f => {
+console.log("=================== f.code: ", f.code + "; val: " + row[f.code]);
                     if (f.type == "Calculated") {
 
                         if(row.orderValue) {
@@ -612,7 +614,7 @@ export default class PlayerStatsComponent extends Component {
                             val = val == "Infinity" ? "" : val;
                             renderRow.push(<div className="calculated">{val}</div>);
                         } else {
-                            renderRow.push("");
+                            renderRow.push(<div />);
                         }
 
                     } else {
@@ -622,7 +624,7 @@ export default class PlayerStatsComponent extends Component {
 
                             renderRow.push(<Float id={row.category + row.playerId} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
                         } else {
-                            renderRow.push("");
+                            renderRow.push(<div />);
                         }
 
                     }
@@ -752,6 +754,7 @@ const css = `
         -webkit-appearance: none;
         -moz-appearance: none;
         border: none;
+        min-width: 60px;
     }
     
     #player-stats-wrapper-container tr:nth-child(odd) {
