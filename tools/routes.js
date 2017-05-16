@@ -151,7 +151,7 @@ const routes = () => {
 
                 }
             };
-            console.log('post_options', post_options);
+
             // Set up the request
             let post_req = _http.request(post_options, function (response) {
                 let data = "";
@@ -159,23 +159,18 @@ const routes = () => {
                     data += chunk;
                 });
                 response.on('end', function () {
-                    console.log('data',data);
                     res.send(data);
                 }).on('error', function (e) {
-                    console.log('error',e);
                     res.send(e);
                 });
             });
             // post the data
             post_req.write(JSON.stringify(req.body));
-            console.log('req.body',JSON.stringify(req.body));
             post_req.on('error', function (e) {
-                console.log('error',e);
                 res.send(e);
             });
             post_req.end();
         } catch (e) {
-            console.log('error',e);
             res.send(e);
         }
     });

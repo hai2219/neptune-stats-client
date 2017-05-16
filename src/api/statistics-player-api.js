@@ -38,7 +38,6 @@ export function getIndividualPlayer(data, sport,season,comp, div, round, fixture
 
     let path = category && category != '' ?  Config.PLAYER_STAT_GET_INDIVIDUAL_CATEGORY_PLAYER_PATH : Config.PLAYER_STAT_GET_INDIVIDUAL_PLAYER_PATH;
 
-   console.log('getIndividualPlayer',data.players);
   let arrP = [];
     let arr = ['AB','R','2B','3B','HR', 'RBI','TB','BB','K','SB','CS','SP','BA','IP','H','ER','HR','E','A','PO'];
 
