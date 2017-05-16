@@ -9,14 +9,14 @@ export default class TableComponent extends Component {
 
 
         const {style, rowStyle, onClick} = this.props;
-        const trKey = 'tr' + rIndex + Math.floor((Math.random() * 1000000000) + 999999999)
+        const trKey = 'tr' + rIndex + Math.floor((Math.random() * 1000000000) + 999999999);
         if (item) {
             return (<tr key={trKey} style={rowStyle}>
                 {
                     item.map((item, index)=> {
                         let handleClick = () => onClick ? onClick(index) : {};
                         let _style = (style && style[index]) ? style[index] : {};
-                        const tdKey = 'td' + index + Math.floor((Math.random() * 1000000000) + 999999999)
+                        const tdKey = 'td' + index + Math.floor((Math.random() * 1000000000) + 999999999);
 
                         return (<td key={tdKey} onClick={handleClick} style={_style}>{item}</td>);
                     })
@@ -39,7 +39,7 @@ export default class TableComponent extends Component {
                 } else if (style && style[index]) {
                     _style = style[index];
                 }
-                const tdKey = 'th' + index + Math.floor((Math.random() * 1000000000) + 999999999)
+                const tdKey = 'th' + index + Math.floor((Math.random() * 1000000000) + 999999999);
 
                 return (<th key={tdKey} style={_style}
                 >{item}</th>);

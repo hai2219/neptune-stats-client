@@ -4,8 +4,11 @@ import path from 'path';
 import open from 'open';
 import compression from 'compression';
 import routes from './routes';
-const appConfig = require('../config');
 
+const appConfig = require('../config');
+const timeout = express.timeout;
+
+app.use(timeout(360000));
 /*eslint-disable no-console */
 
 const host = appConfig.LOCAL_URL || 'http://localhost:';

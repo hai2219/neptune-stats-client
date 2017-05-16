@@ -4,6 +4,7 @@
 "use strict";
 
 import React, {Component} from "react";
+import PropTypes from 'prop-types';
 import PlayerStatsComponent from "../wrapper/statistics-player/player-stats-component/player-stats-component";
 import  HeaderComponent from  "../wrapper/statistics-player/header-component/header-wrapper-component";
 import  FooterComponent from  "../wrapper/statistics-player/footer-component/footer-wrapper-component";
@@ -35,6 +36,7 @@ export default class PlayerStatsPageComponent extends Component {
         this.isEditStats = true;
         this.loading = {format: false, player: false, stats: false};
         this.loadingTimeout = null;
+        this.playerData = null;
     }
 
     componentDidMount() {
@@ -53,7 +55,7 @@ export default class PlayerStatsPageComponent extends Component {
                 this.setState({
                     isOnline:true,
                 });
-                // window.location.reload();
+
                 location.reload(true);
             }
 
@@ -65,26 +67,16 @@ export default class PlayerStatsPageComponent extends Component {
 
         let canvasParam = this.getCanvasParam();
         if(canvasParam){
-            //save person
-console.log('canvasParam',canvasParam);
-            let sportID = canvasParam.sport_id;
             let seasonID = canvasParam.season_id;
             let compID = canvasParam.comp_id;
             let divID = canvasParam.div_id;
             let roundID = canvasParam.round_id;
             let fixtureID = canvasParam.fixture_id;
-            let fixtureteam = canvasParam.fixtureteam_id;
-            let fixtureparticipant = canvasParam.fixtureparticipant_id;
             let team = canvasParam.team_id;
-            let category = '';
-            let stat_code = null;
 
 
             //get statistic definition
-
-
             Service.getFormat(seasonID, compID).then(data => {
-                console.log('getFormat',data);
                 this.loading.format = true;
 
                 if (data && data.data && data.data.Statisticsdefinition) {
@@ -98,52 +90,24 @@ console.log('canvasParam',canvasParam);
                     });
                 }
 
-
             }).catch(error => {
                 this.setState({
                     statisticsDefinitions:[],
                 });
             });
 
-            //get player
-
             Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
 
                 this.loading.player = true;
                 let playerData = data.data;
+
                 if (playerData) {
-                            //get perPlayer
+                    this.playerData = playerData;
 
-                            Service.getIndividualPlayer(playerData,sportID,seasonID,compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
-                                // console.log('getIndividualPlayer',data);
-                                let result = [];
-                                for(let i = 0 ; i < data.length ; i++){
-
-                                    if(data[i].results.length > 0){
-
-                                        result = result.concat(data[i].results)
-
-                                    }
-                                }
-
-                                this.loading.stats = true;
-                                console.log('data[i].results',result);
-                                if (result) {
-                                    this.setState({
-                                        arrPerPerson:result,
-                                    });
-
-                                }else{
-                                    this.setState({
-                                        arrPerPerson:null,
-                                    });
-                                }
-
-
-                            }) ;
+                    this.getStatistics();
 
                     this.setState({
-                        dataPlayer:data.data,
+                        dataPlayer: playerData
                     });
 
                 }else{
@@ -174,6 +138,49 @@ console.log('canvasParam',canvasParam);
 
     }
 
+    getStatistics() {
+        let canvasParam = this.getCanvasParam();
+        let playerData = this.playerData;
+        if(canvasParam) {
+            let sportID = canvasParam.sport_id;
+            let seasonID = canvasParam.season_id;
+            let compID = canvasParam.comp_id;
+            let divID = canvasParam.div_id;
+            let roundID = canvasParam.round_id;
+            let fixtureID = canvasParam.fixture_id;
+            let fixtureteam = canvasParam.fixtureteam_id;
+            let fixtureparticipant = canvasParam.fixtureparticipant_id;
+            let category = '';
+            let stat_code = null;
+
+            Service.getIndividualPlayer(playerData, sportID, seasonID, compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
+                let result = [];
+                for (let i = 0; i < data.length; i++) {
+
+                    if (data[i].results.length > 0) {
+
+                        result = result.concat(data[i].results);
+
+                    }
+                }
+
+                this.loading.stats = true;
+
+                if (result) {
+                    this.setState({
+                        arrPerPerson: result,
+                    });
+
+                } else {
+                    this.setState({
+                        arrPerPerson: null,
+                    });
+                }
+
+
+            });
+        }
+    }
     componentWillUnmount(){
 
     }
@@ -184,7 +191,6 @@ console.log('canvasParam',canvasParam);
             let param = (new Buffer(canvas_param, 'base64')).toString('ascii');
             let paramObj = JSON.parse(param);
             if (paramObj) {
-                // console.log('paramObj',paramObj);
                 return paramObj;
             }
         }
@@ -195,7 +201,7 @@ console.log('canvasParam',canvasParam);
     onSave() {
         this.setState({
             isShowModel:true,
-        })
+        });
 
     }
 
@@ -495,6 +501,7 @@ console.log('canvasParam',canvasParam);
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
             let onShowDailogToggle = (type, onAccept)=> this.onShowDailogToggle(type, onAccept);
+            let onRefreshStats = ()=> this.getStatistics();
 
 
             return (
@@ -517,6 +524,7 @@ console.log('canvasParam',canvasParam);
                                           arrPerPerson={this.state.arrPerPerson}
                                           onEditStats={onEditStats}
                                           onShowToast={onShowToast}
+                                          onRefreshStats={onRefreshStats}
                                           onShowDailogToggle={onShowDailogToggle}
                                           canvasParam={canvasParam}
                                           ref = "playerStats"
@@ -537,6 +545,10 @@ console.log('canvasParam',canvasParam);
 
 
 }
+
+PlayerStatsPageComponent.propTypes = {
+    canvas_param: PropTypes.object
+};
 
 const css = `
  

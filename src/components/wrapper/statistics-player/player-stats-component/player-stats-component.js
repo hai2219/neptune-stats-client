@@ -101,7 +101,7 @@ export default class PlayerStatsComponent extends Component {
 
     findAndReplace(string, target, replacement) {
 
-        var i = 0, length = string.length;
+        let i = 0, length = string.length;
 
         for (i; i < length; i++) {
 
@@ -131,8 +131,6 @@ export default class PlayerStatsComponent extends Component {
         catch(err) {
             return "";
         }
-
-        return "";
     }
 
     parseBodyData() {
@@ -439,9 +437,7 @@ export default class PlayerStatsComponent extends Component {
             let fixtureID = canvasParam.fixture_id;
 
             let isField = (sportID == SportConstant.BASEBALL_ID && currentTab == 3) ? true : false;
-            if(isField){
-
-            }else{
+            if(!isField){
                 if(arrOrderParam.length > 0 ) {
                     Service.saveOrder(sportName, seasonID, compID, divID, roundID, fixtureID, arrOrderParam).then(data => {
                         if(arrParam.length > 0 ){
@@ -451,6 +447,10 @@ export default class PlayerStatsComponent extends Component {
                                 if(this.props.onShowToast){
                                     this.props.onShowToast(1);
                                 }
+
+
+                                if(this.props.onRefreshStats) this.props.onRefreshStats();
+                                if(this.props.onEditStats) this.props.onEditStats(false);
 
                             }).catch(error => {
 
@@ -579,7 +579,7 @@ export default class PlayerStatsComponent extends Component {
 
         if(this.dataSource && this.dataSource.length > 0) {
             this.dataSource.map(row => {
-console.log("========================= renderBody ===============================");
+
                 let renderRow = [];
                 const playerId = row.playerId;
 
@@ -604,7 +604,7 @@ console.log("========================= renderBody ==============================
                 }
 
                 this.dataFormat.map(f => {
-console.log("=================== f.code: ", f.code + "; val: " + row[f.code]);
+
                     if (f.type == "Calculated") {
 
                         if(row.orderValue) {
@@ -656,7 +656,7 @@ console.log("=================== f.code: ", f.code + "; val: " + row[f.code]);
                 {this.loading() > 0 && <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader}
                                                               headerStyle={{color: '#4a4a4a'}} body={dataBody} />}
                 {this.loading() == 0 && <div className="no-stats-entry">Have no player statistics</div>}
-                {this.loading() < 0 && <div className="no-stats-entry"></div>}
+                {this.loading() < 0 && <div className="no-stats-entry" />}
                 <style>{css}</style>
             </div>
         );
@@ -672,6 +672,7 @@ PlayerStatsComponent.propTypes = {
     onEditStats: PropTypes.func,
     canvasParam: PropTypes.object,
     onShowToast: PropTypes.func,
+    onRefreshStats: PropTypes.func,
     onShowDailogToggle: PropTypes.func,
 };
 
