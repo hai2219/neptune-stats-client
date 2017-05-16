@@ -682,6 +682,11 @@ const css = `
         background-color: rgba(241,245,248,1);
     }
     
+    #player-stats-wrapper-container table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    
     #player-stats-wrapper-container .no-stats-entry {
         text-align: center;
         padding: 100px;
@@ -702,6 +707,7 @@ const css = `
         font-family: 'Roboto Condensed';
         font-weight: bold;
         height: 35px;
+        min-width: 60px;
     }
     
     #player-stats-wrapper-container input {
@@ -735,9 +741,17 @@ const css = `
     #player-stats-wrapper-container td {
         height: 54px;
         color: rgb(81, 81, 81);
-        padding: 0 4px;
+        padding: 0;
         font-size: 14px;
         font-family: Roboto;
+        background-color: transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        background: transparent;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
     }
     
     #player-stats-wrapper-container tr:nth-child(odd) {

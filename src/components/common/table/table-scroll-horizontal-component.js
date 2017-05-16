@@ -174,9 +174,6 @@ const css = `
         padding: 0;
         float: left;
     }
-    .horizontal-scroll-freeze div {
-        background-color: white;
-    }
     .horizontal-scroll-auto {
         width: 70%;
         margin: 0;
