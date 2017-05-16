@@ -154,15 +154,17 @@ export default class PlayerStatsComponent extends Component {
             let dataRow = {};
             let name = player.firstName + " " + (player.middleName || "") + " " + player.lastName;
 
-            dataRow.playerId = player.playerId;
+            dataRow.playerId = player.playerSfid;
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
             dataRow.orderValue = currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
+            dataRow.fixtureParticipantId = player.fixtureParticipantId;
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
             dataRow.isOrderChange = false;
+
 
             this.dataFormat.map(f => {
                 if (f.type == "Calculated") {
