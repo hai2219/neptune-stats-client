@@ -553,9 +553,9 @@ const css = `
     }
     
      i.fa-times,.fa-times-circle{
-      font-size: 20px;
-      top:24px;   
-      right:20px;
+      font-size: 28px;
+      top:0px;   
+      right:0px;
     }
     
      .modal-container{
