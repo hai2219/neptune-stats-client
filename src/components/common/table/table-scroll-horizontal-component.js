@@ -101,7 +101,10 @@ export default class TableScrollHorizontal extends Component {
     }
 
     renderFreeze() {
-        let props = _.filter(this.props, (x) => x == "colsFreeze" || x=="styleFreeze" || x=="styleScroll");
+        let props = this.props;
+        props = _.omit(props, 'colsFreeze');
+        props = _.omit(props, 'styleFreeze');
+        props = _.omit(props, 'styleScroll');
 
         return (
             <TableComponent {...props} header={this.parseFreezeHeader()} body={this.parseFreezeBody()}/>
@@ -109,7 +112,10 @@ export default class TableScrollHorizontal extends Component {
     }
 
     renderScroll() {
-        let props = _.filter(this.props, (x) => x == "colsFreeze" || x=="styleFreeze" || x=="styleScroll");
+        let props = this.props;
+        props = _.omit(props, 'colsFreeze');
+        props = _.omit(props, 'styleFreeze');
+        props = _.omit(props, 'styleScroll');
 
         return (
             <TableComponent {...props} header={this.parseScrollHeader()} body={this.parseScrollBody()}/>
@@ -117,7 +123,10 @@ export default class TableScrollHorizontal extends Component {
     }
 
     render() {
-        let props = _.filter(this.props, (x) => x == "colsFreeze" || x=="styleFreeze" || x=="styleScroll");
+        let props = this.props;
+        props = _.omit(props, 'colsFreeze');
+        props = _.omit(props, 'styleFreeze');
+        props = _.omit(props, 'styleScroll');
 
         if(this.props.colsFreeze > 0) {
             return (

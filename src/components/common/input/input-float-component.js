@@ -159,7 +159,7 @@ export default class Float extends Component {
 
     render() {
         let {id} = this.props;
-        let inputProps = _.filter(this.props, (x) => x == "numOfDecimal");
+        const inputProps = _.omit(this.props, 'numOfDecimal');
 
         const onKeyDown = (event) => this.onKeyDown(event);
         const onKeyUp = (event) => this.onKeyUp(event);

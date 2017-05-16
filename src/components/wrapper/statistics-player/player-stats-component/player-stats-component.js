@@ -119,16 +119,14 @@ export default class PlayerStatsComponent extends Component {
         this.dataFormat.map(f => {
             if (f.code != code && f.type != "Calculated") {
                 let code = "[" + f.code + "]";
-                let val = parseFloat(rowData[f.code]);
+                let val = rowData[f.code] || 0;
 
-                if(!isNaN(val)){
-                    formula = this.findAndReplace(formula, code, val);
-                }
+                formula = this.findAndReplace(formula, code, val);
             }
         });
 
         try {
-            return eval(formula).toFixed(2);
+            return eval(formula);
         }
         catch(err) {
             return "";
@@ -160,7 +158,7 @@ export default class PlayerStatsComponent extends Component {
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
-            dataRow.orderValue = 2;//currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
+            dataRow.orderValue = currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
@@ -605,8 +603,16 @@ export default class PlayerStatsComponent extends Component {
                 this.dataFormat.map(f => {
                     if (f.type == "Calculated") {
 
-                        let val = this.getCalculated(row, f.formula, f.code) || "";
-                        renderRow.push(<div className="calculated">{val}</div>);
+                        if(row.orderValue) {
+                            let val = this.getCalculated(row, f.formula, f.code);
+                            val = parseFloat(val).toFixed(2);
+                            val = isNaN(val) ? "" : val;
+                            val = val == "Infinity" ? "" : val;
+                            renderRow.push(<div className="calculated">{val}</div>);
+                        } else {
+                            renderRow.push("");
+                        }
+
                     } else {
 
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
@@ -646,7 +652,7 @@ export default class PlayerStatsComponent extends Component {
                 {this.loading() > 0 && <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader}
                                                               headerStyle={{color: '#4a4a4a'}} body={dataBody} />}
                 {this.loading() == 0 && <div className="no-stats-entry">Have no player statistics</div>}
-                {this.loading() < 0 && <div className="no-stats-entry">Loading..</div>}
+                {this.loading() < 0 && <div className="no-stats-entry"></div>}
                 <style>{css}</style>
             </div>
         );
@@ -710,7 +716,10 @@ const css = `
         box-sizing: border-box;
         border: 1px solid rgb(216, 216, 216);
         border-radius: 2px;
-        -webkit-border-radius: 2px
+        -webkit-border-radius: 2px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
     
     #player-stats-wrapper-container input.order {
