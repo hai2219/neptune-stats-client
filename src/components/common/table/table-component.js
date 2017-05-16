@@ -52,7 +52,7 @@ export default class TableComponent extends Component {
         if (body || header) {
             return (
                 <div style={{overflow: 'scroll', overflowY: 'hidden'}}>
-                    <table className="tableWrapper">
+                    <table className="tableWrapper" cellPadding={0} cellSpacing={0}>
 
                         <thead style={customHeaderBackgroundStyle}>
                         <tr>
