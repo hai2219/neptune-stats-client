@@ -37,6 +37,34 @@ const routes = () => {
         request(options, callback);
     });
 
+    router.get('/heroku/get/*', function (req, res) {
+        let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
+
+        let url = appConfig.PLAYER_STAT_API_HEROKU_URL   + '/' + req.params[0] + search;
+        const options = {
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': appConfig.AUTHORIZATION,
+                'x-api-key': appConfig.X_API_KEY,
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+            }
+        };
+
+        function callback(error, response, body) {
+
+            if (!error && (response.statusCode == 200 || response.statusCode == 404)) {
+                res.send(body);
+            } else {
+                res.send(error);
+            }
+        }
+
+        request(options, callback);
+    });
+
     router.get('/playerstart/get/*', function (req, res) {
         let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
 
@@ -104,33 +132,7 @@ const routes = () => {
         }
     });
 
-    router.get('/heroku/get/*', function (req, res) {
-        let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
 
-        let url = appConfig.PLAYER_STAT_API_HEROKU_HOST   + '/' + req.params[0] + search;
-        const options = {
-            url: url,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': appConfig.AUTHORIZATION,
-                'x-api-key': appConfig.X_API_KEY,
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': '*',
-            }
-        };
-
-        function callback(error, response, body) {
-
-            if (!error && (response.statusCode == 200 || response.statusCode == 404)) {
-                res.send(body);
-            } else {
-                res.send(error);
-            }
-        }
-
-        request(options, callback);
-    });
 
 
     router.post('/heroku/post/*', function (req, res) {
@@ -146,8 +148,10 @@ const routes = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
+
                 }
             };
+            console.log('post_options', post_options);
             // Set up the request
             let post_req = _http.request(post_options, function (response) {
                 let data = "";
@@ -155,18 +159,23 @@ const routes = () => {
                     data += chunk;
                 });
                 response.on('end', function () {
+                    console.log('data',data);
                     res.send(data);
                 }).on('error', function (e) {
+                    console.log('error',e);
                     res.send(e);
                 });
             });
             // post the data
             post_req.write(JSON.stringify(req.body));
+            console.log('req.body',JSON.stringify(req.body));
             post_req.on('error', function (e) {
+                console.log('error',e);
                 res.send(e);
             });
             post_req.end();
         } catch (e) {
+            console.log('error',e);
             res.send(e);
         }
     });

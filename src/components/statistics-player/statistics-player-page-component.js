@@ -110,8 +110,37 @@ console.log('canvasParam',canvasParam);
             Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
 
                 this.loading.player = true;
+                let playerData = data.data;
+                if (playerData) {
+                            //get perPlayer
 
-                if (data.data) {
+                            Service.getIndividualPlayer(playerData,sportID,seasonID,compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
+                                // console.log('getIndividualPlayer',data);
+                                let result = [];
+                                for(let i = 0 ; i < data.length ; i++){
+
+                                    if(data[i].results.length > 0){
+
+                                        result = result.concat(data[i].results)
+
+                                    }
+                                }
+
+                                this.loading.stats = true;
+                                console.log('data[i].results',result);
+                                if (result) {
+                                    this.setState({
+                                        arrPerPerson:result,
+                                    });
+
+                                }else{
+                                    this.setState({
+                                        arrPerPerson:null,
+                                    });
+                                }
+
+
+                            }) ;
 
                     this.setState({
                         dataPlayer:data.data,
@@ -131,30 +160,7 @@ console.log('canvasParam',canvasParam);
             });
 
 
-            //get perPlayer
 
-            Service.getIndividualPlayer(sportID,seasonID,compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
-                console.log('getIndividualPlayer',data);
-
-                this.loading.stats = true;
-
-                if (data) {
-                    this.setState({
-                        arrPerPerson:data,
-                    });
-
-                }else{
-                    this.setState({
-                        arrPerPerson:null,
-                    });
-                }
-
-
-            }).catch(error => {
-                this.setState({
-                    arrPerPerson:null,
-                });
-            });
 
         }
 

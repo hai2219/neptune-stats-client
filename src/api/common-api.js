@@ -22,6 +22,31 @@ export function httpGetPlayerStat(path, param) {
     });
 }
 
+export function httpGetHerokuPlayerStat(path, param,fixtureParticipantId) {
+    return new Promise(function (resolve, reject) {
+        let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_HEROKU_GET + path, param);
+        console.log(url);
+        request.get(  url ,{timeout: 12000}, function (error, response, body) {
+
+            if (!error && response.statusCode == 200) {
+                if (body) {
+                    let result = JSON.parse(body);
+                    for(let i = 0; i <  result.results.length; i++ ){
+
+                        result.results[i].player = fixtureParticipantId;
+                    }
+
+                    console.log('result',result);
+                    return resolve(result);
+                }
+                return resolve();
+            } else {
+                return reject(error || body);
+            }
+        });
+    });
+}
+
 export function httpPostPlayerStat(path, param, data={}) {
     return new Promise(function (resolve, reject) {
         let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_POST + path, param);
@@ -50,23 +75,7 @@ export function httpPostPlayerStat(path, param, data={}) {
     });
 }
 
-export function httpGetHerokuPlayerStat(path, param) {
-    return new Promise(function (resolve, reject) {
-        let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_HEROKU_GET + path, param);
-        console.log(url);
-        request.get(  url ,{timeout: 12000}, function (error, response, body) {
 
-            if (!error && response.statusCode == 200) {
-                if (body) {
-                    return resolve(JSON.parse(body));
-                }
-                return resolve();
-            } else {
-                return reject(error || body);
-            }
-        });
-    });
-}
 
 
 // export function httpPostHerokuPlayerStat(path, param, data={}) {
@@ -105,6 +114,7 @@ export function httpPostHerokuPlayerStat(path, param, data={}) {
         let _headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+
         };
 
         fetch(url, {

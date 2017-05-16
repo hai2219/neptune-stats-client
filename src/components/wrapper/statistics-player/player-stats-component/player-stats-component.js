@@ -160,7 +160,8 @@ export default class PlayerStatsComponent extends Component {
             dataRow.num = player.jerseyNumber ? player.jerseyNumber : '00';
             dataRow.name = name;
             dataRow.category = category;
-            dataRow.orderValue = 2;//currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
+            dataRow.orderValue = currentTab == 1 ? player.orderNumber : player.pitchingOrderNumeber;
+            dataRow.fixtureParticipantId = player.fixtureParticipantId;
             dataRow.orderError = false;
             dataRow.toggle = false;
             dataRow.isChange = false;
@@ -406,7 +407,7 @@ export default class PlayerStatsComponent extends Component {
 
                     this.dataFormat.map(f => {
                         let obj = {
-                            fixture_participant_id:  row.playerId,
+                            fixture_participant_id: row.fixtureParticipantId, //321671, // row.playerId,
                             category: row.category,
                             code: f.code,
                             value: parseFloat(row[f.code])
@@ -418,7 +419,7 @@ export default class PlayerStatsComponent extends Component {
 
 
                     let objOrder = {
-                        fixture_participant_id:  row.playerId,
+                        fixture_participant_id:  row.fixtureParticipantId,
                         category: row.category,
                         order: parseInt(row.orderValue),
 

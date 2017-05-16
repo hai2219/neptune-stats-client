@@ -11,8 +11,8 @@ export function getPlayer(season,competition,division, round, fixture, team){
     return StatisticsApi.getPlayer(season,competition,division, round, fixture, team);
 }
 
-export function getIndividualPlayer(sport,season,comp, div, round, fixture, fixtureteam, fixtureparticipant, category, stat_code){
-    return StatisticsApi.getIndividualPlayer(sport,season,comp, div, round, fixture, fixtureteam, fixtureparticipant, category, stat_code);
+export function getIndividualPlayer(data, sport,season,comp, div, round, fixture, fixtureteam, fixtureparticipant, category, stat_code){
+    return StatisticsApi.getIndividualPlayer(data, sport,season,comp, div, round, fixture, fixtureteam, fixtureparticipant, category, stat_code);
 }
 
 export function savePlayer(sport,season,comp, div, round, fixture,data) {
