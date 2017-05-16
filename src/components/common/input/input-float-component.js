@@ -9,6 +9,7 @@
 
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
+import _ from "lodash";
 
 /**
  * @desc This is Input Float component.
@@ -158,8 +159,7 @@ export default class Float extends Component {
 
     render() {
         let {id} = this.props;
-        const inputProps = Object.assign({}, this.props);
-        delete inputProps.numOfDecimal;
+        let inputProps = _.filter(this.props, (x) => x == "numOfDecimal");
 
         const onKeyDown = (event) => this.onKeyDown(event);
         const onKeyUp = (event) => this.onKeyUp(event);

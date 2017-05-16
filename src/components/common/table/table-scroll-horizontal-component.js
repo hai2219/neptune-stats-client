@@ -10,6 +10,7 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import TableComponent from  './table-component';
+import _ from "lodash";
 
 /**
  * @desc This is Table Scroll Horizontal component.
@@ -100,10 +101,7 @@ export default class TableScrollHorizontal extends Component {
     }
 
     renderFreeze() {
-        const props = Object.assign({}, this.props) || null;
-        delete props.colsFreeze;
-        delete props.styleFreeze;
-        delete props.styleScroll;
+        let props = _.filter(this.props, (x) => x == "colsFreeze" || x=="styleFreeze" || x=="styleScroll");
 
         return (
             <TableComponent {...props} header={this.parseFreezeHeader()} body={this.parseFreezeBody()}/>
@@ -111,10 +109,7 @@ export default class TableScrollHorizontal extends Component {
     }
 
     renderScroll() {
-        const props = Object.assign({}, this.props) || null;
-        delete props.colsFreeze;
-        delete props.styleFreeze;
-        delete props.styleScroll;
+        let props = _.filter(this.props, (x) => x == "colsFreeze" || x=="styleFreeze" || x=="styleScroll");
 
         return (
             <TableComponent {...props} header={this.parseScrollHeader()} body={this.parseScrollBody()}/>
@@ -122,10 +117,7 @@ export default class TableScrollHorizontal extends Component {
     }
 
     render() {
-        const props = Object.assign({}, this.props) || null;
-        delete props.colsFreeze;
-        delete props.styleFreeze;
-        delete props.styleScroll;
+        let props = _.filter(this.props, (x) => x == "colsFreeze" || x=="styleFreeze" || x=="styleScroll");
 
         if(this.props.colsFreeze > 0) {
             return (

@@ -57,7 +57,8 @@ export default class SortIcon extends Component {
         style = style ? style : {border: "none", width: "100%"};
         textStyle = textStyle ? textStyle : {color: '#4a4a4a'};
         iconStyle = iconStyle ? iconStyle : {marginLeft: 5, color: '#4a4a4a'};
-        iconStyle = this.state.active ? Object.assign({}, iconStyle, {color: '#009ade'}) : iconStyle;
+
+        if(this.state.active) iconStyle.color = '#009ade';
 
         return (
             <div className="sortButton" style={style} onClick={onClick}>
