@@ -69,10 +69,7 @@ export default class PlayerStatsPageComponent extends Component {
         if(canvasParam){
             let seasonID = canvasParam.season_id;
             let compID = canvasParam.comp_id;
-            let divID = canvasParam.div_id;
-            let roundID = canvasParam.round_id;
-            let fixtureID = canvasParam.fixture_id;
-            let team = canvasParam.team_id;
+
 
 
             //get statistic definition
@@ -96,32 +93,7 @@ export default class PlayerStatsPageComponent extends Component {
                 });
             });
 
-            Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
-
-                this.loading.player = true;
-                let playerData = data.data;
-
-                if (playerData) {
-                    this.playerData = playerData;
-
-                    this.getStatistics();
-
-                    this.setState({
-                        dataPlayer: playerData
-                    });
-
-                }else{
-                    this.setState({
-                        dataPlayer:null,
-                    });
-                }
-
-
-            }).catch(error => {
-                this.setState({
-                    dataPlayer:null,
-                });
-            });
+            this.getStatistics();
 
 
 
@@ -140,7 +112,7 @@ export default class PlayerStatsPageComponent extends Component {
 
     getStatistics() {
         let canvasParam = this.getCanvasParam();
-        let playerData = this.playerData;
+
         if(canvasParam) {
             let sportID = canvasParam.sport_id;
             let seasonID = canvasParam.season_id;
@@ -151,34 +123,61 @@ export default class PlayerStatsPageComponent extends Component {
             let fixtureteam = canvasParam.fixtureteam_id;
             let fixtureparticipant = canvasParam.fixtureparticipant_id;
             let category = '';
-            let stat_code = null;
+            let stat_code = null; 
+            let team = canvasParam.team_id;
 
-            Service.getIndividualPlayer(playerData, sportID, seasonID, compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
-                let result = [];
-                for (let i = 0; i < data.length; i++) {
+            Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
 
-                    if (data[i].results.length > 0) {
+                this.loading.player = true;
+                let playerData = data.data;
 
-                        result = result.concat(data[i].results);
+                if (playerData) {
 
-                    }
-                }
 
-                this.loading.stats = true;
+                    Service.getIndividualPlayer(playerData, sportID, seasonID, compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
+                        let result = [];
+                        for (let i = 0; i < data.length; i++) {
 
-                if (result) {
-                    this.setState({
-                        arrPerPerson: result,
+                            if (data[i].results.length > 0) {
+
+                                result = result.concat(data[i].results);
+
+                            }
+                        }
+
+                        this.loading.stats = true;
+
+                        if (result) {
+                            this.setState({
+                                arrPerPerson: result,
+                            });
+
+                        } else {
+                            this.setState({
+                                arrPerPerson: null,
+                            });
+                        }
+
+
                     });
 
-                } else {
                     this.setState({
-                        arrPerPerson: null,
+                        dataPlayer: playerData
+                    });
+
+                }else{
+                    this.setState({
+                        dataPlayer:null,
                     });
                 }
 
 
+            }).catch(error => {
+                this.setState({
+                    dataPlayer:null,
+                });
             });
+
         }
     }
     componentWillUnmount(){

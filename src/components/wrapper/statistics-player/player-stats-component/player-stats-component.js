@@ -467,6 +467,27 @@ export default class PlayerStatsComponent extends Component {
                         }
                     });
                 }
+            }else{
+                if(arrParam.length > 0 ){
+
+                    Service.savePlayer(sportName,seasonID,compID, divID, roundID, fixtureID,arrParam).then(data => {
+
+                        if(this.props.onShowToast){
+                            this.props.onShowToast(1);
+                        }
+
+
+                        if(this.props.onRefreshStats) this.props.onRefreshStats();
+                        if(this.props.onEditStats) this.props.onEditStats(false);
+
+                    }).catch(error => {
+
+                        if(this.props.onShowToast){
+                            this.props.onShowToast(2);
+                        }
+                    });
+
+                }
             }
 
 
