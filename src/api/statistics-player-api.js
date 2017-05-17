@@ -77,7 +77,7 @@ export function getIndividualPlayer(data, sport,season,comp, div, round, fixture
 
     return Promise.all(arrP) ;
 
-    // return CommonApi.httpGetHerokuPlayerStat(path, param);
+
     // return new Promise(function (resolve,reject) {
     //
     //     let result = [
