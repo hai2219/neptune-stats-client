@@ -83,22 +83,6 @@ export default class PlayerStatsComponent extends Component {
         this.renderBody();
     }
 
-    getItemValue(playerSfId, code, category){
-
-        if(this.dataStats){
-            for(let i= 0 ; i < this.dataStats.length; i++){
-                let temp = this.dataStats[i];
-
-                if(temp.player == playerSfId && temp.code == code && temp.category == category){
-
-                    return temp.value;
-                }
-            }
-            return null;
-        }
-        return null;
-    }
-
     findAndReplace(string, target, replacement) {
 
         let i = 0, length = string.length;
