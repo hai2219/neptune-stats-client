@@ -171,6 +171,9 @@ export default class PlayerStatsComponent extends Component {
                 } else {
 
                     dataRow[f.code] = this.getItemValue(player.playerSfid, f.code, category);
+                    if(dataRow[f.code] ){
+                        dataRow.toggle = true;
+                    }
                 }
             });
 
