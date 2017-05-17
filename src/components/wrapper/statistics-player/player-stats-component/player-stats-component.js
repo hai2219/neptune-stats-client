@@ -390,6 +390,45 @@ export default class PlayerStatsComponent extends Component {
         if(this.props.onEditStats) this.props.onEditStats(true);
     }
 
+    checkChange(){
+
+        let arrParam = [];
+        let arrOrderParam = [];
+        this.dataSource.map(row => {
+
+            if (row.isChange == true || row.isOrderChange == true) {
+
+                this.dataFormat.map(f => {
+                    let obj = {
+                        fixture_participant_id: row.fixtureParticipantId, //321671, // row.playerId,
+                        category: row.category,
+                        code: f.code,
+                        value: parseFloat(row[f.code])
+
+                    };
+                    arrParam.push(obj);
+
+                });
+
+
+                let objOrder = {
+                    fixture_participant_id:  row.fixtureParticipantId,
+                    category: row.category,
+                    order: parseInt(row.orderValue),
+
+
+                };
+                arrOrderParam.push(objOrder);
+
+            }
+
+        });
+        if(arrParam.length > 0 || arrOrderParam.length > 0){
+            return true;
+        }
+        return false;
+    }
+
     onSaved(){
 
         if(this.checkOrderDouble()) {

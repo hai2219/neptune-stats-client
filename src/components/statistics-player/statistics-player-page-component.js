@@ -123,7 +123,7 @@ export default class PlayerStatsPageComponent extends Component {
             let fixtureteam = canvasParam.fixtureteam_id;
             let fixtureparticipant = canvasParam.fixtureparticipant_id;
             let category = '';
-            let stat_code = null; 
+            let stat_code = null;
             let team = canvasParam.team_id;
 
             Service.getPlayer(seasonID,compID,divID, roundID, fixtureID, team).then(data => {
@@ -198,9 +198,12 @@ export default class PlayerStatsPageComponent extends Component {
     }
 
     onSave() {
-        this.setState({
-            isShowModel:true,
-        });
+        if( this.refs.playerStats.checkChange()){
+            this.setState({
+                isShowModel:true,
+            });
+        }
+
 
     }
 
@@ -358,6 +361,7 @@ export default class PlayerStatsPageComponent extends Component {
             lineHeight: '72px',
             textAlign: 'left',
             backgroundColor: 'rgba(0,173,85,1)',
+
         };
         let styleFail = {
             height: '72px',
@@ -366,7 +370,15 @@ export default class PlayerStatsPageComponent extends Component {
             lineHeight: '72px',
             textAlign: 'left',
             backgroundColor: 'rgba(212,0,20,1)',
+
+    };
+        let textStyle = {
+            textOverflow: 'ellipsis',
+            paddingRight: '50px',
+            whiteSpace: 'nowrap',
+             overflow: 'hidden',
         };
+
         let content =   fail;
         let spanContent =    failSpan;
         let style =   styleFail;
@@ -395,6 +407,7 @@ export default class PlayerStatsPageComponent extends Component {
                     content={content}
                     spanContent={spanContent}
                     spanStyle={spanStyle}
+                    textStyle={textStyle}
                     style={style}
                     isOnline={!this.state.isShowPopup}
                     onClick={closedPopup}
