@@ -135,7 +135,7 @@ export default class Integer extends Component {
         const onBlur = (event) => this.onBlur(id);
 
         return (
-            <input {...this.props} type={"number"} id={id} ref={id} key={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} style={style}/>
+            <input {...this.props} type={"number"} pattern="\d*" inputMode="numeric" step="any" id={id} ref={id} key={id} onKeyUp={onKeyUp} onBlur={onBlur} onKeyDown={onKeyDown} style={style}/>
         );
     }
 }
