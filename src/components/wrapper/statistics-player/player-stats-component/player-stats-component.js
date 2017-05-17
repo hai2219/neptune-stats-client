@@ -119,7 +119,7 @@ export default class PlayerStatsComponent extends Component {
         this.dataFormat.map(f => {
             if (f.code != code && f.type != "Calculated") {
                 let code = "[" + f.code + "]";
-                let val = rowData[f.code] || 0;
+                let val = rowData[f.code].val || 0;
 
                 formula = this.findAndReplace(formula, code, val);
             }
@@ -167,11 +167,12 @@ export default class PlayerStatsComponent extends Component {
             this.dataFormat.map(f => {
                 if (f.type == "Calculated") {
 
-                    dataRow[f.code] = f.formula;
+                    dataRow[f.code] = {val: f.formula, error: false, change: false};
                 } else {
 
-                    dataRow[f.code] = this.getItemValue(player.playerSfid, f.code, category);
-                    if(dataRow[f.code] ){
+                    dataRow[f.code] = {val: '3.3', error: false, change: false};
+
+                    if(dataRow[f.code].val){
                         dataRow.toggle = true;
                     }
                 }
@@ -309,7 +310,7 @@ export default class PlayerStatsComponent extends Component {
         this.dataHeader = dataHeader;
     }
 
-    checkOrderDouble() {
+    checkValid() {
         let found = false;
         let dataSource = _.cloneDeep(this.dataSource);
 
@@ -327,6 +328,22 @@ export default class PlayerStatsComponent extends Component {
                 }
             }
 
+            this.dataFormat.map(f => {
+                if (f.type != "Calculated" && d[f.code].val) {
+                    let val = parseFloat(d[f.code].val);
+                    let obj = d[f.code];
+
+                    obj.error = false;
+
+                    if(isNaN(val)) {
+                        obj.error = true;
+                        found = true;
+                    }
+
+                    d[f.code] = obj;
+                }
+            });
+
             return d;
         });
 
@@ -342,7 +359,7 @@ export default class PlayerStatsComponent extends Component {
                 newRow.orderValue = '';
 
                 this.dataFormat.map(f => {
-                    newRow[f.code] = '';
+                    newRow[f.code] = {val: '', error: false, change: false};
                 });
 
                 newRow.isChange = false;
@@ -352,7 +369,7 @@ export default class PlayerStatsComponent extends Component {
             return newRow;
         });
 
-        this.checkOrderDouble();
+        this.checkValid();
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
@@ -384,7 +401,7 @@ export default class PlayerStatsComponent extends Component {
             return newRow;
         });
 
-        this.checkOrderDouble();
+        this.checkValid();
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
@@ -403,7 +420,7 @@ export default class PlayerStatsComponent extends Component {
                         fixture_participant_id: row.fixtureParticipantId, //321671, // row.playerId,
                         category: row.category,
                         code: f.code,
-                        value: parseFloat(row[f.code])
+                        value: parseFloat(row[f.code].val)
 
                     };
                     arrParam.push(obj);
@@ -431,7 +448,7 @@ export default class PlayerStatsComponent extends Component {
 
     onSaved(){
 
-        if(this.checkOrderDouble()) {
+        if(this.checkValid()) {
 
             if(this.props.onShowToast){
                 this.props.onShowToast(3);
@@ -449,7 +466,7 @@ export default class PlayerStatsComponent extends Component {
                             fixture_participant_id: row.fixtureParticipantId, //321671, // row.playerId,
                             category: row.category,
                             code: f.code,
-                            value: parseFloat(row[f.code])
+                            value: parseFloat(row[f.code].val)
 
                         };
                         arrParam.push(obj);
@@ -549,6 +566,7 @@ export default class PlayerStatsComponent extends Component {
             return newRow;
         });
 
+        this.checkValid();
 
         this.renderBody();
         if(this.props.onEditStats) this.props.onEditStats(true);
@@ -599,7 +617,7 @@ export default class PlayerStatsComponent extends Component {
                 newRow.isChange = false;
 
                 this.dataFormat.map(f => {
-                    newRow[f.code] = '';
+                    newRow[f.code] = {val: '', error: false, change: false};
                 });
             }
 
@@ -655,13 +673,7 @@ export default class PlayerStatsComponent extends Component {
                     renderRow.push(<ToggleComponent id={""+row.playerId} isChecked={row.toggle} onChange={onChangeToggle}/>);
                 }else{
                     let onChangeOrder = (value) => this.onChangeOrder(playerId, value);
-                    let inputStyle = {};
-
-                    if(row.orderError){
-                        inputStyle = {border: "1px solid rgb(244, 66, 66)"};
-                    } else {
-                        inputStyle = {border: "1px solid rgb(0, 151, 222)"};
-                    }
+                    let inputStyle = (row.orderError) ? inputStyleError : inputStyleNormal;
 
                     renderRow.push(<Integer className="order" id={row.category + row.playerId} min={1} max={999} style={inputStyle} defaultValue={row.orderValue} onBlur={onChangeOrder}/>);
                 }
@@ -684,8 +696,9 @@ export default class PlayerStatsComponent extends Component {
 
                         if((isField && row.toggle) || (!isField && row.orderValue && parseInt(row.orderValue) > 0)){
                             let onChangeStats = (value) => this.onChangeStats(playerId, value, f.code);
+                            let inputStyle = (row[f.code].error) ? inputStyleError : inputStatsNormal;
 
-                            renderRow.push(<Float id={row.category + row.playerId} numOfDecimal={2} min={0} max={999} defaultValue={row[f.code]} onBlur={onChangeStats}/>);
+                            renderRow.push(<Float id={row.category + row.playerId} numOfDecimal={2} min={0} max={999} style={inputStyle} defaultValue={row[f.code].val} onBlur={onChangeStats}/>);
                         } else {
                             renderRow.push(<div />);
                         }
@@ -743,6 +756,9 @@ PlayerStatsComponent.defaultProps = {
     currentTab: 1,
 };
 
+const inputStyleError = {border: "1px solid rgb(244, 66, 66)"};
+const inputStyleNormal = {border: "1px solid rgb(0, 151, 222)"};
+const inputStatsNormal = {border: "1px solid rgb(216, 216, 216)"};
 const css = `
     #player-stats-wrapper-container { 
         background-color: rgba(241,245,248,1);
