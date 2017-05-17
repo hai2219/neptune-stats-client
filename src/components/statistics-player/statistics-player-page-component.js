@@ -500,6 +500,7 @@ export default class PlayerStatsPageComponent extends Component {
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
             let onShowDailogToggle = (type, onAccept)=> this.onShowDailogToggle(type, onAccept);
+            let showLoading = (show)=> this.showLoading(show);
             let onRefreshStats = ()=> this.getStatistics();
 
 
@@ -525,6 +526,7 @@ export default class PlayerStatsPageComponent extends Component {
                                           onShowToast={onShowToast}
                                           onRefreshStats={onRefreshStats}
                                           onShowDailogToggle={onShowDailogToggle}
+                                          showLoading={showLoading}
                                           canvasParam={canvasParam}
                                           ref = "playerStats"
                     />
