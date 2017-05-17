@@ -718,7 +718,7 @@ export default class PlayerStatsComponent extends Component {
 
                 {this.loading() > 0 && <TableScrollHorizontal colsFreeze={3} styleFreeze={{width: "32%"}} styleScroll={{width: "68%"}} header={this.dataHeader}
                                                               headerStyle={{color: '#4a4a4a'}} body={dataBody} />}
-                {this.loading() == 0 && <div className="no-stats-entry">Have no player statistics</div>}
+                {this.loading() == 0 && <div className="no-stats-entry">Have no player list</div>}
                 {this.loading() < 0 && <div className="no-stats-entry" />}
                 <style>{css}</style>
             </div>
