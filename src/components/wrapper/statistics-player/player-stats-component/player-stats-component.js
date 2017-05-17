@@ -63,7 +63,7 @@ export default class PlayerStatsComponent extends Component {
             this.parseData();
         }
 
-        if(prevState.currentSort != this.state.currentSort) {
+        if(!_.isEqual(prevState.sort, this.state.sort)) {
             this.parseHeaderData();
             this.renderBody();
         }
@@ -81,6 +81,22 @@ export default class PlayerStatsComponent extends Component {
         this.parseBodyData();
         this.sortTable(currentSort, true);
         this.renderBody();
+    }
+
+    getItemValue(playerSfId, code, category){
+
+        if(this.dataStats){
+            for(let i= 0 ; i < this.dataStats.length; i++){
+                let temp = this.dataStats[i];
+
+                if(temp.player == playerSfId && temp.code == code && temp.category == category){
+
+                    return temp.value;
+                }
+            }
+            return null;
+        }
+        return null;
     }
 
     findAndReplace(string, target, replacement) {
@@ -154,7 +170,7 @@ export default class PlayerStatsComponent extends Component {
                     dataRow[f.code] = {val: f.formula, error: false, change: false};
                 } else {
 
-                    dataRow[f.code] = {val: '3.3', error: false, change: false};
+                    dataRow[f.code] = {val: this.getItemValue(player.playerSfid, f.code, category), error: false, change: false};
 
                     if(dataRow[f.code].val){
                         dataRow.toggle = true;
@@ -554,7 +570,7 @@ export default class PlayerStatsComponent extends Component {
             let newRow = row;
 
             if(playerId == row.playerId ) {
-                newRow[code] = value;
+                newRow[code] = {val: value, error: false, change: false};
                 newRow.isChange = true;
             }
 
@@ -584,7 +600,7 @@ export default class PlayerStatsComponent extends Component {
                 sort.name = active;
                 break;
             case "order":
-                dataSource = _.orderBy(dataSource, ["orderValue"], [order]);
+                dataSource = _.orderBy(dataSource, [( o ) => { return o.orderValue || ''}], [order]);
                 sort.order = active;
                 break;
         }
