@@ -5,18 +5,20 @@ import PropTypes from 'prop-types';
 
 export default class TableComponent extends Component {
 
-    renderRow(item, index) {
+    renderRow(item, rIndex) {
 
 
         const {style, rowStyle, onClick} = this.props;
+        const trKey = 'tr' + rIndex + Math.floor((Math.random() * 1000000000) + 999999999);
         if (item) {
-            return (<tr key={index} style={rowStyle}>
+            return (<tr key={trKey} style={rowStyle}>
                 {
                     item.map((item, index)=> {
                         let handleClick = () => onClick ? onClick(index) : {};
                         let _style = (style && style[index]) ? style[index] : {};
+                        const tdKey = 'td' + index + Math.floor((Math.random() * 1000000000) + 999999999);
 
-                        return (<td key={index} onClick={handleClick} style={_style}>{item}</td>);
+                        return (<td key={tdKey} onClick={handleClick} style={_style}>{item}</td>);
                     })
                 }
             </tr>);
@@ -37,7 +39,9 @@ export default class TableComponent extends Component {
                 } else if (style && style[index]) {
                     _style = style[index];
                 }
-                return (<th key={index} style={_style}
+                const tdKey = 'th' + index + Math.floor((Math.random() * 1000000000) + 999999999);
+
+                return (<th key={tdKey} style={_style}
                 >{item}</th>);
             });
         }

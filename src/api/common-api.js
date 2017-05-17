@@ -7,8 +7,8 @@ const Config = require('../../config');
 export function httpGetPlayerStat(path, param) {
     return new Promise(function (resolve, reject) {
         let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_GET + path, param);
-       console.log(url);
-        request.get(  url ,{timeout: 120000}, function (error, response, body) {
+
+        request.get(  url ,{timeout: 360000}, function (error, response, body) {
 
             if (!error && response.statusCode == 200) {
                 if (body) {
@@ -25,8 +25,8 @@ export function httpGetPlayerStat(path, param) {
 export function httpGetHerokuPlayerStat(path, param,fixtureParticipantId) {
     return new Promise(function (resolve, reject) {
         let url = actualUrlParse(createRootUrl(Config.LOCAL_URL, Config.LOCAL_PORT) + Config.PLAYER_STAT_HEROKU_GET + path, param);
-        // console.log(url);
-        request.get(  url ,{timeout: 120000}, function (error, response, body) {
+
+        request.get(  url ,{timeout: 360000}, function (error, response, body) {
 
             if (!error && response.statusCode == 200) {
                 if (body) {
@@ -122,7 +122,7 @@ export function httpPostHerokuPlayerStat(path, param, data={}) {
             headers: _headers,
             body: JSON.stringify(data)
         }) .then(response => {
-            console.log('response',response );
+
             if(response.status == 200){
                 return resolve(response);
             }else{
