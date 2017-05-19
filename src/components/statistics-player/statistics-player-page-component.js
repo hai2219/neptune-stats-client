@@ -189,7 +189,8 @@ export default class PlayerStatsPageComponent extends Component {
         if(canvas_param){
             let param = (new Buffer(canvas_param, 'base64')).toString('ascii');
             let paramObj = JSON.parse(param);
-            if (paramObj) {
+            if (paramObj ) {
+                console.log('paramObj',paramObj);
                 return paramObj;
             }
         }
