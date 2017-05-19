@@ -600,7 +600,7 @@ export default class PlayerStatsComponent extends Component {
                 sort.name = active;
                 break;
             case "order":
-                dataSource = _.orderBy(dataSource, [( o ) => { return o.orderValue || ''}], [order]);
+                dataSource = _.orderBy(dataSource, [( o ) => { return o.orderValue || '' ;}], [order]);
                 sort.order = active;
                 break;
         }
