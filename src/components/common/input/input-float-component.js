@@ -39,6 +39,8 @@ export default class Float extends Component {
         super(props);
 
         this.value = "";
+        this.isPress = false;
+        this.currentCode = 0;
     }
 
     _isNumber(key) {
@@ -91,6 +93,11 @@ export default class Float extends Component {
         let val = event.target.value;
         let value = parseFloat(val);
 
+        if(this.isPress && key == this.currentCode) {
+            this.isPress = false;
+            this.currentCode = 0;
+        }
+
         if(this._isSubtract(key)) {
             if(this.value.length > 0 && isNaN(value)) {
                 this.refs[id].value = this.value;
@@ -122,6 +129,15 @@ export default class Float extends Component {
         let key = event.charCode || event.keyCode;
         let value = event.target.value;
 
+        if(this.isPress && this.currentCode != key) {
+
+            event.stopPropagation();
+            event.preventDefault();
+            return event.returnValue = false;
+        }
+
+        this.currentCode = key;
+        this.isPress = true;
         this.value = value;
 
         if(this._isMoveAndDelete(key)) {

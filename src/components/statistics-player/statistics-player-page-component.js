@@ -17,7 +17,6 @@ import * as Service from  "../../services/statistic-player-services";
 export default class PlayerStatsPageComponent extends Component {
     constructor(props) {
 
-
         super(props);
         this.state = {
             dataSource: [],
@@ -32,6 +31,7 @@ export default class PlayerStatsPageComponent extends Component {
             showDialogToggle:0,
             isOnline:navigator.onLine
         };
+
         this.currentTab = 1;
         this.isEditStats = true;
         this.loading = {format: false, player: false, stats: false};
@@ -43,7 +43,6 @@ export default class PlayerStatsPageComponent extends Component {
 
         this.showLoading(true);
 
-        //listen internet connect
         let cb = (e)=> {
 
             if(e.type == 'offline'){
@@ -58,21 +57,16 @@ export default class PlayerStatsPageComponent extends Component {
 
                 location.reload(true);
             }
-
         };
 
         window.addEventListener('offline', cb);
         window.addEventListener('online',cb);
-        //
 
         let canvasParam = this.getCanvasParam();
         if(canvasParam){
             let seasonID = canvasParam.season_id;
             let compID = canvasParam.comp_id;
 
-
-
-            //get statistic definition
             Service.getFormat(seasonID, compID).then(data => {
                 this.loading.format = true;
 
@@ -94,10 +88,6 @@ export default class PlayerStatsPageComponent extends Component {
             });
 
             this.getStatistics();
-
-
-
-
         }
 
         this.loadingTimeout = setInterval(()=>{
@@ -107,7 +97,6 @@ export default class PlayerStatsPageComponent extends Component {
                 clearInterval(this.loadingTimeout);
             }
         }, 100);
-
     }
 
     getStatistics() {
@@ -133,7 +122,6 @@ export default class PlayerStatsPageComponent extends Component {
 
                 if (playerData) {
 
-
                     Service.getIndividualPlayer(playerData, sportID, seasonID, compID, divID, roundID, fixtureID, fixtureteam, fixtureparticipant, category, stat_code).then(data => {
                         let result = [];
                         for (let i = 0; i < data.length; i++) {
@@ -145,7 +133,9 @@ export default class PlayerStatsPageComponent extends Component {
                             }
                         }
 
-                        this.loading.stats = true;
+                        setTimeout(()=>{
+                            this.loading.stats = true;
+                        }, 3000);
 
                         if (result) {
                             this.setState({
@@ -157,8 +147,6 @@ export default class PlayerStatsPageComponent extends Component {
                                 arrPerPerson: null,
                             });
                         }
-
-
                     });
 
                     this.setState({
@@ -177,7 +165,6 @@ export default class PlayerStatsPageComponent extends Component {
                     dataPlayer:null,
                 });
             });
-
         }
     }
     componentWillUnmount(){
@@ -514,6 +501,7 @@ export default class PlayerStatsPageComponent extends Component {
             let onClickTab = (index)=> this.onClickTab(index);
             let onShowToast = (type)=> this.onShowToast(type);
             let onShowDailogToggle = (type, onAccept)=> this.onShowDailogToggle(type, onAccept);
+            let showLoading = (show)=> this.showLoading(show);
             let onRefreshStats = ()=> this.getStatistics();
 
 
@@ -539,6 +527,7 @@ export default class PlayerStatsPageComponent extends Component {
                                           onShowToast={onShowToast}
                                           onRefreshStats={onRefreshStats}
                                           onShowDailogToggle={onShowDailogToggle}
+                                          showLoading={showLoading}
                                           canvasParam={canvasParam}
                                           ref = "playerStats"
                     />
