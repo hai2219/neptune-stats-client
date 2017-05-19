@@ -167,9 +167,6 @@ export default class PlayerStatsPageComponent extends Component {
             });
         }
     }
-    componentWillUnmount(){
-
-    }
 
     getCanvasParam() {
         const {canvas_param} = this.props;
