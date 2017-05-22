@@ -6,14 +6,17 @@ import compression from 'compression';
 import routes from './routes';
 
 const appConfig = require('../config');
-const timeout = express.timeout;
+//const timeout = express.timeout;
 
-app.use(timeout(360000));
+//app.use(timeout(360000));
 /*eslint-disable no-console */
 
 const host = appConfig.LOCAL_URL || 'http://localhost:';
 const port = appConfig.LOCAL_PORT || 3000;
 const app = express();
+
+app.set('views',path.join(__dirname, "../src"));
+app.set('view engine', 'ejs');
 
 app.use(compression());
 app.use(express.static('dist'));
@@ -41,6 +44,6 @@ app.listen(port, function (err) {
     if (err) {
         console.log(err);
     } else {
-        open(`${host}${port}`);
+        open(`${host}:${port}`);
     }
 });
