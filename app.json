@@ -1,0 +1,21 @@
+{
+  "name": "tg-player-statistics",
+  "description": "tg-player-statistics",
+  "keywords": [
+    "statistics"
+  ],
+  "repository": "https://github.com/imgstg/neptune-stats-client.git",
+  "scripts": {
+    "postdeploy": "npm run build"
+  },
+  "env": {
+    "CANVAS_CONSUMER_SECRET": {
+      "description": "Canvas secret",
+      "value": "..."
+    },
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "staging"
+    }
+  }
+}
