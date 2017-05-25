@@ -7,7 +7,7 @@ import crypto from "crypto";
 const router = express.Router();
 const appConfig = require('../config');
 import * as env from '../env';
-const baseUrl = appConfig.LOCAL_URL+':'+appConfig.LOCAL_PORT;
+const baseUrl = appConfig.LOCAL_URL + ':' + appConfig.LOCAL_PORT;
 
 const routes = () => {
     router.get('/api/get/*', function (req, res) {
@@ -40,7 +40,7 @@ const routes = () => {
     router.get('/heroku/get/*', function (req, res) {
         let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
 
-        let url = appConfig.PLAYER_STAT_API_HEROKU_URL   + '/' + req.params[0] + search;
+        let url = appConfig.PLAYER_STAT_API_HEROKU_URL + '/' + req.params[0] + search;
         const options = {
             url: url,
             headers: {
@@ -68,7 +68,7 @@ const routes = () => {
     router.get('/playerstart/get/*', function (req, res) {
         let search = (req._parsedUrl && req._parsedUrl.search) ? req._parsedUrl.search : '';
 
-        let url = appConfig.PLAYER_STAT_API_HOST +':' +  appConfig.PLAYER_STAT_API_PORT + '/' + req.params[0] + search;
+        let url = appConfig.PLAYER_STAT_API_HOST + ':' + appConfig.PLAYER_STAT_API_PORT + '/' + req.params[0] + search;
         const options = {
             url: url,
             headers: {
@@ -180,11 +180,11 @@ const routes = () => {
         let authenticate = false;
         let envelope = {};
 
-     let canvas_param = '';
+        let canvas_param = '';
         try {
 
             let bodyArray = req.body.signed_request.split(".");
-            let canvas_consumer_secret = env.CANVAS_CONSUMER_SECRET;
+            let canvas_consumer_secret = process.env.CANVAS_CONSUMER_SECRET;
             let consumerSecret = bodyArray[0];
             let encoded_envelope = bodyArray[1];
             let check = crypto.createHmac("sha256", canvas_consumer_secret).update(encoded_envelope).digest("base64");
@@ -192,7 +192,7 @@ const routes = () => {
             if (check === consumerSecret) {
                 envelope = JSON.parse(new Buffer(encoded_envelope, "base64").toString("ascii"));
 
-                canvas_param =  (envelope.context && envelope.context.environment && envelope.context.environment.parameters )?envelope.context.environment.parameters:{};
+                canvas_param = (envelope.context && envelope.context.environment && envelope.context.environment.parameters) ? envelope.context.environment.parameters : {};
                 authenticate = true;
             }
         } catch (e) {
@@ -203,12 +203,12 @@ const routes = () => {
 
         if (authenticate == false && canvas_param) {
             //Enable comment below to check authorisation
-            return res.send({code: 401, message: "Unauthorized"});
+            return res.send({ code: 401, message: "Unauthorized" });
         } else {
             let search = JSON.stringify(canvas_param);
             search = new Buffer(search).toString('base64');
 
-            return res.render('../src/index', { baseUrl,canvas_param:search});
+            return res.render('../src/index', { baseUrl, canvas_param: search });
         }
 
 
@@ -218,21 +218,21 @@ const routes = () => {
 
 
         let canvas_param = {
-                        "sport_id": "Baseball",
-                        "season_id": "a2Cp0000000AdmdEAC",
-                        "comp_id": "a0Ap0000004g9eaEAA",
-                        "div_id": "a0Ap0000004g9eaEAA",
-                        "round_id": 9086,
-                        "fixture_id": 41067,
-                        "fixtureteam_id": 67122,
-                        "fixtureparticipant_id": 321671,
-                        "team_id": "a0Rp0000004ALbyEAG"
+            "sport_id": "Baseball",
+            "season_id": "a2Cp0000000AdmdEAC",
+            "comp_id": "a0Ap0000004g9eaEAA",
+            "div_id": "a0Ap0000004g9eaEAA",
+            "round_id": 9086,
+            "fixture_id": 41067,
+            "fixtureteam_id": 67122,
+            "fixtureparticipant_id": 321671,
+            "team_id": "a0Rp0000004ALbyEAG"
 
         };
 
         let search = JSON.stringify(canvas_param);
         search = new Buffer(search).toString('base64');
-        return res.render('../src/index', {baseUrl, canvas_param:search});
+        return res.render('../src/index', { baseUrl, canvas_param: search });
     });
 
 
