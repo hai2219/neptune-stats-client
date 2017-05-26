@@ -1,6 +1,6 @@
 {
-    "LOCAL_URL": "http://localhost",
-    "LOCAL_PORT": "3003",
+    "LOCAL_URL": "https://neptune-stats-client-hai.herokuapp.com",
+    "LOCAL_PORT": "443",
     "PLAYER_STAT_API_HOST": "http://128.199.90.210",
     "PLAYER_STAT_API_PORT": "8082",
     "PLAYER_STAT_API_HEROKU_HOST": "neptune-stats-api.herokuapp.com",
